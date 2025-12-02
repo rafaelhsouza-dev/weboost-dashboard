@@ -121,10 +121,6 @@ a {
     overflow: hidden;
 }
 
-aside.sidebar.collapsed #sidebarLogo {
-    height: 80px !important;
-}
-
 .login-page::before {
     content: '';
     position: absolute;
@@ -329,13 +325,15 @@ aside.sidebar.collapsed #sidebarLogo {
 }
 
 /*
- * Dark Mode Bootstrap Overrides v2
- * Ensures icons and utility classes respect the dark theme.
+ * Dark Mode Bootstrap Overrides v3
  */
+
+/* Target all material symbols to use the main text color in dark mode */
 [data-theme="dark"] .material-symbols-rounded {
     color: var(--text-main);
 }
 
+/* Target default bootstrap text colors and force them to use our theme variable */
 [data-theme="dark"] .text-dark,
 [data-theme="dark"] .text-black,
 [data-theme="dark"] .text-body {
@@ -346,15 +344,21 @@ aside.sidebar.collapsed #sidebarLogo {
     color: var(--text-muted) !important;
 }
 
-/* Specificity boost for links and dropdowns */
+/* Ensure links in dark mode have the correct color, even if they have bootstrap classes */
+[data-theme="dark"] a.text-body,
+[data-theme="dark"] a.text-dark {
+    color: var(--text-main) !important;
+}
+
 [data-theme="dark"] a.text-body:hover,
-[data-theme="dark"] a.text-body:focus {
+[data-theme="dark"] a.text-dark:hover {
     color: var(--primary-color) !important;
 }
 
+/* Special fix for dropdown items that might have their own specific styles */
 [data-theme="dark"] .dropdown-menu {
     background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
+    border-color: var(--border-color);
 }
 
 [data-theme="dark"] .dropdown-item {
@@ -364,9 +368,10 @@ aside.sidebar.collapsed #sidebarLogo {
 [data-theme="dark"] .dropdown-item:hover,
 [data-theme="dark"] .dropdown-item:focus {
     background-color: rgba(0, 255, 133, 0.1);
-    color: var(--primary-color) !important;
+    color: var(--text-main);
 }
 
+/* Ensure outline buttons are visible */
 [data-theme="dark"] .btn-outline-secondary {
     color: var(--text-muted);
     border-color: var(--border-color);
@@ -378,10 +383,21 @@ aside.sidebar.collapsed #sidebarLogo {
     border-color: var(--primary-color);
 }
 
+/* Fix for specific components */
 [data-theme="dark"] .bg-light {
     background-color: var(--bg-card) !important;
 }
 
 [data-theme="dark"] .border {
     border-color: var(--border-color) !important;
+}
+
+/* Ensure menu items in sidebar have correct color */
+[data-theme="dark"] .sidebar .menu-item {
+    color: var(--text-main);
+}
+
+[data-theme="dark"] .sidebar .menu-item.active,
+[data-theme="dark"] .sidebar .menu-item:hover {
+    color: var(--primary-color);
 }
