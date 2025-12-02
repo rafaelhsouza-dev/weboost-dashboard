@@ -35,6 +35,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const sidebar = document.querySelector('.sidebar');
     const mainContent = document.querySelector('.main-content');
     const sidebarLogo = document.getElementById('sidebarLogo'); // Obter referência ao logo
+    const clientSelector = document.getElementById('clientSelector'); // Obter referência ao seletor de cliente
+
+    if (clientSelector) {
+        clientSelector.addEventListener('change', (event) => {
+            console.log('Cliente selecionado:', event.target.value);
+            // Aqui você adicionaria a lógica para carregar os dados do cliente selecionado
+        });
+    }
 
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', () => {

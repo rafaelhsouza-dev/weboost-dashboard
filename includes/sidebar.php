@@ -6,6 +6,15 @@
         </div>
     </div>
 
+    <div class="p-3">
+        <select id="clientSelector" class="form-select">
+            <option value="admin">Administração</option>
+            <option value="cliente_a">Cliente A</option>
+            <option value="cliente_b">Cliente B</option>
+            <option value="cliente_c">Cliente C</option>
+        </select>
+    </div>
+
     <div class="sidebar-menu">
         <a href="#" class="menu-item active">
             <span class="material-symbols-rounded">home</span>
