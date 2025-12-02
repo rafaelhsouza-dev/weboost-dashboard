@@ -159,6 +159,10 @@ a {
 .card-body .text-muted {
     color: #fff !important;
 }
+.card-body input{
+    color: #fff !important;
+    background-color: rgba(0, 0, 0, 1);
+}
 
 [data-theme="dark"] .login-card {
     background-color: rgba(40, 48, 70, 0.9);
