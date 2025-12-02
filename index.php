@@ -1,7 +1,6 @@
 <?php
-// Inclui o código que define as variáveis de visualização
-// Usar 'require' garante que o script pare se o arquivo não for encontrado
-require 'includes/header.php';
+// Inclui as variáveis de configuração que serão usadas em toda a página
+include 'includes/config.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +36,7 @@ require 'includes/header.php';
     <!-- Main Content -->
     <main class="main-content">
         
-        <?php // O header já foi incluído no topo do arquivo ?>
+        <?php include 'includes/header.php'; ?>
 
         <?php
         // Carrega o conteúdo principal da página com base na view

@@ -1,15 +1,5 @@
 <?php
-// Define o view atual, com 'geral' como novo padrão
-$currentView = $_GET['view'] ?? 'geral';
-
-// Mapeia os valores do view para nomes mais amigáveis e define a ordem
-$clientNames = [
-    'geral' => 'Geral',
-    'admin' => 'Administração',
-    'cliente_a' => 'Cliente A',
-    'cliente_b' => 'Cliente B',
-    'cliente_c' => 'Cliente C',
-];
+// As variáveis $currentView e $clientNames agora vêm de includes/config.php (incluído no index.php)
 ?>
 <!-- Sidebar -->
 <aside class="sidebar">

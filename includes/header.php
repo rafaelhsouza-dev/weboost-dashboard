@@ -1,13 +1,5 @@
 <?php
-// O mesmo código da sidebar para garantir que as variáveis estejam disponíveis
-$currentView = $_GET['view'] ?? 'geral';
-$clientNames = [
-    'geral' => 'Geral',
-    'admin' => 'Administração',
-    'cliente_a' => 'Cliente A',
-    'cliente_b' => 'Cliente B',
-    'cliente_c' => 'Cliente C',
-];
+// As variáveis $currentView e $clientNames agora vêm de includes/config.php (incluído no index.php)
 
 // Define o título baseado no view atual
 $headerTitle = 'Dashboard | ' . ($clientNames[$currentView] ?? 'Visão Geral');
