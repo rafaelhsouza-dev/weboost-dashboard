@@ -325,19 +325,16 @@ a {
 }
 
 /*
- * Dark Mode Bootstrap Overrides
- * Ensures Bootstrap's utility classes respect the dark theme.
+ * Dark Mode Bootstrap Overrides v2
+ * Ensures icons and utility classes respect the dark theme.
  */
+[data-theme="dark"] .material-symbols-rounded {
+    color: var(--text-main);
+}
+
 [data-theme="dark"] .text-dark,
 [data-theme="dark"] .text-black,
-[data-theme="dark"] .text-body,
-[data-theme="dark"] .text-body-secondary,
-[data-theme="dark"] .h1,
-[data-theme="dark"] .h2,
-[data-theme="dark"] .h3,
-[data-theme="dark"] .h4,
-[data-theme="dark"] .h5,
-[data-theme="dark"] .h6 {
+[data-theme="dark"] .text-body {
     color: var(--text-main) !important;
 }
 
@@ -345,8 +342,10 @@ a {
     color: var(--text-muted) !important;
 }
 
-[data-theme="dark"] a {
-    color: var(--primary-color);
+/* Specificity boost for links and dropdowns */
+[data-theme="dark"] a.text-body:hover,
+[data-theme="dark"] a.text-body:focus {
+    color: var(--primary-color) !important;
 }
 
 [data-theme="dark"] .dropdown-menu {
@@ -361,7 +360,18 @@ a {
 [data-theme="dark"] .dropdown-item:hover,
 [data-theme="dark"] .dropdown-item:focus {
     background-color: rgba(0, 255, 133, 0.1);
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .btn-outline-secondary {
+    color: var(--text-muted);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+    color: #000;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 [data-theme="dark"] .bg-light {
