@@ -132,6 +132,11 @@ a {
     animation: rotate 20s linear infinite;
     border-radius: 100%;
 }
+.rounded-circle {
+    border: solid 1px #00FF85;
+    height: 60px;
+    width: 60px;
+}
 
 @keyframes rotate {
     from {
