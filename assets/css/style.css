@@ -150,7 +150,10 @@ a {
     color: #fff;
     z-index: 1;
 }
-.login-card p, .login-brand h4 {
+.card-body h4 {
+    color: #fff;
+}
+.card-body p {
     color: #fff;
 }
 
