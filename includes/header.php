@@ -1,7 +1,8 @@
 <?php
 // O mesmo código da sidebar para garantir que as variáveis estejam disponíveis
-$currentView = $_GET['view'] ?? 'admin';
+$currentView = $_GET['view'] ?? 'geral';
 $clientNames = [
+    'geral' => 'Geral',
     'admin' => 'Administração',
     'cliente_a' => 'Cliente A',
     'cliente_b' => 'Cliente B',

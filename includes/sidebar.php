@@ -1,9 +1,10 @@
 <?php
-// Define o view atual, com 'admin' como padrão
-$currentView = $_GET['view'] ?? 'admin';
+// Define o view atual, com 'geral' como novo padrão
+$currentView = $_GET['view'] ?? 'geral';
 
-// Mapeia os valores do view para nomes mais amigáveis
+// Mapeia os valores do view para nomes mais amigáveis e define a ordem
 $clientNames = [
+    'geral' => 'Geral',
     'admin' => 'Administração',
     'cliente_a' => 'Cliente A',
     'cliente_b' => 'Cliente B',
@@ -32,7 +33,9 @@ $clientNames = [
         <?php
         if ($currentView === 'admin') {
             include 'menu-admin.php';
-        } else {
+        } elseif ($currentView === 'geral') {
+            include 'menu-geral.php';
+        } else { // Qualquer outro valor (cliente_a, cliente_b, etc.) usa o menu de cliente
             include 'menu-client.php';
         }
         ?>
