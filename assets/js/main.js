@@ -69,6 +69,35 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Date Range Picker Logic
+    const dateRangePicker = document.getElementById('dateRangePicker');
+    const dateRangeItems = document.querySelectorAll('[aria-labelledby="dateRangePicker"] .dropdown-item');
+    
+    // Ler parâmetros da URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentView = urlParams.get('view') || 'geral';
+    const currentPeriod = urlParams.get('period') || 'today';
+
+    // Atualiza o texto do botão com base no período atual
+    if (dateRangePicker) {
+        const currentItem = document.querySelector(`[data-period="${currentPeriod}"]`);
+        if (currentItem) {
+            dateRangePicker.textContent = currentItem.textContent;
+        } else {
+            dateRangePicker.textContent = 'Hoje';
+        }
+    }
+
+    // Adiciona listener para cada item do dropdown
+    dateRangeItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const selectedPeriod = this.getAttribute('data-period');
+            // Mantém o 'view' atual e adiciona o novo 'period'
+            window.location.href = `index.php?view=${currentView}&period=${selectedPeriod}`;
+        });
+    });
+
     // Initialize ApexCharts
     initCharts();
 

@@ -1,5 +1,5 @@
 <?php
-// As variáveis $currentView e $clientNames agora vêm de includes/config.php (incluído no index.php)
+// As variáveis de configuração ($currentView, $clientNames, etc.) agora vêm de includes/config.php
 
 // Define o título baseado no view atual
 $headerTitle = 'Dashboard | ' . ($clientNames[$currentView] ?? 'Visão Geral');
@@ -14,6 +14,23 @@ $headerTitle = 'Dashboard | ' . ($clientNames[$currentView] ?? 'Visão Geral');
     </div>
 
     <div class="d-flex align-items-center gap-3">
+        <!-- Date Range Picker Dropdown -->
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="dateRangePicker" data-bs-toggle="dropdown" aria-expanded="false">
+                <!-- O texto aqui será atualizado via JS -->
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dateRangePicker">
+                <li><a class="dropdown-item" href="#" data-period="today">Hoje</a></li>
+                <li><a class="dropdown-item" href="#" data-period="7d">Últimos 7 dias</a></li>
+                <li><a class="dropdown-item" href="#" data-period="15d">Últimos 15 dias</a></li>
+                <li><a class="dropdown-item" href="#" data-period="30d">Últimos 30 dias</a></li>
+                <li><a class="dropdown-item" href="#" data-period="bimester">Bimestre</a></li>
+                <li><a class="dropdown-item" href="#" data-period="trimester">Trimestre</a></li>
+                <li><a class="dropdown-item" href="#" data-period="semester">Semestre</a></li>
+                <li><a class="dropdown-item" href="#" data-period="year">Ano</a></li>
+            </ul>
+        </div>
+
         <div class="theme-toggle" id="themeToggle">
             <span class="material-symbols-rounded">dark_mode</span>
         </div>
