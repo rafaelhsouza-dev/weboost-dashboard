@@ -154,7 +154,10 @@ a {
     color: #fff;
 }
 .card-body p {
-    color: #fff;
+    color: #fff !important;
+}
+.card-body .text-muted {
+    color: #fff !important;
 }
 
 [data-theme="dark"] .login-card {
