@@ -31,7 +31,7 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="d-flex align-items-center gap-2 text-primary fw-bold fs-4">
-                <img src="imgs/WB-LOGO-WORDMARK@300x-1.webp" alt="Weboost" height="40">
+                <img id="sidebarLogo" src="imgs/WB-LOGO-WORDMARK@300x-1.webp" alt="Weboost" height="40">
             </div>
         </div>
 

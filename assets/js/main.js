@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.querySelector('.sidebar');
     const mainContent = document.querySelector('.main-content');
+    const sidebarLogo = document.getElementById('sidebarLogo'); // Obter referência ao logo
 
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', () => {
@@ -41,6 +42,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Desktop: Collapse/Expand
                 sidebar.classList.toggle('collapsed');
                 mainContent.classList.toggle('expanded');
+
+                // Lógica para trocar o logo
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebarLogo.src = 'imgs/Icon-1.webp';
+                } else {
+                    sidebarLogo.src = 'imgs/WB-LOGO-WORDMARK@300x-1.webp';
+                }
 
                 // Trigger resize for charts
                 setTimeout(() => {
