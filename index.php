@@ -27,79 +27,12 @@
 
 <body>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <div class="d-flex align-items-center gap-2 text-primary fw-bold fs-4">
-                <img id="sidebarLogo" src="imgs/WB-LOGO-WORDMARK@300x-1.webp" alt="Weboost" height="40">
-            </div>
-        </div>
-
-        <div class="sidebar-menu">
-            <a href="#" class="menu-item active">
-                <span class="material-symbols-rounded">home</span>
-                <span>Dashboard</span>
-            </a>
-            <a href="#" class="menu-item">
-                <span class="material-symbols-rounded">group</span>
-                <span>CDP</span>
-            </a>
-            <a href="#" class="menu-item">
-                <span class="material-symbols-rounded">analytics</span>
-                <span>Analytics</span>
-            </a>
-            <a href="#" class="menu-item">
-                <span class="material-symbols-rounded">campaign</span>
-                <span>Campaigns</span>
-            </a>
-            <a href="#" class="menu-item">
-                <span class="material-symbols-rounded">settings</span>
-                <span>Settings</span>
-            </a>
-        </div>
-
-        <div class="p-3 border-top border-secondary-subtle">
-            <a href="#" onclick="logout()" class="menu-item text-danger">
-                <span class="material-symbols-rounded">logout</span>
-                <span>Logout</span>
-            </a>
-        </div>
-    </aside>
+    <?php include 'includes/sidebar.php'; ?>
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Top Header -->
-        <header class="top-header">
-            <div class="d-flex align-items-center">
-                <button id="sidebarToggle" class="btn btn-link text-body p-0 me-3">
-                    <span class="material-symbols-rounded">menu</span>
-                </button>
-                <h4 class="m-0">Dashboard Overview</h4>
-            </div>
-
-            <div class="d-flex align-items-center gap-3">
-                <div class="theme-toggle" id="themeToggle">
-                    <span class="material-symbols-rounded">dark_mode</span>
-                </div>
-
-                <div class="dropdown">
-                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-body"
-                        data-bs-toggle="dropdown">
-                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=4361ee&color=fff" alt="User"
-                            class="rounded-circle me-2" width="32" height="32">
-                        <span class="d-none d-md-block">Admin User</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item text-danger" href="#" onclick="logout()">Logout</a></li>
-                    </ul>
-                </div>
-            </div>
-        </header>
+        
+        <?php include 'includes/header.php'; ?>
 
         <!-- Dashboard Content -->
         <div class="container-fluid p-0">
@@ -252,16 +185,8 @@
         </div>
     </main>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- ApexCharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <!-- Auth JS -->
-    <script src="assets/js/auth.js"></script>
-    <!-- Main JS -->
-    <script src="assets/js/main.js"></script>
+    <?php include 'includes/footer.php'; ?>
+    
 </body>
 
 </html>
