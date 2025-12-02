@@ -15,7 +15,7 @@
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-body"
                 data-bs-toggle="dropdown">
-                <img src="https://ui-avatars.com/api/?name=Admin+User&background=4361ee&color=fff" alt="User"
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=00FF85&color=fff" alt="User"
                     class="rounded-circle me-2" width="32" height="32">
                 <span class="d-none d-md-block">Admin User</span>
             </a>
