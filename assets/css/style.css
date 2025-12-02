@@ -436,3 +436,19 @@ a {
 [data-theme="dark"] .sidebar .form-select {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23a0aec0' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
 }
+
+/* Table Overrides for Dark Mode */
+[data-theme="dark"] .table {
+    color: var(--text-main);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover {
+    color: var(--text-main);
+    background-color: rgba(255, 255, 255, 0.075);
+}
+
+[data-theme="dark"] thead {
+    border-bottom-width: 2px;
+    border-bottom-color: var(--border-color);
+}

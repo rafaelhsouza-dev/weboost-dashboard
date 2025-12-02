@@ -67,7 +67,7 @@
                 </div>
                 <div class="card-body">
                     <table class="table table-hover">
-                        <thead class="table-light">
+                        <thead>
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Nome</th>
