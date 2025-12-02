@@ -34,14 +34,14 @@
                     <img src="imgs/WB-LOGO-WORDMARK@300x-1.webp" alt="Weboost" height="40">
                 </div>
 
-                <h4 class="text-center mb-4">Dashboard!</h4>
-                <p class="text-center text-muted mb-4">Please sign in to continue to your dashboard.</p>
+                <h4 class="text-center mb-4">Olá!</h4>
+                <p class="text-center text-muted mb-4">Por favor faça seu login para aceder ao painel.</p>
 
                 <div id="errorMsg" class="alert alert-danger d-none" role="alert"></div>
 
                 <form id="loginForm">
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email address</label>
+                        <label for="email" class="form-label">Email</label>
                         <div class="input-group">
                             <span class="input-group-text bg-transparent border-end-0">
                                 <span class="material-symbols-rounded text-muted">mail</span>
@@ -52,7 +52,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="password" class="form-label">Password</label>
+                        <label for="password" class="form-label">Senha</label>
                         <div class="input-group">
                             <span class="input-group-text bg-transparent border-end-0">
                                 <span class="material-symbols-rounded text-muted">lock</span>
@@ -65,17 +65,16 @@
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="rememberMe">
-                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                            <label class="form-check-label" for="rememberMe">Lembrar</label>
                         </div>
-                        <a href="#" class="text-decoration-none small">Forgot Password?</a>
+                        <a href="#" class="text-decoration-none small">Perdeu a senha?</a>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 py-2">Sign In</button>
+                    <button type="submit" class="btn btn-primary w-100 py-2">Entrar</button>
                 </form>
 
                 <div class="text-center mt-4">
-                    <p class="small text-muted">Don't have an account? <a href="#" class="text-decoration-none">Create
-                            Account</a></p>
+                    <p class="small text-muted">Não tem conta? <a href="#" class="text-decoration-none">Criar conta</a></p>
                 </div>
             </div>
         </div>
