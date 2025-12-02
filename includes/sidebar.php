@@ -1,3 +1,15 @@
+<?php
+// Define o view atual, com 'admin' como padrão
+$currentView = $_GET['view'] ?? 'admin';
+
+// Mapeia os valores do view para nomes mais amigáveis
+$clientNames = [
+    'admin' => 'Administração',
+    'cliente_a' => 'Cliente A',
+    'cliente_b' => 'Cliente B',
+    'cliente_c' => 'Cliente C',
+];
+?>
 <!-- Sidebar -->
 <aside class="sidebar">
     <div class="sidebar-header">
@@ -8,34 +20,22 @@
 
     <div class="p-3">
         <select id="clientSelector" class="form-select">
-            <option value="admin">Administração</option>
-            <option value="cliente_a">Cliente A</option>
-            <option value="cliente_b">Cliente B</option>
-            <option value="cliente_c">Cliente C</option>
+            <?php foreach ($clientNames as $value => $name): ?>
+                <option value="<?php echo $value; ?>" <?php echo ($currentView === $value) ? 'selected' : ''; ?>>
+                    <?php echo $name; ?>
+                </option>
+            <?php endforeach; ?>
         </select>
     </div>
 
     <div class="sidebar-menu">
-        <a href="#" class="menu-item active">
-            <span class="material-symbols-rounded">home</span>
-            <span>Dashboard</span>
-        </a>
-        <a href="#" class="menu-item">
-            <span class="material-symbols-rounded">group</span>
-            <span>CDP</span>
-        </a>
-        <a href="#" class="menu-item">
-            <span class="material-symbols-rounded">analytics</span>
-            <span>Analytics</span>
-        </a>
-        <a href="#" class="menu-item">
-            <span class="material-symbols-rounded">campaign</span>
-            <span>Campaigns</span>
-        </a>
-        <a href="#" class="menu-item">
-            <span class="material-symbols-rounded">settings</span>
-            <span>Settings</span>
-        </a>
+        <?php
+        if ($currentView === 'admin') {
+            include 'menu-admin.php';
+        } else {
+            include 'menu-client.php';
+        }
+        ?>
     </div>
 
     <div class="p-3 border-top border-secondary-subtle">

@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (clientSelector) {
         clientSelector.addEventListener('change', (event) => {
-            console.log('Cliente selecionado:', event.target.value);
-            // Aqui você adicionaria a lógica para carregar os dados do cliente selecionado
+            const selectedView = event.target.value;
+            window.location.href = 'index.php?view=' + selectedView;
         });
     }
 
