@@ -1,7 +1,13 @@
 <?php
 // Parâmetros da URL com valores padrão
 $currentView = $_GET['view'] ?? 'geral';
-$currentPeriod = $_GET['period'] ?? 'today';
+// Define o fuso horário para evitar problemas com as funções de data
+date_default_timezone_set('America/Sao_Paulo');
+
+// Lida com o intervalo de datas
+// Sanitiza para garantir que são strings seguras
+$startDate = isset($_GET['startDate']) ? htmlspecialchars($_GET['startDate']) : date('Y-m-d\T00:00');
+$endDate = isset($_GET['endDate']) ? htmlspecialchars($_GET['endDate']) : date('Y-m-d\TH:i');
 
 // Mapeamento de nomes para o seletor de cliente
 $clientNames = [
@@ -10,17 +16,5 @@ $clientNames = [
     'cliente_a' => 'Cliente A',
     'cliente_b' => 'Cliente B',
     'cliente_c' => 'Cliente C',
-];
-
-// Mapeamento de nomes para o seletor de data
-$periodNames = [
-    'today' => 'Hoje',
-    '7d' => 'Últimos 7 dias',
-    '15d' => 'Últimos 15 dias',
-    '30d' => 'Últimos 30 dias',
-    'bimester' => 'Bimestre',
-    'trimester' => 'Trimestre',
-    'semester' => 'Semestre',
-    'year' => 'Ano',
 ];
 ?>

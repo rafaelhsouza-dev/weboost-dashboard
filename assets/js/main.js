@@ -69,32 +69,85 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Date Range Picker Logic
-    const dateRangePicker = document.getElementById('dateRangePicker');
-    const dateRangeItems = document.querySelectorAll('[aria-labelledby="dateRangePicker"] .dropdown-item');
-    
-    // Ler parâmetros da URL
+    // Date Range Logic
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    const applyDateRangeBtn = document.getElementById('applyDateRange');
+    const datePresetItems = document.querySelectorAll('[aria-labelledby="datePresetPicker"] .dropdown-item');
+
+    // Helper para formatar a data para o input datetime-local (YYYY-MM-DDTHH:MM)
+    const formatDateForInput = (date) => {
+        const pad = (num) => num.toString().padStart(2, '0');
+        const year = date.getFullYear();
+        const month = pad(date.getMonth() + 1);
+        const day = pad(date.getDate());
+        const hours = pad(date.getHours());
+        const minutes = pad(date.getMinutes());
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+    };
+
     const urlParams = new URLSearchParams(window.location.search);
     const currentView = urlParams.get('view') || 'geral';
-    const currentPeriod = urlParams.get('period') || 'today';
+    const startDateParam = urlParams.get('startDate');
+    const endDateParam = urlParams.get('endDate');
 
-    // Atualiza o texto do botão com base no período atual
-    if (dateRangePicker) {
-        const currentItem = document.querySelector(`[data-period="${currentPeriod}"]`);
-        if (currentItem) {
-            dateRangePicker.textContent = currentItem.textContent;
-        } else {
-            dateRangePicker.textContent = 'Hoje';
-        }
+    // Inicializa os campos de data
+    if (startDateParam && endDateParam) {
+        startDateInput.value = startDateParam;
+        endDateInput.value = endDateParam;
+    } else {
+        const now = new Date();
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+
+        startDateInput.value = formatDateForInput(todayStart);
+        endDateInput.value = formatDateForInput(now);
+    }
+    
+    // Aplica o filtro de data
+    if (applyDateRangeBtn) {
+        applyDateRangeBtn.addEventListener('click', () => {
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+
+            if (startDate && endDate) {
+                // Remove os parâmetros de período antigos e adiciona os novos
+                urlParams.delete('period');
+                urlParams.set('startDate', startDate);
+                urlParams.set('endDate', endDate);
+                window.location.search = urlParams.toString();
+            }
+        });
     }
 
-    // Adiciona listener para cada item do dropdown
-    dateRangeItems.forEach(item => {
+    // Aplica predefinições
+    datePresetItems.forEach(item => {
         item.addEventListener('click', function(e) {
             e.preventDefault();
-            const selectedPeriod = this.getAttribute('data-period');
-            // Mantém o 'view' atual e adiciona o novo 'period'
-            window.location.href = `index.php?view=${currentView}&period=${selectedPeriod}`;
+            const period = this.getAttribute('data-period');
+            const now = new Date();
+            let startDate = new Date();
+
+            switch (period) {
+                case 'today':
+                    startDate.setHours(0, 0, 0, 0);
+                    break;
+                case '7d':
+                    startDate.setDate(now.getDate() - 7);
+                    startDate.setHours(0, 0, 0, 0);
+                    break;
+                case '15d':
+                    startDate.setDate(now.getDate() - 15);
+                    startDate.setHours(0, 0, 0, 0);
+                    break;
+                case '30d':
+                     startDate.setDate(now.getDate() - 30);
+                     startDate.setHours(0, 0, 0, 0);
+                    break;
+            }
+            
+            startDateInput.value = formatDateForInput(startDate);
+            endDateInput.value = formatDateForInput(now);
         });
     });
 

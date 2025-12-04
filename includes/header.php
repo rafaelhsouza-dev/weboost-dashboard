@@ -14,21 +14,33 @@ $headerTitle = 'Dashboard | ' . ($clientNames[$currentView] ?? 'Visão Geral');
     </div>
 
     <div class="d-flex align-items-center gap-3">
-        <!-- Date Range Picker Dropdown -->
-        <div class="dropdown">
-            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="dateRangePicker" data-bs-toggle="dropdown" aria-expanded="false">
-                <!-- O texto aqui será atualizado via JS -->
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dateRangePicker">
-                <li><a class="dropdown-item" href="#" data-period="today">Hoje</a></li>
-                <li><a class="dropdown-item" href="#" data-period="7d">Últimos 7 dias</a></li>
-                <li><a class="dropdown-item" href="#" data-period="15d">Últimos 15 dias</a></li>
-                <li><a class="dropdown-item" href="#" data-period="30d">Últimos 30 dias</a></li>
-                <li><a class="dropdown-item" href="#" data-period="bimester">Bimestre</a></li>
-                <li><a class="dropdown-item" href="#" data-period="trimester">Trimestre</a></li>
-                <li><a class="dropdown-item" href="#" data-period="semester">Semestre</a></li>
-                <li><a class="dropdown-item" href="#" data-period="year">Ano</a></li>
-            </ul>
+        <!-- Date Range Filters -->
+        <div class="d-flex align-items-center gap-2">
+            <!-- Start Date -->
+            <div class="form-group">
+                <label for="startDate" class="form-label visually-hidden">Data Início</label>
+                <input type="datetime-local" class="form-control form-control-sm" id="startDate" name="startDate">
+            </div>
+            <!-- End Date -->
+            <div class="form-group">
+                <label for="endDate" class="form-label visually-hidden">Data Fim</label>
+                <input type="datetime-local" class="form-control form-control-sm" id="endDate" name="endDate">
+            </div>
+
+            <!-- Presets Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="datePresetPicker" data-bs-toggle="dropdown" aria-expanded="false">
+                    Predefinições
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="datePresetPicker">
+                    <li><a class="dropdown-item" href="#" data-period="today">Hoje</a></li>
+                    <li><a class="dropdown-item" href="#" data-period="7d">Últimos 7 dias</a></li>
+                    <li><a class="dropdown-item" href="#" data-period="15d">Últimos 15 dias</a></li>
+                    <li><a class="dropdown-item" href="#" data-period="30d">Últimos 30 dias</a></li>
+                </ul>
+            </div>
+
+            <button class="btn btn-primary btn-sm" id="applyDateRange">Aplicar</button>
         </div>
 
         <div class="theme-toggle" id="themeToggle">
