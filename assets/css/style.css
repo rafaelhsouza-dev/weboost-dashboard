@@ -450,3 +450,8 @@ a {
     border-bottom-width: 2px;
     border-bottom-color: var(--border-color);
 }
+
+[data-theme="dark"] .table th,
+[data-theme="dark"] .table td {
+    color: var(--text-main);
+}
