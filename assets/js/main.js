@@ -199,7 +199,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // 3. Clone the content and force light theme
             const contentClone = sourceContent.cloneNode(true);
-            contentClone.setAttribute('data-theme', 'light'); // Force light theme on the clone
+            contentClone.classList.add('pdf-export');
+			contentClone.setAttribute('data-theme', 'light'); // Force light theme on the clone
             contentClone.style.padding = '1.5rem'; // Add some padding for aesthetics
             pdfContainer.appendChild(contentClone);
 
@@ -230,19 +231,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error("Erro ao clonar gráficos:", err);
             }
 
+            const pageBreak = document.createElement('div');
+            pageBreak.classList.add('page-break');
+            contentClone.appendChild(pageBreak);
+
             // 5. Generate PDF from the clone
             const pdfOptions = {
                 margin: [0.5, 0.5, 0.8, 0.5],
-                filename: `relatorio-weboost-${new Date().toISOString().slice(0,10)}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
+                filename: `relatorio-weboost-${new Date().toISOString().slice(0, 10)}.pdf`,
+                image: {type: 'jpeg', quality: 0.98},
                 html2canvas: {
                     scale: 2,
                     useCORS: true,
-                    letterRendering: true,
-                    width: contentClone.scrollWidth,
-                    windowWidth: contentClone.scrollWidth
+                    letterRendering: true
                 },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                jsPDF: {unit: 'in', format: 'a4', orientation: 'portrait'},
+                pagebreak: {mode: ['avoid-all', 'css', 'legacy']},
+                enableLinks: true
             };
 
             // Delay to allow cloned charts to render

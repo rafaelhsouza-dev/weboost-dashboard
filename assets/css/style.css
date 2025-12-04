@@ -184,10 +184,25 @@ a {
 #pdf-container {
     position: absolute;
     left: -9999px;
-    top: auto;
-    width: 1123px; /* A4 width at 96 DPI */
-    background-color: #fff !important;
+    top: -9999px;
+    z-index: -1;
+    background: #fff;
+    width: 210mm; /* A4 width */
 }
+.page-break {
+    page-break-after: always;
+}
+
+.pdf-export {
+    width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+.pdf-export .card {
+    border: 1px solid #dee2e6 !important;
+    box-shadow: none !important;
+}
+
 
 /* Sidebar */
 .sidebar {
