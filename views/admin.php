@@ -18,7 +18,7 @@
         </div>
         <div class="col-md-3">
             <div class="card">
-                <div class="card-body d-flex align-items-center">
+                <div class="cicle-wb card-body d-flex align-items-center">
                     <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3 text-success">
                         <span class="material-symbols-rounded">person_add</span>
                     </div>
@@ -31,7 +31,7 @@
         </div>
         <div class="col-md-3">
             <div class="card">
-                <div class="card-body d-flex align-items-center">
+                <div class="cicle-wb card-body d-flex align-items-center">
                     <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3 text-warning">
                         <span class="material-symbols-rounded">paid</span>
                     </div>
@@ -44,7 +44,7 @@
         </div>
         <div class="col-md-3">
             <div class="card">
-                <div class="card-body d-flex align-items-center">
+                <div class="cicle-wb card-body d-flex align-items-center">
                     <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3 text-danger">
                         <span class="material-symbols-rounded">support_agent</span>
                     </div>

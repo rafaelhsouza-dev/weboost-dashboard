@@ -19,7 +19,7 @@
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body d-flex align-items-center">
-                    <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3 text-success">
+                    <div class="cicle-wb bg-success bg-opacity-10 p-3 rounded-circle me-3 text-success">
                         <span class="material-symbols-rounded">shopping_cart</span>
                     </div>
                     <div>
@@ -32,7 +32,7 @@
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body d-flex align-items-center">
-                    <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3 text-warning">
+                    <div class="cicle-wb bg-warning bg-opacity-10 p-3 rounded-circle me-3 text-warning">
                         <span class="material-symbols-rounded">group</span>
                     </div>
                     <div>
@@ -45,7 +45,7 @@
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body d-flex align-items-center">
-                    <div class="bg-info bg-opacity-10 p-3 rounded-circle me-3 text-info">
+                    <div class="cicle-wb bg-info bg-opacity-10 p-3 rounded-circle me-3 text-info">
                         <span class="material-symbols-rounded">trending_up</span>
                     </div>
                     <div>
