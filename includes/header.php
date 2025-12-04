@@ -2,7 +2,7 @@
 // As variáveis de configuração ($currentView, $clientNames, etc.) agora vêm de includes/config.php
 
 // Define o título baseado no view atual
-$headerTitle = 'Dashboard | ' . ($clientNames[$currentView] ?? 'Visão Geral');
+$headerTitle = ($clientNames[$currentView] ?? 'Visão Geral');
 ?>
 <!-- Top Header -->
 <header class="top-header">
