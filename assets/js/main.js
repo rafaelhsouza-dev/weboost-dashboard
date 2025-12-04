@@ -236,6 +236,95 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialize ApexCharts
     initCharts();
 
+    // PDF Export Logic (Clone Method)
+    const exportPdfBtn = document.getElementById('exportPdfBtn');
+    if (exportPdfBtn) {
+        exportPdfBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const btn = this;
+            const originalBtnHTML = btn.innerHTML;
+            const sourceContent = document.getElementById('viewContent');
+
+            if (!sourceContent) {
+                alert('Erro: Não foi possível encontrar o conteúdo para exportar.');
+                return;
+            }
+
+            // 1. Indicate loading state
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+            btn.classList.add('disabled');
+
+            // 2. Create a hidden container for the clone
+            const pdfContainer = document.createElement('div');
+            pdfContainer.id = 'pdf-container';
+            document.body.appendChild(pdfContainer);
+
+            // 3. Clone the content and force light theme
+            const contentClone = sourceContent.cloneNode(true);
+            contentClone.setAttribute('data-theme', 'light'); // Force light theme on the clone
+            contentClone.style.padding = '1.5rem'; // Add some padding for aesthetics
+            pdfContainer.appendChild(contentClone);
+
+            // 4. Re-render charts within the CLONE
+            try {
+                const originalSalesChartEl = document.querySelector('#salesChart');
+                const clonedSalesChartEl = contentClone.querySelector('#salesChart');
+                if (originalSalesChartEl && clonedSalesChartEl && typeof salesChart !== 'undefined') {
+                    let clonedSalesOptions = JSON.parse(JSON.stringify(salesChart.w.globals.initialOptions));
+                    clonedSalesOptions.chart.background = '#ffffff';
+                    clonedSalesOptions.tooltip.theme = 'light';
+                    clonedSalesOptions.xaxis.labels.style.colors = '#212529';
+                    clonedSalesOptions.yaxis.labels.style.colors = '#212529';
+                    clonedSalesOptions.grid.borderColor = '#e9ecef';
+                    new ApexCharts(clonedSalesChartEl, clonedSalesOptions).render();
+                }
+                
+                const originalVisitorsChartEl = document.querySelector('#visitorsChart');
+                const clonedVisitorsChartEl = contentClone.querySelector('#visitorsChart');
+                if (originalVisitorsChartEl && clonedVisitorsChartEl && typeof visitorsChart !== 'undefined') {
+                    let clonedVisitorsOptions = JSON.parse(JSON.stringify(visitorsChart.w.globals.initialOptions));
+                    clonedVisitorsOptions.chart.background = '#ffffff';
+                    clonedVisitorsOptions.theme.mode = 'light';
+                    clonedVisitorsOptions.legend.labels.colors = '#212529';
+                    new ApexCharts(clonedVisitorsChartEl, clonedVisitorsOptions).render();
+                }
+            } catch (err) {
+                console.error("Erro ao clonar gráficos:", err);
+            }
+
+            // 5. Generate PDF from the clone
+            const pdfOptions = {
+                margin: [0.5, 0.5, 0.8, 0.5],
+                filename: `relatorio-weboost-${new Date().toISOString().slice(0,10)}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Delay to allow cloned charts to render
+            setTimeout(() => {
+                html2pdf().from(contentClone).set(pdfOptions).toPdf().get('pdf').then(function (pdf) {
+                    const pageCount = pdf.internal.getNumberOfPages();
+                    const pageWidth = pdf.internal.pageSize.getWidth();
+                    const pageHeight = pdf.internal.pageSize.getHeight();
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(100);
+                    for (let i = 1; i <= pageCount; i++) {
+                        pdf.setPage(i);
+                        pdf.text('Relatório Confidencial - Weboost', pageWidth / 2, 0.3, { align: 'center' });
+                        pdf.text(`Página ${i} de ${pageCount}`, pageWidth / 2, pageHeight - 0.5, { align: 'center' });
+                    }
+                }).save().finally(() => {
+                    // 6. Cleanup
+                    document.body.removeChild(pdfContainer);
+                    btn.innerHTML = originalBtnHTML;
+                    btn.classList.remove('disabled');
+                });
+            }, 1000);
+        });
+    }
+
     // Initialize Swiper
     initSwiper();
 });

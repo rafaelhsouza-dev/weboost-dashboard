@@ -150,16 +150,16 @@ a {
     color: #fff;
     z-index: 1;
 }
-.card-body h4 {
+.login-card .card-body h4 {
     color: #fff;
 }
-.card-body p {
+.login-card .card-body p {
     color: #fff !important;
 }
-.card-body .text-muted {
+.login-card .card-body .text-muted {
     color: #fff !important;
 }
-.card-body input{
+.login-card .card-body input{
     color: #fff !important;
     background-color: rgba(0, 0, 0, 1);
 }
@@ -178,6 +178,15 @@ a {
     align-items: center;
     justify-content: center;
     gap: 10px;
+}
+
+/* Container for PDF generation */
+#pdf-container {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1123px; /* A4 width at 96 DPI */
+    background-color: #fff !important;
 }
 
 /* Sidebar */
