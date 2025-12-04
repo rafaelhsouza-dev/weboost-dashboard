@@ -455,3 +455,9 @@ a {
 [data-theme="dark"] .table td {
     color: var(--text-main);
 }
+
+input[type="datetime-local"] {
+    background: var(--text-main);
+    padding: 5px 15px;
+    max-width: 170px;
+}
