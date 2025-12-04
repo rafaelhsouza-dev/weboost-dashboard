@@ -6,7 +6,7 @@
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body d-flex align-items-center">
-                    <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3 text-primary">
+                    <div class="cicle-wb bg-primary bg-opacity-10 p-3 rounded-circle me-3 text-primary">
                         <span class="material-symbols-rounded">attach_money</span>
                     </div>
                     <div>

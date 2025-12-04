@@ -38,7 +38,7 @@
             <div class="dropup">
                 <a href="#" class="d-flex w-100 align-items-center text-decoration-none dropdown-toggle text-body"
                    data-bs-toggle="dropdown">
-                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=00ff85&color=fff" alt="User"
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=00ff85&color=000" alt="User"
                          class="rounded-circle me-2" width="32" height="32">
                     <div class="sidebar-user-info">
                         <span class="d-block">Admin User</span>
