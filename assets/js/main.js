@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // 5. Generate PDF from the clone
             const pdfOptions = {
-                margin: [0.5, 0.5, 0.8, 0.5],
+                margin: 0,
                 filename: `relatorio-weboost-${new Date().toISOString().slice(0, 10)}.pdf`,
                 image: {type: 'jpeg', quality: 0.98},
                 html2canvas: {

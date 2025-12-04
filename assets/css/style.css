@@ -187,7 +187,6 @@ a {
     top: -9999px;
     z-index: -1;
     background: #fff;
-    width: 210mm; /* A4 width */
 }
 .page-break {
     page-break-after: always;
@@ -196,6 +195,13 @@ a {
 .pdf-export {
     width: 100% !important;
     overflow-x: hidden !important;
+    transform: scale(0.8);
+    transform-origin: top left;
+}
+
+
+.pdf-export img {
+    max-width: 100% !important;
 }
 
 .pdf-export .card {
