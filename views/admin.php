@@ -1,56 +1,56 @@
 <!-- Dashboard Content for Admin -->
 <div class="container-fluid p-0">
 
-    <!-- Admin Stats Cards -->
+    <!-- Stats Cards -->
     <div class="row mb-4">
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body d-flex align-items-center">
                     <div class="cicle-wb bg-primary bg-opacity-10 p-3 rounded-circle me-3 text-primary">
+                        <span class="material-symbols-rounded">attach_money</span>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Total Revenue</h6>
+                        <h4 class="mb-0">$45,231</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body d-flex align-items-center">
+                    <div class="cicle-wb bg-success bg-opacity-10 p-3 rounded-circle me-3 text-success">
+                        <span class="material-symbols-rounded">shopping_cart</span>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Total Orders</h6>
+                        <h4 class="mb-0">1,205</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body d-flex align-items-center">
+                    <div class="cicle-wb bg-warning bg-opacity-10 p-3 rounded-circle me-3 text-warning">
                         <span class="material-symbols-rounded">group</span>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1">Total de Clientes</h6>
-                        <h4 class="mb-0">125</h4>
+                        <h6 class="text-muted mb-1">New Customers</h6>
+                        <h4 class="mb-0">342</h4>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card">
-                <div class="cicle-wb card-body d-flex align-items-center">
-                    <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3 text-success">
-                        <span class="material-symbols-rounded">person_add</span>
+                <div class="card-body d-flex align-items-center">
+                    <div class="cicle-wb bg-info bg-opacity-10 p-3 rounded-circle me-3 text-info">
+                        <span class="material-symbols-rounded">trending_up</span>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1">Novos Clientes (Mês)</h6>
-                        <h4 class="mb-0">12</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="cicle-wb card-body d-flex align-items-center">
-                    <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3 text-warning">
-                        <span class="material-symbols-rounded">paid</span>
-                    </div>
-                    <div>
-                        <h6 class="text-muted mb-1">Receita Global (Mês)</h6>
-                        <h4 class="mb-0">R$ 45.231</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="cicle-wb card-body d-flex align-items-center">
-                    <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3 text-danger">
-                        <span class="material-symbols-rounded">support_agent</span>
-                    </div>
-                    <div>
-                        <h6 class="text-muted mb-1">Tickets de Suporte</h6>
-                        <h4 class="mb-0">8</h4>
+                        <h6 class="text-muted mb-1">Growth</h6>
+                        <h4 class="mb-0">+12.5%</h4>
                     </div>
                 </div>
             </div>

@@ -10,47 +10,47 @@
                         <span class="material-symbols-rounded">attach_money</span>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1">Client Revenue</h6>
-                        <h4 class="mb-0">$10,543</h4>
+                        <h6 class="text-muted mb-1">Total Revenue</h6>
+                        <h4 class="mb-0">$45,231</h4>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card">
-                <div class="cicle-wb card-body d-flex align-items-center">
-                    <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3 text-success">
+                <div class="card-body d-flex align-items-center">
+                    <div class="cicle-wb bg-success bg-opacity-10 p-3 rounded-circle me-3 text-success">
                         <span class="material-symbols-rounded">shopping_cart</span>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1">Client Orders</h6>
-                        <h4 class="mb-0">312</h4>
+                        <h6 class="text-muted mb-1">Total Orders</h6>
+                        <h4 class="mb-0">1,205</h4>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card">
-                <div class="cicle-wb card-body d-flex align-items-center">
-                    <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3 text-warning">
-                        <span class="material-symbols-rounded">support_agent</span>
+                <div class="card-body d-flex align-items-center">
+                    <div class="cicle-wb bg-warning bg-opacity-10 p-3 rounded-circle me-3 text-warning">
+                        <span class="material-symbols-rounded">group</span>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1">Support Tickets</h6>
-                        <h4 class="mb-0">12</h4>
+                        <h6 class="text-muted mb-1">New Customers</h6>
+                        <h4 class="mb-0">342</h4>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card">
-                <div class="cicle-wb card-body d-flex align-items-center">
-                    <div class="bg-info bg-opacity-10 p-3 rounded-circle me-3 text-info">
-                        <span class="material-symbols-rounded">subscriptions</span>
+                <div class="card-body d-flex align-items-center">
+                    <div class="cicle-wb bg-info bg-opacity-10 p-3 rounded-circle me-3 text-info">
+                        <span class="material-symbols-rounded">trending_up</span>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1">Active Subscriptions</h6>
-                        <h4 class="mb-0">3</h4>
+                        <h6 class="text-muted mb-1">Growth</h6>
+                        <h4 class="mb-0">+12.5%</h4>
                     </div>
                 </div>
             </div>
