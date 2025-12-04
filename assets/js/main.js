@@ -235,7 +235,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 margin: [0.5, 0.5, 0.8, 0.5],
                 filename: `relatorio-weboost-${new Date().toISOString().slice(0,10)}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    letterRendering: true,
+                    width: contentClone.scrollWidth,
+                    windowWidth: contentClone.scrollWidth
+                },
                 jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
