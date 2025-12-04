@@ -491,6 +491,18 @@ a {
     padding: 0.75rem 0 !important;
 }
 
+/* Ajuste para ícones datetime-local em dark mode */
+[data-theme="dark"] input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+[data-theme="dark"] input[type="datetime-local"]::-webkit-inner-spin-button {
+    filter: invert(1);
+}
+[data-theme="dark"] input[type="datetime-local"]::-webkit-clear-button {
+    filter: invert(1);
+}
+
+
 .cicle-wb {
     width: 55px;
     height: 55px;
