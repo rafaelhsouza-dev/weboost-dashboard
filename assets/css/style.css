@@ -457,7 +457,7 @@ a {
 }
 
 [data-theme="light"] input[type="datetime-local"] {
-    background: var(--text-muted);
+    background: var(--bg-card);
     padding: 5px 15px;
     max-width: 170px;
 }
