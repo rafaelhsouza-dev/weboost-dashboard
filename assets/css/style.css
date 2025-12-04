@@ -96,9 +96,8 @@ a {
     border-color: var(--primary-color);
     color: #000000;
     /* Black text for contrast */
-    padding: 0.6rem 1.5rem;
+    padding: 2px 15px;
     font-weight: 600;
-    border-radius: 0.5rem;
     transition: all 0.3s ease;
 }
 
