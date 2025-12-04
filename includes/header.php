@@ -10,7 +10,7 @@ $headerTitle = ($clientNames[$currentView] ?? 'Visão Geral');
         <button id="sidebarToggle" class="btn btn-link text-body p-0 me-3">
             <span class="material-symbols-rounded">menu</span>
         </button>
-        <h4 class="m-0"><?php echo $headerTitle; ?></h4>
+        <h5 class="m-0"><?php echo $headerTitle; ?></h5>
     </div>
 
     <div class="d-flex align-items-center gap-3">
@@ -50,7 +50,7 @@ $headerTitle = ($clientNames[$currentView] ?? 'Visão Geral');
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-body"
                 data-bs-toggle="dropdown">
-                <img src="https://ui-avatars.com/api/?name=Admin+User&background=4361ee&color=fff" alt="User"
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=00ff85&color=fff" alt="User"
                     class="rounded-circle me-2" width="32" height="32">
                 <span class="d-none d-md-block">Admin User</span>
             </a>
