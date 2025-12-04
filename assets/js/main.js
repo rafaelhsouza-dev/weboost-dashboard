@@ -108,16 +108,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const endDateParam = urlParams.get('endDate');
 
     // Inicializa os campos de data
-    if (startDateParam && endDateParam) {
-        startDateInput.value = startDateParam;
-        endDateInput.value = endDateParam;
-    } else {
-        const now = new Date();
-        const todayStart = new Date();
-        todayStart.setHours(0, 0, 0, 0);
+    if (startDateInput && endDateInput) {
+        if (startDateParam && endDateParam) {
+            startDateInput.value = startDateParam;
+            endDateInput.value = endDateParam;
+        } else {
+            const now = new Date();
+            const todayStart = new Date();
+            todayStart.setHours(0, 0, 0, 0);
 
-        startDateInput.value = formatDateForInput(todayStart);
-        endDateInput.value = formatDateForInput(now);
+            startDateInput.value = formatDateForInput(todayStart);
+            endDateInput.value = formatDateForInput(now);
+        }
     }
     
     // Aplica o filtro de data
@@ -127,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const endDate = endDateInput.value;
 
             if (startDate && endDate) {
-                // Remove os parâmetros de período antigos e adiciona os novos
+                const urlParams = new URLSearchParams(window.location.search);
                 urlParams.delete('period');
                 urlParams.set('startDate', startDate);
                 urlParams.set('endDate', endDate);
@@ -166,6 +168,70 @@ document.addEventListener('DOMContentLoaded', function () {
             endDateInput.value = formatDateForInput(now);
         });
     });
+
+    // PDF Export Logic
+    const exportPdfBtn = document.getElementById('exportPdfBtn');
+    if (exportPdfBtn) {
+        exportPdfBtn.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent default link behavior
+
+            const btn = this;
+            const originalBtnHTML = btn.innerHTML;
+            const content = document.getElementById('viewContent');
+
+            if (!content) {
+                alert('Não foi possível encontrar o conteúdo para exportar.');
+                return;
+            }
+
+            const body = document.body;
+            const isDarkMode = body.getAttribute('data-theme') === 'dark';
+
+            // 1. Prepare for PDF generation
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+            btn.classList.add('disabled');
+
+            // Temporarily switch to light mode if in dark mode
+            if (isDarkMode) {
+                body.setAttribute('data-theme', 'light');
+                updateChartsTheme(); // Re-render charts in the new theme
+            }
+
+            const pdfOptions = {
+                margin: [0.5, 0.5, 0.8, 0.5],
+                filename: `relatorio-weboost-${new Date().toISOString().slice(0,10)}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Delay to allow charts to re-render
+            setTimeout(() => {
+                html2pdf().from(content).set(pdfOptions).toPdf().get('pdf').then(function (pdf) {
+                    const pageCount = pdf.internal.getNumberOfPages();
+                    const pageWidth = pdf.internal.pageSize.getWidth();
+                    const pageHeight = pdf.internal.pageSize.getHeight();
+
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(100);
+
+                    for (let i = 1; i <= pageCount; i++) {
+                        pdf.setPage(i);
+                        pdf.text('Relatório Confidencial - Weboost', pageWidth / 2, 0.3, { align: 'center' });
+                        pdf.text(`Página ${i} de ${pageCount}`, pageWidth / 2, pageHeight - 0.5, { align: 'center' });
+                    }
+                }).save().finally(() => {
+                    // Cleanup
+                    if (isDarkMode) {
+                        body.setAttribute('data-theme', 'dark');
+                        updateChartsTheme();
+                    }
+                    btn.innerHTML = originalBtnHTML;
+                    btn.classList.remove('disabled');
+                });
+            }, isDarkMode ? 500 : 100);
+        });
+    }
 
     // Initialize ApexCharts
     initCharts();

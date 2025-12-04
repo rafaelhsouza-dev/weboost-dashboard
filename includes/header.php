@@ -43,6 +43,9 @@ $headerTitle = ($clientNames[$currentView] ?? 'Visão Geral');
             <button class="btn btn-primary btn-sm" id="applyDateRange">Aplicar</button>
         </div>
 
+        <a href="#" id="exportPdfBtn" class="text-body p-2" title="Exportar para PDF">
+            <span class="material-symbols-rounded">picture_as_pdf</span>
+        </a>
         <div class="theme-toggle" id="themeToggle">
             <span class="material-symbols-rounded">dark_mode</span>
         </div>

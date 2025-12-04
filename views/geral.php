@@ -1,11 +1,3 @@
-<!-- Export Button -->
-<div class="d-flex justify-content-end mb-3">
-    <button id="exportPdfBtn" class="btn btn-secondary btn-sm">
-        <span class="material-symbols-rounded me-1" style="font-size: 1.1rem; vertical-align: text-bottom;">download</span>
-        Exportar PDF
-    </button>
-</div>
-
 <!-- Dashboard Content -->
 <div class="container-fluid p-0" id="viewContent">
 
