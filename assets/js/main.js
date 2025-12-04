@@ -16,19 +16,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    themeToggle.addEventListener('click', () => {
-        if (body.getAttribute('data-theme') === 'dark') {
-            body.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
-            icon.textContent = 'dark_mode';
-        } else {
-            body.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-            icon.textContent = 'light_mode';
-        }
-        // Update charts theme if needed
-        updateChartsTheme();
-    });
+    if(themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                icon.textContent = 'dark_mode';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                icon.textContent = 'light_mode';
+            }
+            // Update charts theme if needed
+            updateChartsTheme();
+        });
+    }
 
     // Sidebar Toggle
     const sidebarToggle = document.getElementById('sidebarToggle');
@@ -139,102 +141,37 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Aplica predefinições
-    datePresetItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const period = this.getAttribute('data-period');
-            const now = new Date();
-            let startDate = new Date();
-
-            switch (period) {
-                case 'today':
-                    startDate.setHours(0, 0, 0, 0);
-                    break;
-                case '7d':
-                    startDate.setDate(now.getDate() - 7);
-                    startDate.setHours(0, 0, 0, 0);
-                    break;
-                case '15d':
-                    startDate.setDate(now.getDate() - 15);
-                    startDate.setHours(0, 0, 0, 0);
-                    break;
-                case '30d':
-                     startDate.setDate(now.getDate() - 30);
-                     startDate.setHours(0, 0, 0, 0);
-                    break;
-            }
-            
-            startDateInput.value = formatDateForInput(startDate);
-            endDateInput.value = formatDateForInput(now);
-        });
-    });
-
-    // PDF Export Logic
-    const exportPdfBtn = document.getElementById('exportPdfBtn');
-    if (exportPdfBtn) {
-        exportPdfBtn.addEventListener('click', function (e) {
-            e.preventDefault(); // Prevent default link behavior
-
-            const btn = this;
-            const originalBtnHTML = btn.innerHTML;
-            const content = document.getElementById('viewContent');
-
-            if (!content) {
-                alert('Não foi possível encontrar o conteúdo para exportar.');
-                return;
-            }
-
-            const body = document.body;
-            const isDarkMode = body.getAttribute('data-theme') === 'dark';
-
-            // 1. Prepare for PDF generation
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-            btn.classList.add('disabled');
-
-            // Temporarily switch to light mode if in dark mode
-            if (isDarkMode) {
-                body.setAttribute('data-theme', 'light');
-                updateChartsTheme(); // Re-render charts in the new theme
-            }
-
-            const pdfOptions = {
-                margin: [0.5, 0.5, 0.8, 0.5],
-                filename: `relatorio-weboost-${new Date().toISOString().slice(0,10)}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
-
-            // Delay to allow charts to re-render
-            setTimeout(() => {
-                html2pdf().from(content).set(pdfOptions).toPdf().get('pdf').then(function (pdf) {
-                    const pageCount = pdf.internal.getNumberOfPages();
-                    const pageWidth = pdf.internal.pageSize.getWidth();
-                    const pageHeight = pdf.internal.pageSize.getHeight();
-
-                    pdf.setFontSize(10);
-                    pdf.setTextColor(100);
-
-                    for (let i = 1; i <= pageCount; i++) {
-                        pdf.setPage(i);
-                        pdf.text('Relatório Confidencial - Weboost', pageWidth / 2, 0.3, { align: 'center' });
-                        pdf.text(`Página ${i} de ${pageCount}`, pageWidth / 2, pageHeight - 0.5, { align: 'center' });
-                    }
-                }).save().finally(() => {
-                    // Cleanup
-                    if (isDarkMode) {
-                        body.setAttribute('data-theme', 'dark');
-                        updateChartsTheme();
-                    }
-                    btn.innerHTML = originalBtnHTML;
-                    btn.classList.remove('disabled');
-                });
-            }, isDarkMode ? 500 : 100);
+    if(datePresetItems) {
+        datePresetItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const period = this.getAttribute('data-period');
+                const now = new Date();
+                let startDate = new Date();
+    
+                switch (period) {
+                    case 'today':
+                        startDate.setHours(0, 0, 0, 0);
+                        break;
+                    case '7d':
+                        startDate.setDate(now.getDate() - 7);
+                        startDate.setHours(0, 0, 0, 0);
+                        break;
+                    case '15d':
+                        startDate.setDate(now.getDate() - 15);
+                        startDate.setHours(0, 0, 0, 0);
+                        break;
+                    case '30d':
+                         startDate.setDate(now.getDate() - 30);
+                         startDate.setHours(0, 0, 0, 0);
+                        break;
+                }
+                
+                startDateInput.value = formatDateForInput(startDate);
+                endDateInput.value = formatDateForInput(now);
+            });
         });
     }
-
-    // Initialize ApexCharts
-    initCharts();
 
     // PDF Export Logic (Clone Method)
     const exportPdfBtn = document.getElementById('exportPdfBtn');
@@ -324,6 +261,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 1000);
         });
     }
+
+    // Initialize ApexCharts
+    initCharts();
 
     // Initialize Swiper
     initSwiper();
@@ -424,7 +364,7 @@ function updateChartsTheme() {
     const gridColor = isDark ? '#3b4253' : '#e9ecef';
     const themeMode = isDark ? 'dark' : 'light';
 
-    if (salesChart) {
+    if (typeof salesChart !== 'undefined' && salesChart) {
         salesChart.updateOptions({
             xaxis: { labels: { style: { colors: textColor } } },
             yaxis: { labels: { style: { colors: textColor } } },
@@ -433,7 +373,7 @@ function updateChartsTheme() {
         });
     }
 
-    if (visitorsChart) {
+    if (typeof visitorsChart !== 'undefined' && visitorsChart) {
         visitorsChart.updateOptions({
             theme: { mode: themeMode },
             legend: { labels: { colors: textColor } }
@@ -443,31 +383,33 @@ function updateChartsTheme() {
 
 // Swiper
 function initSwiper() {
-    new Swiper('.mySwiper', {
-        slidesPerView: 1,
-        spaceBetween: 30,
-        loop: true,
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        autoplay: {
-            delay: 2500,
-            disableOnInteraction: false,
-        },
-        breakpoints: {
-            640: {
-                slidesPerView: 2,
-                spaceBetween: 20,
+    if(typeof Swiper !== 'undefined') {
+        new Swiper('.mySwiper', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
             },
-            768: {
-                slidesPerView: 3,
-                spaceBetween: 40,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
             },
-        }
-    });
+            autoplay: {
+                delay: 2500,
+                disableOnInteraction: false,
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
+                },
+                768: {
+                    slidesPerView: 3,
+                    spaceBetween: 40,
+                },
+            }
+        });
+    }
 }
