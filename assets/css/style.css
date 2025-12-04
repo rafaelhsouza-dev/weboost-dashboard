@@ -466,3 +466,27 @@ a {
     padding: 5px 15px;
     max-width: 170px;
 }
+
+/* --- Sidebar User Footer --- */
+/* Por padrão, a versão recolhida está escondida e a expandida está visível */
+.sidebar-user-collapsed {
+    display: none;
+}
+.sidebar-user-expanded {
+    display: block;
+}
+
+/* Quando a sidebar estiver recolhida... */
+.sidebar.collapsed .sidebar-user-expanded {
+    display: none; /* Esconde a versão expandida */
+}
+
+.sidebar.collapsed .sidebar-user-collapsed {
+    display: block; /* Mostra a versão recolhida */
+}
+
+/* Garante que o footer não seja escondido como os outros .p-3 */
+.sidebar.collapsed .sidebar-footer {
+    display: block !important;
+    padding: 0.75rem 0 !important;
+}
