@@ -31,10 +31,33 @@
         ?>
     </div>
 
-    <div class="p-3 border-top border-secondary-subtle">
-        <a href="#" onclick="logout()" class="menu-item text-danger">
-            <span class="material-symbols-rounded">logout</span>
-            <span>Logout</span>
-        </a>
+    <div class="sidebar-footer p-3 border-top border-secondary-subtle">
+        <div class="dropup">
+            <a href="#" class="d-flex w-100 align-items-center text-decoration-none dropdown-toggle text-body"
+               data-bs-toggle="dropdown">
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=00ff85&color=fff" alt="User"
+                     class="rounded-circle me-2" width="32" height="32">
+                <div class="sidebar-user-info">
+                    <span class="d-block">Admin User</span>
+                </div>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow" style="width: calc(100% - 1.5rem);">
+                <li><a class="dropdown-item" href="#">
+                    <span class="material-symbols-rounded me-2">person</span>
+                    Profile
+                </a></li>
+                <li><a class="dropdown-item" href="#">
+                    <span class="material-symbols-rounded me-2">settings</span>
+                    Settings
+                </a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item text-danger" href="#" onclick="logout()">
+                    <span class="material-symbols-rounded me-2">logout</span>
+                    Logout
+                </a></li>
+            </ul>
+        </div>
     </div>
 </aside>
