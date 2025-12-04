@@ -66,30 +66,12 @@
 
         <!-- Versão recolhida: Visível apenas quando a classe .collapsed estiver presente -->
         <div class="sidebar-user-collapsed">
-            <div class="dropup">
-                <a href="#" class="d-block text-center text-decoration-none dropdown-toggle text-body"
-                   data-bs-toggle="dropdown">
-                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=00ff85&color=fff" alt="User"
-                         class="rounded-circle" width="32" height="32">
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark shadow">
-                    <li><a class="dropdown-item" href="#">
-                        <span class="material-symbols-rounded me-2">person</span>
-                        Profile
-                    </a></li>
-                    <li><a class="dropdown-item" href="#">
-                        <span class="material-symbols-rounded me-2">settings</span>
-                        Settings
-                    </a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item text-danger" href="#" onclick="logout()">
-                        <span class="material-symbols-rounded me-2">logout</span>
-                        Logout
-                    </a></li>
-                </ul>
-            </div>
+            <!-- Este link agora expandirá a sidebar -->
+            <a href="#" id="userAvatarCollapsed" class="d-block text-center text-decoration-none text-body">
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=00ff85&color=fff" alt="User"
+                     class="rounded-circle" width="32" height="32">
+            </a>
+             <!-- Link de logout rápido -->
              <a href="#" onclick="logout()" class="d-block text-center text-danger mt-3">
                 <span class="material-symbols-rounded">logout</span>
             </a>

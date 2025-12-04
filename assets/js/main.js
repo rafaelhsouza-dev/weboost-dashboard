@@ -32,10 +32,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Sidebar Toggle
     const sidebarToggle = document.getElementById('sidebarToggle');
+    const userAvatarCollapsed = document.getElementById('userAvatarCollapsed');
     const sidebar = document.querySelector('.sidebar');
     const mainContent = document.querySelector('.main-content');
-    const sidebarLogo = document.getElementById('sidebarLogo'); // Obter referência ao logo
-    const clientSelector = document.getElementById('clientSelector'); // Obter referência ao seletor de cliente
+    const sidebarLogo = document.getElementById('sidebarLogo');
+    const clientSelector = document.getElementById('clientSelector');
 
     if (clientSelector) {
         clientSelector.addEventListener('change', (event) => {
@@ -44,27 +45,42 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', () => {
-            if (window.innerWidth >= 992) {
-                // Desktop: Collapse/Expand
-                sidebar.classList.toggle('collapsed');
-                mainContent.classList.toggle('expanded');
+    const toggleSidebar = () => {
+        if (window.innerWidth >= 992) {
+            // Desktop: Collapse/Expand
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
 
-                // Lógica para trocar o logo
-                if (sidebar.classList.contains('collapsed')) {
-                    sidebarLogo.src = 'imgs/Icon-1.webp';
-                } else {
-                    sidebarLogo.src = 'imgs/WB-LOGO-WORDMARK@300x-1.webp';
-                }
-
-                // Trigger resize for charts
-                setTimeout(() => {
-                    window.dispatchEvent(new Event('resize'));
-                }, 300);
+            // Lógica para trocar o logo
+            if (sidebar.classList.contains('collapsed')) {
+                sidebarLogo.src = 'imgs/Icon-1.webp';
             } else {
-                // Mobile: Show/Hide
-                sidebar.classList.toggle('show');
+                sidebarLogo.src = 'imgs/WB-LOGO-WORDMARK@300x-1.webp';
+            }
+
+            // Trigger resize for charts
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+            }, 300);
+        } else {
+            // Mobile: Show/Hide
+            sidebar.classList.toggle('show');
+        }
+    };
+
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleSidebar();
+        });
+    }
+
+    if (userAvatarCollapsed) {
+        userAvatarCollapsed.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Apenas expande, não recolhe
+            if (sidebar.classList.contains('collapsed')) {
+                toggleSidebar();
             }
         });
     }
