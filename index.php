@@ -10,12 +10,12 @@ if ($currentView === 'admin') {
     include 'views/geral.php';
 } elseif ($currentView === 'list-customers') {
     include 'views/list-customers.php';
-} elseif ($currentView === 'crud-customer') {
-    include 'views/crud-customer.php';
-} elseif ($currentView === 'list-users') {
-    include 'views/list-users.php';
-} elseif ($currentView === 'crud-user') {
-    include 'views/crud-user.php';
+} elseif ($currentView === 'edit-customer') {
+    include 'views/edit-customer.php';
+} elseif ($currentView === 'list-utilizadores') {
+    include 'views/list-utilizadores.php';
+} elseif ($currentView === 'edit-user') {
+    include 'views/edit-user.php';
 } elseif ($currentView === 'view-customer') {
     include 'views/view-customer.php';
 } elseif ($currentView === 'settings-admin') {
