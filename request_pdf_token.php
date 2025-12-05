@@ -1,23 +1,31 @@
 <?php
 // request_pdf_token.php
 
-// Inicia a sessão para poder armazenar o token
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+// 1. Define o diretório de tokens e garante que ele exista
+$tokenDir = __DIR__ . '/pdf_tokens/';
+if (!is_dir($tokenDir)) {
+    mkdir($tokenDir, 0755, true);
 }
 
-// 1. Gera um token criptograficamente seguro
+// 2. Gera um token criptograficamente seguro
 $token = bin2hex(random_bytes(32));
 
-// 2. Armazena o token na sessão para validação posterior
-// Em um sistema real, você poderia associar este token a um ID de usuário ou URL específica
-// e definir um tempo de expiração.
-$_SESSION['pdf_access_token'] = $token;
+// 3. Cria um arquivo temporário com o nome do token.
+// O conteúdo pode ser o timestamp para validação de expiração futura.
+$tokenFilePath = $tokenDir . $token;
+file_put_contents($tokenFilePath, time());
 
-// 3. Define o cabeçalho da resposta para JSON
+// Limpa tokens com mais de 5 minutos (manutenção simples)
+foreach (glob($tokenDir . '*') as $file) {
+    if (filemtime($file) < time() - 300) {
+        unlink($file);
+    }
+}
+
+// 4. Define o cabeçalho da resposta para JSON
 header('Content-Type: application/json');
 
-// 4. Retorna o token para o cliente
+// 5. Retorna o token para o cliente
 echo json_encode(['token' => $token]);
 
 exit;

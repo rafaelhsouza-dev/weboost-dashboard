@@ -7,13 +7,21 @@ if (session_status() === PHP_SESSION_NONE) {
 // Flag para verificar se a visualização é para PDF
 $is_pdf_view = isset($_GET['pdf']) && $_GET['pdf'] == '1';
 
-// Flag para verificar se a requisição é autenticada para gerar PDF (via token de sessão de uso único)
+// Flag para verificar se a requisição é autenticada para gerar PDF (via token de arquivo de uso único)
 $is_authenticated_for_pdf = false;
-if ($is_pdf_view && isset($_GET['token']) && isset($_SESSION['pdf_access_token'])) {
-    if (hash_equals($_SESSION['pdf_access_token'], $_GET['token'])) {
-        $is_authenticated_for_pdf = true;
-        // Invalida o token após o uso para garantir que seja de uso único
-        unset($_SESSION['pdf_access_token']);
+if ($is_pdf_view && isset($_GET['token'])) {
+    $tokenDir = __DIR__ . '/../pdf_tokens/';
+    $tokenFile = $tokenDir . basename($_GET['token']); // basename() para segurança
+
+    // Verifica se o arquivo de token existe
+    if (file_exists($tokenFile)) {
+        // (Opcional) Verifica se o token não expirou (ex: 5 minutos)
+        if (filemtime($tokenFile) >= time() - 300) {
+            $is_authenticated_for_pdf = true;
+        }
+        
+        // Deleta o arquivo para que o token não possa ser reutilizado
+        unlink($tokenFile);
     }
 }
 
