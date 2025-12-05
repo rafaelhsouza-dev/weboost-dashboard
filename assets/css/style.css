@@ -597,3 +597,25 @@ a {
     justify-content: center;
     align-items: center;
 }
+
+/* --- PDF View Specific Styles --- */
+
+/* Garante que os contêineres dos gráficos tenham altura para renderizar */
+.pdf-view #salesChart,
+.pdf-view #visitorsChart {
+    min-height: 350px;
+}
+
+/* Oculta elementos interativos desnecessários na visualização de PDF */
+.pdf-view .btn,
+.pdf-view .dropdown,
+.pdf-view #datePresetPicker,
+.pdf-view input[type="datetime-local"],
+.pdf-view .form-select {
+    display: none !important;
+}
+
+/* Garante que o título do card ainda apareça, mesmo que estivesse em um flex com um dropdown */
+.pdf-view .card-header h5 {
+    width: 100%;
+}
