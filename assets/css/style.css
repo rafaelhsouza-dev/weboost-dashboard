@@ -66,7 +66,7 @@ a {
     color: var(--primary-color);
     text-decoration: none;
 }
-select, .form-check-input[type=text] {
+select, .form-check-input[type=text], .form-check-input[type=date] {
     min-height: 40px !important;
     max-height: 40px !important;
 }
