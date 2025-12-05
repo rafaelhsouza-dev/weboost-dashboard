@@ -67,14 +67,16 @@ a {
     text-decoration: none;
 }
 select, input {
-    min-height: 45px !important;
+    min-height: 30px !important;
+    max-height: 30px !important;
 }
 .btn-outline-primary {
     color: var(--primary-color);
     border-color: var(--primary-color);
 }
 button#datePresetPicker {
-    min-height: 45px !important;
+    min-height: 30px !important;
+    max-height: 30px !important;
 }
 
 /* Card Styles */
