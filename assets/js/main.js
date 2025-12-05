@@ -173,10 +173,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // PDF Export Logic (Clone Method)
+    // PDF Export Logic (Refactored)
     const exportPdfBtn = document.getElementById('exportPdfBtn');
     if (exportPdfBtn) {
-        exportPdfBtn.addEventListener('click', function (e) {
+        exportPdfBtn.addEventListener('click', async function (e) {
             e.preventDefault();
 
             const btn = this;
@@ -189,87 +189,108 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             // 1. Indicate loading state
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-            btn.classList.add('disabled');
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Gerando...';
+            btn.disabled = true;
 
-            // 2. Create a hidden container for the clone
+            // 2. Create a temporary, off-screen container for the clone
             const pdfContainer = document.createElement('div');
-            pdfContainer.id = 'pdf-container';
+            pdfContainer.style.position = 'fixed';
+            pdfContainer.style.left = '-9999px'; // Move it off-screen
+            pdfContainer.style.top = '0';
+            pdfContainer.style.width = '1120px'; // A4 paper width at 96 DPI is ~794px, giving more room to avoid squeezing
+            pdfContainer.style.height = 'auto';
+            pdfContainer.style.background = 'white';
+            pdfContainer.style.padding = '20px'; // Add padding for aesthetics
             document.body.appendChild(pdfContainer);
 
-            // 3. Clone the content and force light theme
+            // 3. Clone the content, force light theme and append
             const contentClone = sourceContent.cloneNode(true);
-            contentClone.classList.add('pdf-export');
-			contentClone.setAttribute('data-theme', 'light'); // Force light theme on the clone
-            contentClone.style.padding = '1.5rem'; // Add some padding for aesthetics
+            contentClone.setAttribute('data-theme', 'light');
+            contentClone.classList.add('pdf-export'); // A class for any specific PDF styles
             pdfContainer.appendChild(contentClone);
 
-            // 4. Re-render charts within the CLONE
-            try {
-                const originalSalesChartEl = document.querySelector('#salesChart');
-                const clonedSalesChartEl = contentClone.querySelector('#salesChart');
-                if (originalSalesChartEl && clonedSalesChartEl && typeof salesChart !== 'undefined') {
-                    let clonedSalesOptions = JSON.parse(JSON.stringify(salesChart.w.globals.initialOptions));
-                    clonedSalesOptions.chart.background = '#ffffff';
-                    clonedSalesOptions.tooltip.theme = 'light';
-                    clonedSalesOptions.xaxis.labels.style.colors = '#212529';
-                    clonedSalesOptions.yaxis.labels.style.colors = '#212529';
-                    clonedSalesOptions.grid.borderColor = '#e9ecef';
-                    new ApexCharts(clonedSalesChartEl, clonedSalesOptions).render();
+            // 4. Function to re-render a chart in the clone
+            const renderClonedChart = async (originalChart, selector) => {
+                const clonedEl = contentClone.querySelector(selector);
+                if (originalChart && clonedEl) {
+                    // Deep copy options and force light theme
+                    const clonedOptions = JSON.parse(JSON.stringify(originalChart.w.globals.initialOptions));
+                    clonedOptions.chart.background = '#ffffff';
+                    clonedOptions.theme = { mode: 'light' };
+                    clonedOptions.tooltip = { theme: 'light' };
+                    const textColor = '#212529';
+                    clonedOptions.xaxis.labels.style.colors = textColor;
+                    clonedOptions.yaxis.labels.style.colors = textColor;
+                    clonedOptions.grid.borderColor = '#e9ecef';
+                    if (clonedOptions.legend && clonedOptions.legend.labels) {
+                        clonedOptions.legend.labels.colors = textColor;
+                    }
+                    
+                    const chart = new ApexCharts(clonedEl, clonedOptions);
+                    await chart.render();
+                    return chart;
                 }
-                
-                const originalVisitorsChartEl = document.querySelector('#visitorsChart');
-                const clonedVisitorsChartEl = contentClone.querySelector('#visitorsChart');
-                if (originalVisitorsChartEl && clonedVisitorsChartEl && typeof visitorsChart !== 'undefined') {
-                    let clonedVisitorsOptions = JSON.parse(JSON.stringify(visitorsChart.w.globals.initialOptions));
-                    clonedVisitorsOptions.chart.background = '#ffffff';
-                    clonedVisitorsOptions.theme.mode = 'light';
-                    clonedVisitorsOptions.legend.labels.colors = '#212529';
-                    new ApexCharts(clonedVisitorsChartEl, clonedVisitorsOptions).render();
-                }
-            } catch (err) {
-                console.error("Erro ao clonar gráficos:", err);
-            }
-
-            const pageBreak = document.createElement('div');
-            pageBreak.classList.add('page-break');
-            contentClone.appendChild(pageBreak);
-
-            // 5. Generate PDF from the clone
-            const pdfOptions = {
-                margin: 0,
-                filename: `relatorio-weboost-${new Date().toISOString().slice(0, 10)}.pdf`,
-                image: {type: 'jpeg', quality: 0.98},
-                html2canvas: {
-                    scale: 2,
-                    useCORS: true,
-                    letterRendering: true
-                },
-                jsPDF: {unit: 'in', format: 'a4', orientation: 'portrait'},
-                pagebreak: {mode: ['avoid-all', 'css', 'legacy']},
-                enableLinks: true
+                return null;
             };
 
-            // Delay to allow cloned charts to render
-            setTimeout(() => {
-                html2pdf().from(contentClone).set(pdfOptions).toPdf().get('pdf').then(function (pdf) {
-                    const pageCount = pdf.internal.getNumberOfPages();
-                    const pageWidth = pdf.internal.pageSize.getWidth();
-                    const pageHeight = pdf.internal.pageSize.getHeight();
-                    pdf.setFontSize(10);
-                    pdf.setTextColor(100);
-                    for (let i = 1; i <= pageCount; i++) {
-                        pdf.setPage(i);
-                        pdf.text('Relatório Confidencial - Weboost', pageWidth / 2, 0.3, { align: 'center' });
-                        pdf.text(`Página ${i} de ${pageCount}`, pageWidth / 2, pageHeight - 0.5, { align: 'center' });
-                    }
-                }).save().finally(() => {
-                    // 6. Cleanup
-                    document.body.removeChild(pdfContainer);
-                    btn.innerHTML = originalBtnHTML;
-                    btn.classList.remove('disabled');
-                });
-            }, 1000);
+            // Re-render all charts and wait for them
+            try {
+                // Ensure the global chart variables exist
+                if (typeof salesChart !== 'undefined') {
+                    await renderClonedChart(salesChart, '#salesChart');
+                }
+                if (typeof visitorsChart !== 'undefined') {
+                     await renderClonedChart(visitorsChart, '#visitorsChart');
+                }
+            } catch (err) {
+                console.error("Erro ao clonar gráficos para o PDF:", err);
+                // Cleanup and exit if charts fail
+                document.body.removeChild(pdfContainer);
+                btn.innerHTML = originalBtnHTML;
+                btn.disabled = false;
+                alert('Ocorreu um erro ao gerar os gráficos para o PDF.');
+                return;
+            }
+            
+            // 5. Generate PDF from the prepared clone
+            const pdfOptions = {
+                margin: [0.4, 0.4, 0.6, 0.4], // top, left, bottom, right in inches
+                filename: `relatorio-weboost-${new Date().toISOString().slice(0, 10)}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 2, // Higher scale for better quality
+                    useCORS: true,
+                    letterRendering: true,
+                    scrollX: 0,
+                    scrollY: -window.scrollY,
+                    windowWidth: pdfContainer.scrollWidth,
+                    windowHeight: pdfContainer.scrollHeight
+                },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+                pagebreak: { mode: 'css', before: '.page-break' }
+            };
+
+            html2pdf().from(contentClone).set(pdfOptions).toPdf().get('pdf').then(function (pdf) {
+                const pageCount = pdf.internal.getNumberOfPages();
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                pdf.setFontSize(8);
+                pdf.setTextColor('#6c757d');
+
+                for (let i = 1; i <= pageCount; i++) {
+                    pdf.setPage(i);
+                    // Header
+                    pdf.text('Relatório Confidencial - Weboost', pageWidth / 2, 0.25, { align: 'center' });
+                    // Footer
+                    const footerText = `Página ${i} de ${pageCount}`;
+                    pdf.text(footerText, pageWidth / 2, pageHeight - 0.35, { align: 'center' });
+                }
+            }).save().finally(() => {
+                // 6. Cleanup
+                document.body.removeChild(pdfContainer);
+                btn.innerHTML = originalBtnHTML;
+                btn.disabled = false;
+            });
         });
     }
 
