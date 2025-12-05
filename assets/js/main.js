@@ -5,18 +5,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // Theme Toggle
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
-    const icon = themeToggle.querySelector('span');
+    
+    // Verifica se themeToggle existe antes de tentar acessá-lo
+    if (themeToggle) {
+        const icon = themeToggle.querySelector('span');
 
-    // Check local storage
-    const currentTheme = localStorage.getItem('theme');
-    if (currentTheme) {
-        body.setAttribute('data-theme', currentTheme);
-        if (currentTheme === 'dark') {
-            icon.textContent = 'light_mode';
+        // Check local storage
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            body.setAttribute('data-theme', currentTheme);
+            if (currentTheme === 'dark') {
+                icon.textContent = 'light_mode';
+            }
         }
-    }
 
-    if(themeToggle) {
         themeToggle.addEventListener('click', () => {
             if (body.getAttribute('data-theme') === 'dark') {
                 body.setAttribute('data-theme', 'light');
