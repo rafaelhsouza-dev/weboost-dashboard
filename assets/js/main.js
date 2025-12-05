@@ -189,13 +189,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 dashboardUrl.searchParams.set('token', window.pdfAccessToken);
             }
 
-            // 2. Codificar a URL para ser usada como parâmetro
-            const encodedUrl = encodeURIComponent(dashboardUrl.toString());
-
-            // 3. Construir a URL final da API
+            // 2. Construir a URL final da API, deixando URLSearchParams cuidar da codificação
             const apiBaseUrl = 'https://api.weboost.pt/puppeteer/pdf';
             const apiParams = new URLSearchParams({
-                url: encodedUrl,
+                url: dashboardUrl.toString(), // Passar a URL literal diretamente
                 format: 'A4',
                 landscape: 'false',
                 margin_top: '10mm',
@@ -206,8 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const finalApiUrl = `${apiBaseUrl}?${apiParams.toString()}`;
 
-            // 4. Redirecionar para a API para baixar o PDF
-            // Abrir em uma nova aba é mais amigável
+            // 3. Redirecionar para a API para baixar o PDF
             window.open(finalApiUrl, '_blank');
         });
     }
