@@ -44,6 +44,8 @@ include 'includes/config.php';
             include 'views/admin.php';
         } elseif ($currentView === 'geral') {
             include 'views/geral.php';
+        } elseif ($currentView === 'create-customer') {
+            include 'views/create-customer.php';
         } else { // Para qualquer cliente
             include 'views/cliente.php';
         }

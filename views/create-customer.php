@@ -1,64 +1,43 @@
 <?php
-require_once '../includes/config.php';
-require_once '../includes/header.php';
-require_once '../includes/menu-admin.php'; // Assuming this is an admin function
-
-// Placeholder for handling form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Basic sanitization and validation (more robust validation needed in a real application)
-    $nome_empresa = filter_input(INPUT_POST, 'nome_empresa', FILTER_SANITIZE_STRING);
-    $pessoa_contacto = filter_input(INPUT_POST, 'pessoa_contacto', FILTER_SANITIZE_STRING);
+// Mock-only: handle POST and show a confirmation alert on the page (no persistence)
+$formSubmitted = false;
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Basic sanitization (demonstrative)
+    $nome_empresa = filter_input(INPUT_POST, 'nome_empresa', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $pessoa_contacto = filter_input(INPUT_POST, 'pessoa_contacto', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $email_contacto = filter_input(INPUT_POST, 'email_contacto', FILTER_SANITIZE_EMAIL);
-    $telefone_contacto = filter_input(INPUT_POST, 'telefone_contacto', FILTER_SANITIZE_STRING);
-    $nif = filter_input(INPUT_POST, 'nif', FILTER_SANITIZE_STRING);
-    $morada_empresa = filter_input(INPUT_POST, 'morada_empresa', FILTER_SANITIZE_STRING);
+    $telefone_contacto = filter_input(INPUT_POST, 'telefone_contacto', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $nif = filter_input(INPUT_POST, 'nif', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $morada_empresa = filter_input(INPUT_POST, 'morada_empresa', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $website_empresa = filter_input(INPUT_POST, 'website_empresa', FILTER_SANITIZE_URL);
-    $setor_atividade = filter_input(INPUT_POST, 'setor_atividade', FILTER_SANITIZE_STRING);
+    $setor_atividade = filter_input(INPUT_POST, 'setor_atividade', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $servicos = filter_input(INPUT_POST, 'servicos', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: [];
-    $observacoes = filter_input(INPUT_POST, 'observacoes', FILTER_SANITIZE_STRING);
-
-    // For demonstration, just print the collected data
-    echo "<script>alert('Dados recebidos:\nEmpresa: {$nome_empresa}\nContacto: {$pessoa_contacto}\nEmail: {$email_contacto}\nTelefone: {$telefone_contacto}\nNIF: {$nif}\nMorada: {$morada_empresa}\nWebsite: {$website_empresa}\nSetor: {$setor_atividade}\nServiços: " . implode(', ', $servicos) . "\nObservações: {$observacoes}');</script>";
-
-    // In a real application, you would save this to a database
-    // For example:
-    // $stmt = $pdo->prepare("INSERT INTO clientes (...) VALUES (...)");
-    // $stmt->execute([...]);
+    $observacoes = filter_input(INPUT_POST, 'observacoes', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $formSubmitted = true;
 }
 ?>
 
-<div class="main-content">
-    <div class="top-header">
-        <div class="hamburger-menu" id="sidebarToggle">
-            <i class="material-symbols-rounded">menu</i>
-        </div>
-        <div class="page-title">
-            <h2>Criar Novo Cliente</h2>
-        </div>
-        <div class="header-actions">
-            <!-- Header actions can go here -->
-            <button class="theme-toggle" id="themeToggle">
-                <span class="material-symbols-rounded">dark_mode</span>
-            </button>
-            <div class="user-info">
-                <img src="https://via.placeholder.com/40" alt="User Avatar" class="user-avatar">
-            </div>
-        </div>
-    </div>
-
-    <div class="content-wrapper">
-        <div class="card">
-            <div class="card-header">
-                <h3>Formulário de Registo de Cliente</h3>
-            </div>
-            <div class="card-body">
-                <form action="create-customer.php" method="POST">
-                    <div class="row g-3">
-                        <!-- Informações Básicas -->
-                        <div class="col-md-6">
-                            <label for="nome_empresa" class="form-label">Nome da Empresa</label>
-                            <input type="text" class="form-control" id="nome_empresa" name="nome_empresa" placeholder="Nome completo da empresa" required>
+<!-- Inner view content -->
+<div class="container-fluid p-0" id="viewContent">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Criar Novo Cliente</h5>
+                </div>
+                <div class="card-body">
+                    <?php if (!empty($formSubmitted)): ?>
+                        <div class="alert alert-success" role="alert">
+                            Cliente mockado registado com sucesso! (Sem gravação em base de dados)
                         </div>
+                    <?php endif; ?>
+                    <form action="" method="POST">
+                        <div class="row g-3">
+                            <!-- Informações Básicas -->
+                            <div class="col-md-6">
+                                <label for="nome_empresa" class="form-label">Nome da Empresa</label>
+                                <input type="text" class="form-control" id="nome_empresa" name="nome_empresa" placeholder="Nome completo da empresa" required>
+                            </div>
                         <div class="col-md-6">
                             <label for="pessoa_contacto" class="form-label">Pessoa de Contacto</label>
                             <input type="text" class="form-control" id="pessoa_contacto" name="pessoa_contacto" placeholder="Nome da pessoa de contacto" required>
@@ -133,13 +112,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Registar Cliente</button>
                         </div>
+                        
+                        <!-- Ajuda futura: integração com API -->
+                        <div class="col-12">
+                            <small class="text-muted">Este formulário é mockado e futuramente será integrado a uma API.</small>
+                        </div>
                     </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-<?php
-require_once '../includes/footer.php';
-?>

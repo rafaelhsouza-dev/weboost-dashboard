@@ -192,26 +192,41 @@ document.addEventListener('DOMContentLoaded', function () {
             btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Gerando...';
             btn.disabled = true;
 
-            // 2. Create a temporary, off-screen container for the clone
+            // 2. Create a temporary, in-DOM hidden container for the clone
             const pdfContainer = document.createElement('div');
-            pdfContainer.style.position = 'fixed';
-            pdfContainer.style.left = '-9999px'; // Move it off-screen
+            // Keep it in the normal flow (absolute) but hidden to ensure proper sizing for charts/canvases
+            pdfContainer.style.position = 'absolute';
+            pdfContainer.style.left = '0';
             pdfContainer.style.top = '0';
-            pdfContainer.setAttribute('data-theme', 'light'); // Force light theme on the container
-            pdfContainer.style.background = 'white';
-            pdfContainer.style.padding = '20px'; // Add padding for aesthetics
+            pdfContainer.style.visibility = 'hidden';
+            pdfContainer.style.zIndex = '-1';
+            // Force light appearance
+            pdfContainer.setAttribute('data-theme', 'light');
+            pdfContainer.style.background = '#ffffff';
+            pdfContainer.style.padding = '20px';
+            // Match source content width to avoid clipping and reflows
+            const contentWidth = sourceContent.scrollWidth || sourceContent.offsetWidth || 1024;
+            pdfContainer.style.width = contentWidth + 'px';
             document.body.appendChild(pdfContainer);
 
             // 3. Clone the content and append
             const contentClone = sourceContent.cloneNode(true);
-            // contentClone.setAttribute('data-theme', 'light'); // Redundant if parent container has it
-            // contentClone.classList.add('pdf-export'); // No longer needed, as we control sizing via html2pdf options
+            // Add a helper class to force light styles in CSS
+            contentClone.classList.add('pdf-export');
             pdfContainer.appendChild(contentClone);
 
             // 4. Function to re-render a chart in the clone
             const renderClonedChart = async (originalChart, selector) => {
                 const clonedEl = contentClone.querySelector(selector);
                 if (originalChart && clonedEl) {
+                    // Ensure cloned chart container has a width similar to the original
+                    const origEl = document.querySelector(selector);
+                    if (origEl) {
+                        const computed = getComputedStyle(origEl);
+                        clonedEl.style.width = origEl.clientWidth + 'px';
+                        clonedEl.style.height = origEl.clientHeight + 'px';
+                        clonedEl.style.maxWidth = computed.maxWidth;
+                    }
                     // Deep copy options and force light theme
                     const clonedOptions = JSON.parse(JSON.stringify(originalChart.w.globals.initialOptions));
                     clonedOptions.chart.background = '#ffffff';
@@ -235,6 +250,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 return null;
             };
 
+            // Helper: wait for all images inside the cloned content to load
+            const waitForImages = async (rootEl) => {
+                const imgs = Array.from(rootEl.querySelectorAll('img'));
+                await Promise.all(imgs.map(img => {
+                    return new Promise(resolve => {
+                        if (img.complete && img.naturalWidth !== 0) return resolve();
+                        img.addEventListener('load', () => resolve(), { once: true });
+                        img.addEventListener('error', () => resolve(), { once: true });
+                    });
+                }));
+            };
+
             // Re-render all charts and wait for them
             try {
                 // Ensure the global chart variables exist
@@ -244,6 +271,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (typeof visitorsChart !== 'undefined') {
                      await renderClonedChart(visitorsChart, '#visitorsChart');
                 }
+                // Ensure images are loaded
+                await waitForImages(contentClone);
             } catch (err) {
                 console.error("Erro ao clonar gráficos para o PDF:", err);
                 // Cleanup and exit if charts fail
@@ -263,7 +292,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     scale: 2, // Higher scale for better quality
                     useCORS: true,
                     letterRendering: true,
-                    // Remove explicit windowWidth/Height, scrollX/Y - let html2pdf manage for better fitting
+                    backgroundColor: '#ffffff',
+                    windowWidth: contentWidth
                 },
                 jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
                 pagebreak: { mode: 'css', before: '.page-break' }
