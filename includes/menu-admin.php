@@ -1,16 +1,16 @@
 <?php
-// Garantir que $currentView esteja definido (vindo de includes/config.php)
-if (!isset($currentView)) { $currentView = 'admin'; }
+// Garantir que $menuContext esteja definido (vindo de includes/config.php)
+if (!isset($menuContext)) { $menuContext = 'admin'; }
 ?>
-<a href="index.php?view=admin" class="menu-item <?php echo ($currentView === 'admin') ? 'active' : ''; ?>">
+<a href="index.php?view=list-users" class="menu-item <?php echo ($menuContext === 'admin' && !in_array($currentView, ['list-customers', 'crud-customer'])) ? 'active' : ''; ?>">
     <span class="material-symbols-rounded">shield_person</span>
     <span>Usuários</span>
-    </a>
-<a href="index.php?view=list-customers" class="menu-item <?php echo ($currentView === 'list-customers') ? 'active' : ''; ?>">
+</a>
+<a href="index.php?view=list-customers" class="menu-item <?php echo (in_array($currentView, ['list-customers', 'crud-customer'])) ? 'active' : ''; ?>">
     <span class="material-symbols-rounded">person</span>
     <span>Clientes</span>
-    </a>
+</a>
 <a href="#" class="menu-item">
     <span class="material-symbols-rounded">settings</span>
     <span>Configurações</span>
-    </a>
+</a>

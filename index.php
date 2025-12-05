@@ -10,8 +10,12 @@ if ($currentView === 'admin') {
     include 'views/geral.php';
 } elseif ($currentView === 'list-customers') {
     include 'views/list-customers.php';
-} elseif ($currentView === 'create-customer') {
-    include 'views/create-customer.php';
+} elseif ($currentView === 'crud-customer') {
+    include 'views/crud-customer.php';
+} elseif ($currentView === 'list-users') {
+    include 'views/list-users.php';
+} elseif ($currentView === 'crud-user') {
+    include 'views/crud-user.php';
 } else { // Para qualquer cliente
     include 'views/cliente.php';
 }
