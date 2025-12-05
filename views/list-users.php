@@ -2,9 +2,9 @@
 <?php
 // Dados Mockados para Usuários
 $users = [
-    ['id' => 1, 'name' => 'Rafael Souza', 'email' => 'rafael.souza@weboost.pt', 'role' => 'Admin'],
-    ['id' => 2, 'name' => 'Carla Mendes', 'email' => 'carla.mendes@weboost.pt', 'role' => 'Gestor de Projetos'],
-    ['id' => 3, 'name' => 'Pedro Alves', 'email' => 'pedro.alves@weboost.pt', 'role' => 'Analista de SEO'],
+    ['id' => 1, 'name' => 'Rafael Souza', 'email' => 'rafael.souza@weboost.pt', 'role' => 'Admin', 'status' => 'Ativo'],
+    ['id' => 2, 'name' => 'Carla Mendes', 'email' => 'carla.mendes@weboost.pt', 'role' => 'Gestor de Projetos', 'status' => 'Ativo'],
+    ['id' => 3, 'name' => 'Pedro Alves', 'email' => 'pedro.alves@weboost.pt', 'role' => 'Analista de SEO', 'status' => 'Inativo'],
 ];
 ?>
 
@@ -37,11 +37,18 @@ $users = [
                             <th scope="col">Nome</th>
                             <th scope="col">Email</th>
                             <th scope="col">Cargo</th>
+                            <th scope="col">Status</th>
                             <th scope="col" class="text-end">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($users as $user): ?>
+                        <?php foreach ($users as $user): 
+                            $status_class = '';
+                            switch ($user['status']) {
+                                case 'Ativo': $status_class = 'text-success'; break;
+                                case 'Inativo': $status_class = 'text-danger'; break;
+                            }
+                        ?>
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center">
@@ -53,9 +60,9 @@ $users = [
                             </td>
                             <td><?php echo htmlspecialchars($user['email']); ?></td>
                             <td><?php echo htmlspecialchars($user['role']); ?></td>
+                            <td><span class="fw-bold <?php echo $status_class; ?>"><?php echo htmlspecialchars($user['status']); ?></span></td>
                             <td class="text-end">
-                                <a href="index.php?view=crud-user&id=<?php echo $user['id']; ?>" class="text-body p-2" title="Editar"><span class="material-symbols-rounded">edit</span></a>
-                                <a href="#" class="text-body p-2" title="Deletar" data-id="<?php echo $user['id']; ?>"><span class="material-symbols-rounded">delete</span></a>
+                                <a href="index.php?view=crud-user&id=<?php echo $user['id']; ?>" class="action-icon p-2" title="Editar"><span class="material-symbols-rounded">edit</span></a>
                             </td>
                         </tr>
                         <?php endforeach; ?>

@@ -95,6 +95,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 </select>
                             </div>
 
+                            <!-- Status do Cliente -->
+                            <div class="col-md-6">
+                                <label class="form-label">Status</label>
+                                <div class="d-flex">
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="radio" name="status" id="status_ativo" value="Ativo" <?php echo (($customer['status'] ?? 'Ativo') === 'Ativo') ? 'checked' : ''; ?>>
+                                        <label class="form-check-label" for="status_ativo">Ativo</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="status" id="status_inativo" value="Inativo" <?php echo (($customer['status'] ?? '') === 'Inativo') ? 'checked' : ''; ?>>
+                                        <label class="form-check-label" for="status_inativo">Inativo</label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Serviços Contratados -->
                             <div class="col-12">
                                 <label class="form-label">Serviços de Interesse</label>
@@ -121,9 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <!-- Botões de Ação -->
                             <div class="col-12 d-flex align-items-center">
                                 <button type="submit" class="btn btn-primary me-3"><?php echo $submitButtonText; ?></button>
-                                <?php if ($isEditing): ?>
-                                    <button type="button" class="btn btn-danger">Deletar Cliente</button>
-                                <?php endif; ?>
+                                <a href="index.php?view=list-customers" class="btn btn-secondary">Cancelar</a>
                             </div>
                         </div>
                     </form>

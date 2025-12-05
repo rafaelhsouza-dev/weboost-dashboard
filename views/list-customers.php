@@ -79,9 +79,8 @@
                             <td><?php echo htmlspecialchars($customer['email']); ?></td>
                             <td><span class="fw-bold <?php echo $status_class; ?>"><?php echo htmlspecialchars($customer['status']); ?></span></td>
                             <td class="text-end">
-                                <a href="index.php?view=cliente_<?php echo $customer['id']; ?>" class="text-body p-2" title="Visualizar"><span class="material-symbols-rounded">visibility</span></a>
-                                <a href="index.php?view=crud-customer&id=<?php echo $customer['id']; ?>" class="text-body p-2" title="Editar"><span class="material-symbols-rounded">edit</span></a>
-                                <a href="#" class="text-body p-2" title="Deletar" data-id="<?php echo $customer['id']; ?>"><span class="material-symbols-rounded">delete</span></a>
+                                <a href="index.php?view=cliente_<?php echo $customer['id']; ?>" class="action-icon p-2" title="Visualizar"><span class="material-symbols-rounded">visibility</span></a>
+                                <a href="index.php?view=crud-customer&id=<?php echo $customer['id']; ?>" class="action-icon p-2" title="Editar"><span class="material-symbols-rounded">edit</span></a>
                             </td>
                         </tr>
                         <?php endforeach; ?>

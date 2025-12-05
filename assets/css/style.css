@@ -619,3 +619,43 @@ a {
 .pdf-view .card-header h5 {
     width: 100%;
 }
+/* --- Estilos Adicionais para Polimento --- */
+
+/* Estilo para ícones de ação (Visualizar, Editar) */
+.action-icon {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.action-icon:hover {
+    color: var(--primary-color);
+}
+
+/* Garante que o cabeçalho da tabela no modo escuro tenha a cor de texto correta */
+[data-theme="dark"] .table > thead {
+    --bs-table-color: var(--text-main);
+}
+
+
+
+/* --- Estilos Adicionais para Polimento (Adicionado em 05/12) --- */
+
+/* Estilo para ícones de ação (Visualizar, Editar) para respeitar temas */
+.action-icon {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+    vertical-align: middle; /* Alinha melhor os ícones com o texto */
+}
+
+.action-icon:hover {
+    color: var(--primary-color);
+}
+
+/* Garante que o cabeçalho da tabela no modo escuro tenha a cor de texto correta */
+[data-theme="dark"] .table > thead {
+    --bs-table-color: var(--text-main);
+    border-color: var(--border-color);
+}
+

@@ -66,6 +66,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                     ?>
                                 </select>
                             </div>
+                             <div class="col-12">
+                                <label class="form-label">Status</label>
+                                <div class="d-flex">
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="radio" name="status" id="status_ativo" value="Ativo" <?php echo (($user['status'] ?? 'Ativo') === 'Ativo') ? 'checked' : ''; ?>>
+                                        <label class="form-check-label" for="status_ativo">Ativo</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="status" id="status_inativo" value="Inativo" <?php echo (($user['status'] ?? '') === 'Inativo') ? 'checked' : ''; ?>>
+                                        <label class="form-check-label" for="status_inativo">Inativo</label>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-12">
                                 <label for="user_password" class="form-label"><?php echo $isEditing ? 'Nova Senha (deixe em branco para não alterar)' : 'Senha'; ?></label>
                                 <input type="password" class="form-control" id="user_password" name="user_password" <?php echo !$isEditing ? 'required' : ''; ?>>
@@ -74,9 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <!-- Botões de Ação -->
                             <div class="col-12 d-flex align-items-center mt-4">
                                 <button type="submit" class="btn btn-primary me-3"><?php echo $submitButtonText; ?></button>
-                                <?php if ($isEditing): ?>
-                                    <button type="button" class="btn btn-danger">Deletar Usuário</button>
-                                <?php endif; ?>
+                                <a href="index.php?view=list-users" class="btn btn-secondary">Cancelar</a>
                             </div>
                         </div>
                     </form>
