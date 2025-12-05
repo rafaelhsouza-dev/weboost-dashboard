@@ -1,8 +1,21 @@
 <?php
-// As variáveis de configuração ($currentView, $clientNames, etc.) agora vêm de includes/config.php
+// As variáveis de configuração ($currentView, $menuContext, $clientNames, $viewTitles) vêm de includes/config.php
+// Define defaults para evitar avisos caso este arquivo seja usado fora do index.php
+if (!isset($currentView)) { $currentView = 'geral'; }
+if (!isset($menuContext)) { $menuContext = $currentView; }
+if (!isset($clientNames) || !is_array($clientNames)) {
+    $clientNames = [
+        'geral' => 'Geral',
+        'admin' => 'Administração',
+        'cliente_a' => 'Cliente A',
+        'cliente_b' => 'Cliente B',
+        'cliente_c' => 'Cliente C',
+    ];
+}
+if (!isset($viewTitles) || !is_array($viewTitles)) { $viewTitles = []; }
 
-// Define o título baseado no view atual
-$headerTitle = ($clientNames[$currentView] ?? 'Visão Geral');
+// Define o título baseado no view atual, com fallback para o contexto do menu
+$headerTitle = $viewTitles[$currentView] ?? ($clientNames[$menuContext] ?? 'Visão Geral');
 ?>
 <!-- Top Header -->
 <header class="top-header">

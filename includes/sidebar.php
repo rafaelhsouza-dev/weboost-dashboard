@@ -1,5 +1,17 @@
 <?php
-// As variáveis $currentView e $clientNames agora vêm de includes/config.php (incluído no index.php)
+// As variáveis $currentView, $menuContext e $clientNames vêm de includes/config.php (incluído no index.php)
+// Define defaults para evitar avisos caso este arquivo seja usado fora do index.php
+if (!isset($currentView)) { $currentView = 'geral'; }
+if (!isset($menuContext)) { $menuContext = $currentView; }
+if (!isset($clientNames) || !is_array($clientNames)) {
+    $clientNames = [
+        'geral' => 'Geral',
+        'admin' => 'Administração',
+        'cliente_a' => 'Cliente A',
+        'cliente_b' => 'Cliente B',
+        'cliente_c' => 'Cliente C',
+    ];
+}
 ?>
 <!-- Sidebar -->
 <aside class="sidebar">
@@ -12,7 +24,7 @@
     <div class="p-3">
         <select id="clientSelector" class="form-select">
             <?php foreach ($clientNames as $value => $name): ?>
-                <option value="<?php echo $value; ?>" <?php echo ($currentView === $value) ? 'selected' : ''; ?>>
+                <option value="<?php echo $value; ?>" <?php echo ($menuContext === $value) ? 'selected' : ''; ?>>
                     <?php echo $name; ?>
                 </option>
             <?php endforeach; ?>
@@ -21,9 +33,10 @@
 
     <div class="sidebar-menu">
         <?php
-        if ($currentView === 'admin') {
+        // Usa o contexto de menu efetivo para manter a hierarquia ao entrar em subpáginas
+        if ($menuContext === 'admin') {
             include 'menu-admin.php';
-        } elseif ($currentView === 'geral') {
+        } elseif ($menuContext === 'geral') {
             include 'menu-geral.php';
         } else { // Qualquer outro valor (cliente_a, cliente_b, etc.) usa o menu de cliente
             include 'menu-client.php';

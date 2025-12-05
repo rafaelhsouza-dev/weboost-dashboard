@@ -17,4 +17,18 @@ $clientNames = [
     'cliente_b' => 'Cliente B',
     'cliente_c' => 'Cliente C',
 ];
+
+// Define o contexto do menu para subviews que pertencem a uma seção específica
+// Assim, quando estivermos em "create-customer", continuamos com o menu de "admin" ativo
+$viewContextMap = [
+    'create-customer' => 'admin',
+];
+
+// Contexto efetivo para menu/seleção de cliente e título
+$menuContext = $viewContextMap[$currentView] ?? $currentView;
+
+// Títulos específicos por subview (opcional)
+$viewTitles = [
+    'create-customer' => 'Administração / Novo Cliente',
+];
 ?>

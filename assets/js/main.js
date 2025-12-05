@@ -192,14 +192,15 @@ document.addEventListener('DOMContentLoaded', function () {
             btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Gerando...';
             btn.disabled = true;
 
-            // 2. Create a temporary, in-DOM hidden container for the clone
+            // 2. Create a temporary, in-DOM container for the clone (kept visible but transparent for correct sizing)
             const pdfContainer = document.createElement('div');
-            // Keep it in the normal flow (absolute) but hidden to ensure proper sizing for charts/canvases
+            // Keep it in the normal flow for proper sizing of charts/canvases
             pdfContainer.style.position = 'absolute';
             pdfContainer.style.left = '0';
             pdfContainer.style.top = '0';
-            pdfContainer.style.visibility = 'hidden';
-            pdfContainer.style.zIndex = '-1';
+            // Keep visible for layout, but fully transparent and non-interactive
+            pdfContainer.style.opacity = '0.01';
+            pdfContainer.style.pointerEvents = 'none';
             // Force light appearance
             pdfContainer.setAttribute('data-theme', 'light');
             pdfContainer.style.background = '#ffffff';
@@ -296,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     windowWidth: contentWidth
                 },
                 jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
-                pagebreak: { mode: 'css', before: '.page-break' }
+                pagebreak: { mode: ['css', 'legacy'], before: '.page-break' }
             };
 
             html2pdf().from(contentClone).set(pdfOptions).toPdf().get('pdf').then(function (pdf) {
