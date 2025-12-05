@@ -66,6 +66,9 @@ a {
     color: var(--primary-color);
     text-decoration: none;
 }
+select, input {
+    min-height: 45px !important;
+}
 
 /* Card Styles */
 .card {

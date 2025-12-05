@@ -150,7 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                     </div>
                                     <div class="col-md-6" id="detalhes-origem-container">
                                         <!-- Dynamic origin details here -->
-                                        <div id="detalhes-origem" class="mt-2"></div>
+                                        <div id="detalhes-origem"></div>
                                     </div>
                                 </div>
                             </div>
