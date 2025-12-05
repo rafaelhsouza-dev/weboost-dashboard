@@ -69,6 +69,10 @@ a {
 select, input {
     min-height: 45px !important;
 }
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
 
 /* Card Styles */
 .card {
