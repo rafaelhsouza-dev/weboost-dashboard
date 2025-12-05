@@ -14,7 +14,7 @@
     <span class="material-symbols-rounded">campaign</span>
     <span>Campaigns</span>
 </a>
-<a href="index.php?view=settings" class="menu-item <?php echo ($currentView === 'settings') ? 'active' : ''; ?>">
+<a href="index.php?view=settings-client" class="menu-item <?php echo ($currentView === 'settings-client') ? 'active' : ''; ?>">
     <span class="material-symbols-rounded">settings</span>
     <span>Configurações</span>
 </a>

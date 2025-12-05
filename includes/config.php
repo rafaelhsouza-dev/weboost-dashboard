@@ -52,7 +52,9 @@ $viewContextMap = [
     'view-customer' => 'admin',
     'list-users' => 'admin',
     'crud-user' => 'admin',
-    'settings' => 'admin', // Associando settings ao contexto de admin por padrão
+    'settings-admin' => 'admin',
+    'settings-geral' => 'geral',
+    'settings-client' => 'cliente', // Associa a um contexto de cliente genérico
 ];
 
 // Contexto efetivo para menu/seleção de cliente e título
@@ -65,6 +67,8 @@ $viewTitles = [
     'view-customer' => 'Administração / Visualizar Cliente',
     'list-users' => 'Administração / Usuários',
     'crud-user' => 'Administração / Manutenção de Usuário',
-    'settings' => 'Configurações',
+    'settings-admin' => 'Configurações de Administração',
+    'settings-geral' => 'Configurações Gerais',
+    'settings-client' => 'Configurações do Cliente',
 ];
 ?>

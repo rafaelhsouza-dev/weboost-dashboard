@@ -18,8 +18,12 @@ if ($currentView === 'admin') {
     include 'views/crud-user.php';
 } elseif ($currentView === 'view-customer') {
     include 'views/view-customer.php';
-} elseif ($currentView === 'settings') {
-    include 'views/settings.php';
+} elseif ($currentView === 'settings-admin') {
+    include 'views/settings-admin.php';
+} elseif ($currentView === 'settings-geral') {
+    include 'views/settings-geral.php';
+} elseif ($currentView === 'settings-client') {
+    include 'views/settings-client.php';
 } else { // Para qualquer cliente
     include 'views/cliente.php';
 }

@@ -10,7 +10,7 @@ if (!isset($menuContext)) { $menuContext = 'admin'; }
     <span class="material-symbols-rounded">person</span>
     <span>Clientes</span>
 </a>
-<a href="index.php?view=settings" class="menu-item <?php echo ($currentView === 'settings') ? 'active' : ''; ?>">
+<a href="index.php?view=settings-admin" class="menu-item <?php echo ($currentView === 'settings-admin') ? 'active' : ''; ?>">
     <span class="material-symbols-rounded">settings</span>
     <span>Configurações</span>
 </a>
