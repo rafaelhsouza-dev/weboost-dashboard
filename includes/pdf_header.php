@@ -51,7 +51,7 @@
         }
     </style>
 </head>
-<body class="pdf-view">
+<body class="pdf-view" data-theme="light">
 
 <div class="custom-pdf-header">
     <p>Relatório Confidencial - Weboost</p>
