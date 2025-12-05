@@ -32,6 +32,7 @@ $clientNames = [
 $viewContextMap = [
     'crud-customer' => 'admin',
     'list-customers' => 'admin',
+    'view-customer' => 'admin',
     'list-users' => 'admin',
     'crud-user' => 'admin',
 ];
@@ -43,6 +44,7 @@ $menuContext = $viewContextMap[$currentView] ?? $currentView;
 $viewTitles = [
     'crud-customer' => 'Administração / Manutenção de Cliente',
     'list-customers' => 'Administração / Clientes',
+    'view-customer' => 'Administração / Visualizar Cliente',
     'list-users' => 'Administração / Usuários',
     'crud-user' => 'Administração / Manutenção de Usuário',
 ];

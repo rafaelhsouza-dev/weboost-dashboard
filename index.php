@@ -16,6 +16,8 @@ if ($currentView === 'admin') {
     include 'views/list-users.php';
 } elseif ($currentView === 'crud-user') {
     include 'views/crud-user.php';
+} elseif ($currentView === 'view-customer') {
+    include 'views/view-customer.php';
 } else { // Para qualquer cliente
     include 'views/cliente.php';
 }
