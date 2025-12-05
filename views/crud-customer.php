@@ -29,6 +29,7 @@ $origem_options = [
 ];
 $servicos = ["Gestão Meta Ads", "Gestão Google Ads", "Gestão TikTok Ads", "Produção Vídeo/Foto", "Design Gráfico", "Email Marketing", "SEO", "Gestão Orgânica Redes Sociais", "Criação/Manutenção Website"];
 $departamentos = ["Marketing", "TI / Desenvolvimento", "Design", "Vídeo / Foto", "Gestão / Atendimento", "Performance"];
+$contrato_status_options = ['Ativo', 'Pendente', 'Concluído', 'Cancelado', 'Suspenso'];
 
 
 // 2. Determinar o modo (Criação vs. Edição)
@@ -196,6 +197,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     const servicos = <?php echo json_encode($servicos); ?>;
     const departamentos = <?php echo json_encode($departamentos); ?>;
     const gestores = <?php echo json_encode($gestores); ?>;
+    const contrato_status_options = <?php echo json_encode($contrato_status_options); ?>;
 
     function adicionarContacto() {
         const container = document.getElementById('contactos-gestao');
@@ -218,6 +220,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         
         let servicosHtml = servicos.map(s => `<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="contrato_servicos[${contratoIndex}][]" value="${s}"><label class="form-check-label">${s}</label></div>`).join('');
         let departamentosHtml = departamentos.map(d => `<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="contrato_departamentos[${contratoIndex}][]" value="${d}"><label class="form-check-label">${d}</label></div>`).join('');
+        let contratoStatusOptionsHtml = contrato_status_options.map(s => `<option value="${s}">${s}</option>`).join('');
 
         novo.innerHTML = `
             <button type="button" class="btn-close position-absolute top-0 end-0 m-2" aria-label="Close" onclick="this.closest('.border').remove()"></button>
@@ -225,9 +228,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <div class="col-md-4"><label class="form-label">Início do Contrato</label><input type="date" name="contrato_inicio[]" class="form-control" required></div>
                 <div class="col-md-4"><label class="form-label">Fim do Contrato</label><input type="date" name="contrato_fim[]" class="form-control"></div>
                 <div class="col-md-4"><label class="form-label">Tipo de Cobrança</label><select name="contrato_cobranca[]" class="form-select" required><option value="mensal">Mensal</option><option value="trimestral">Trimestral</option><option value="semestral">Semestral</option><option value="anual">Anual</option><option value="unico">Pagamento Único</option></select></div>
-                <div class="col-md-12"><label class="form-label">Valor do Contrato (€)</label><input type="number" step="0.01" name="contrato_valor[]" class="form-control" required></div>
+                <div class="col-md-6"><label class="form-label">Valor do Contrato (€)</label><input type="number" step="0.01" name="contrato_valor[]" class="form-control" required></div>
+                <div class="col-md-6">
+                    <label class="form-label">Status do Contrato</label>
+                    <select name="contrato_status[]" class="form-select">
+                        ${contratoStatusOptionsHtml}
+                    </select>
+                </div>
                 <div class="col-12"><label class="form-label mb-2">Serviços Incluídos</label><div>${servicosHtml}</div></div>
                 <div class="col-12"><label class="form-label mb-2">Departamentos Envolvidos</label><div>${departamentosHtml}</div></div>
+                <div class="col-12">
+                    <label class="form-label">Observações Internas do Contrato</label>
+                    <textarea name="contrato_observacoes[]" class="form-control" rows="3" placeholder="Notas internas sobre este contrato..."></textarea>
+                </div>
             </div>
         `;
         container.appendChild(novo);
