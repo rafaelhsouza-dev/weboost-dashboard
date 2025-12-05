@@ -1,6 +1,12 @@
 <?php
+// --- Configurações de Segurança e Ambiente ---
+define('PDF_ACCESS_TOKEN', 'weboost-secret-token-for-pdf-generation-12345');
+
 // Flag para verificar se a visualização é para PDF
 $is_pdf_view = isset($_GET['pdf']) && $_GET['pdf'] == '1';
+
+// Flag para verificar se a requisição é autenticada para gerar PDF (via token)
+$is_authenticated_for_pdf = $is_pdf_view && isset($_GET['token']) && $_GET['token'] === PDF_ACCESS_TOKEN;
 
 // Parâmetros da URL com valores padrão
 $currentView = $_GET['view'] ?? 'geral';

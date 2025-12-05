@@ -54,6 +54,10 @@ if ($is_pdf_view) {
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        // Passa o token de acesso do PDF para o JavaScript de forma segura
+        window.pdfAccessToken = '<?php echo PDF_ACCESS_TOKEN; ?>';
+    </script>
 </head>
 
 <body>

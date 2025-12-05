@@ -7,6 +7,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatório Weboost</title>
+    <?php
+    // Se a página estiver sendo acessada por um serviço autenticado para gerar PDF,
+    // injeta um script para pular a verificação de autenticação do lado do cliente.
+    if ($is_authenticated_for_pdf ?? false) {
+        echo '<script>window.skipAuthCheck = true;</script>';
+    }
+    ?>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">

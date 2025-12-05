@@ -181,12 +181,34 @@ document.addEventListener('DOMContentLoaded', function () {
         exportPdfBtn.addEventListener('click', function (e) {
             e.preventDefault();
 
-            // Adiciona o parâmetro pdf=1 à URL atual
-            const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.set('pdf', '1');
+            // 1. Construir a URL da página de impressão
+            const dashboardUrl = new URL(window.location.href);
+            dashboardUrl.searchParams.set('pdf', '1');
+            // Adiciona o token de acesso para autenticação no backend
+            if (window.pdfAccessToken) {
+                dashboardUrl.searchParams.set('token', window.pdfAccessToken);
+            }
 
-            // Abre a nova URL em uma nova aba para impressão/salvamento
-            window.open(currentUrl.toString(), '_blank');
+            // 2. Codificar a URL para ser usada como parâmetro
+            const encodedUrl = encodeURIComponent(dashboardUrl.toString());
+
+            // 3. Construir a URL final da API
+            const apiBaseUrl = 'https://api.weboost.pt/puppeteer/pdf';
+            const apiParams = new URLSearchParams({
+                url: encodedUrl,
+                format: 'A4',
+                landscape: 'false',
+                margin_top: '10mm',
+                margin_right: '10mm',
+                margin_bottom: '10mm',
+                margin_left: '10mm'
+            });
+
+            const finalApiUrl = `${apiBaseUrl}?${apiParams.toString()}`;
+
+            // 4. Redirecionar para a API para baixar o PDF
+            // Abrir em uma nova aba é mais amigável
+            window.open(finalApiUrl, '_blank');
         });
     }
 

@@ -51,6 +51,11 @@ window.location.href = 'index.php';
 
 // Check auth on protected pages
 function checkAuth() {
+    // Pula a verificação se a flag for definida (por exemplo, para geração de PDF via token)
+    if (window.skipAuthCheck === true) {
+        return;
+    }
+
     const isLoginPage = window.location.pathname.includes('login.php');
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     
