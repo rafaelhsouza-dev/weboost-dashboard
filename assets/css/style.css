@@ -73,6 +73,9 @@ select, input {
     color: var(--primary-color);
     border-color: var(--primary-color);
 }
+button#datePresetPicker {
+    min-height: 45px !important;
+}
 
 /* Card Styles */
 .card {
