@@ -112,10 +112,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Registar Cliente</button>
                         </div>
-                        
-                        <!-- Ajuda futura: integração com API -->
+
                         <div class="col-12">
-                            <small class="text-muted">Este formulário é mockado e futuramente será integrado a uma API.</small>
+                            <small class="text-muted">Cadastro de cliente.</small>
                         </div>
                     </div>
                     </form>

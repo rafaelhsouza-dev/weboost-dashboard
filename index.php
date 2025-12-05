@@ -8,6 +8,8 @@ if ($currentView === 'admin') {
     include 'views/admin.php';
 } elseif ($currentView === 'geral') {
     include 'views/geral.php';
+} elseif ($currentView === 'list-customers') {
+    include 'views/list-customers.php';
 } elseif ($currentView === 'create-customer') {
     include 'views/create-customer.php';
 } else { // Para qualquer cliente

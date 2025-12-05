@@ -25,6 +25,7 @@ $clientNames = [
 // Assim, quando estivermos em "create-customer", continuamos com o menu de "admin" ativo
 $viewContextMap = [
     'create-customer' => 'admin',
+    'list-customers' => 'admin',
 ];
 
 // Contexto efetivo para menu/seleção de cliente e título
@@ -33,5 +34,6 @@ $menuContext = $viewContextMap[$currentView] ?? $currentView;
 // Títulos específicos por subview (opcional)
 $viewTitles = [
     'create-customer' => 'Administração / Novo Cliente',
+    'list-customers' => 'Administração / Clientes',
 ];
 ?>
