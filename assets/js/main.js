@@ -216,39 +216,92 @@ document.addEventListener('DOMContentLoaded', function () {
             contentClone.classList.add('pdf-export');
             pdfContainer.appendChild(contentClone);
 
-            // 4. Function to re-render a chart in the clone
+            // 4. Function to re-render a chart in the clone (defensive)
             const renderClonedChart = async (originalChart, selector) => {
-                const clonedEl = contentClone.querySelector(selector);
-                if (originalChart && clonedEl) {
+                try {
+                    const clonedEl = contentClone.querySelector(selector);
+                    if (!originalChart || !clonedEl) return null;
+
                     // Ensure cloned chart container has a width similar to the original
                     const origEl = document.querySelector(selector);
                     if (origEl) {
                         const computed = getComputedStyle(origEl);
-                        clonedEl.style.width = origEl.clientWidth + 'px';
-                        clonedEl.style.height = origEl.clientHeight + 'px';
-                        clonedEl.style.maxWidth = computed.maxWidth;
+                        const w = origEl.clientWidth || parseInt(computed.width) || 600;
+                        const h = origEl.clientHeight || 350;
+                        clonedEl.style.width = w + 'px';
+                        clonedEl.style.height = h + 'px';
+                        if (computed.maxWidth) clonedEl.style.maxWidth = computed.maxWidth;
                     }
-                    // Deep copy options and force light theme
-                    const clonedOptions = JSON.parse(JSON.stringify(originalChart.w.globals.initialOptions));
+
+                    // Deep copy options safely from different possible locations
+                    const safeDeepClone = (obj) => {
+                        if (typeof structuredClone === 'function') {
+                            try { return structuredClone(obj); } catch (_) {}
+                        }
+                        if (obj === undefined) return null;
+                        try { return JSON.parse(JSON.stringify(obj)); } catch (e) { return null; }
+                    };
+
+                    const srcOptions = originalChart?.w?.globals?.initialOptions
+                        || originalChart?.w?.config
+                        || originalChart?.opts
+                        || null;
+                    const clonedOptions = safeDeepClone(srcOptions) || {};
+
+                    // Ensure required sub-objects
+                    clonedOptions.chart = clonedOptions.chart || {};
+                    clonedOptions.tooltip = clonedOptions.tooltip || {};
+                    clonedOptions.xaxis = clonedOptions.xaxis || {};
+                    clonedOptions.yaxis = clonedOptions.yaxis || {};
+                    clonedOptions.grid = clonedOptions.grid || {};
+                    clonedOptions.legend = clonedOptions.legend || {};
+                    if (clonedOptions.legend && !clonedOptions.legend.labels) {
+                        clonedOptions.legend.labels = {};
+                    }
+
+                    // Force light theme/appearance
                     clonedOptions.chart.background = '#ffffff';
-                    clonedOptions.tooltip = { theme: 'light' };
+                    clonedOptions.tooltip.theme = 'light';
                     const textColor = '#212529';
+
+                    // xaxis labels color (handle array/object styles)
+                    if (!clonedOptions.xaxis.labels) clonedOptions.xaxis.labels = { style: {} };
+                    if (!clonedOptions.xaxis.labels.style) clonedOptions.xaxis.labels.style = {};
                     clonedOptions.xaxis.labels.style.colors = textColor;
-                    clonedOptions.yaxis.labels.style.colors = textColor;
+
+                    // yaxis can be array or object
+                    if (Array.isArray(clonedOptions.yaxis)) {
+                        clonedOptions.yaxis = clonedOptions.yaxis.map(y => {
+                            y = y || {};
+                            if (!y.labels) y.labels = { style: {} };
+                            if (!y.labels.style) y.labels.style = {};
+                            y.labels.style.colors = textColor;
+                            return y;
+                        });
+                    } else {
+                        if (!clonedOptions.yaxis.labels) clonedOptions.yaxis.labels = { style: {} };
+                        if (!clonedOptions.yaxis.labels.style) clonedOptions.yaxis.labels.style = {};
+                        clonedOptions.yaxis.labels.style.colors = textColor;
+                    }
+
                     clonedOptions.grid.borderColor = '#e9ecef';
                     if (clonedOptions.legend && clonedOptions.legend.labels) {
                         clonedOptions.legend.labels.colors = textColor;
                     }
-                    // For visitors chart specifically
+
+                    // For visitors chart specifically ensure palette
                     if (selector === '#visitorsChart') {
-                        clonedOptions.theme = { mode: 'light', palette: 'palette1' }; // Ensure consistent palette
+                        clonedOptions.theme = Object.assign({ mode: 'light' }, clonedOptions.theme || {});
+                        if (!clonedOptions.theme.palette) clonedOptions.theme.palette = 'palette1';
                     }
-                    
+
                     const chart = new ApexCharts(clonedEl, clonedOptions);
                     await chart.render();
                     return chart;
+                } catch (e) {
+                    console.warn('Falha ao clonar/renderizar gráfico para PDF em', selector, e);
+                    return null;
                 }
-                return null;
             };
 
             // Helper: wait for all images inside the cloned content to load
@@ -263,26 +316,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 }));
             };
 
-            // Re-render all charts and wait for them
-            try {
-                // Ensure the global chart variables exist
-                if (typeof salesChart !== 'undefined') {
-                    await renderClonedChart(salesChart, '#salesChart');
-                }
-                if (typeof visitorsChart !== 'undefined') {
-                     await renderClonedChart(visitorsChart, '#visitorsChart');
-                }
-                // Ensure images are loaded
-                await waitForImages(contentClone);
-            } catch (err) {
-                console.error("Erro ao clonar gráficos para o PDF:", err);
-                // Cleanup and exit if charts fail
-                document.body.removeChild(pdfContainer);
-                btn.innerHTML = originalBtnHTML;
-                btn.disabled = false;
-                alert('Ocorreu um erro ao gerar os gráficos para o PDF.');
-                return;
+            // Re-render all charts and wait for them (do not abort on individual failures)
+            // Only attempt if elements exist in the cloned content
+            if (typeof salesChart !== 'undefined' && contentClone.querySelector('#salesChart')) {
+                await renderClonedChart(salesChart, '#salesChart');
             }
+            if (typeof visitorsChart !== 'undefined' && contentClone.querySelector('#visitorsChart')) {
+                await renderClonedChart(visitorsChart, '#visitorsChart');
+            }
+            // Ensure images are loaded before rendering PDF
+            await waitForImages(contentClone);
             
             // 5. Generate PDF from the prepared clone
             const pdfOptions = {
