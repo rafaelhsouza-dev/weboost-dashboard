@@ -92,6 +92,7 @@ button, .btn {
     box-shadow: var(--card-shadow);
     transition: background-color var(--transition-speed);
     margin-bottom: 1.5rem;
+    border: solid 1px var(--primary-color);
 }
 
 .card-header {
