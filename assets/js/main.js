@@ -175,36 +175,61 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // PDF Export Logic
+    // PDF Export Logic (Secure Token Flow)
     const exportPdfBtn = document.getElementById('exportPdfBtn');
     if (exportPdfBtn) {
-        exportPdfBtn.addEventListener('click', function (e) {
+        exportPdfBtn.addEventListener('click', async function (e) {
             e.preventDefault();
+            const btn = this;
+            const originalBtnHTML = btn.innerHTML;
 
-            // 1. Construir a URL da página de impressão
-            const dashboardUrl = new URL(window.location.href);
-            dashboardUrl.searchParams.set('pdf', '1');
-            // Adiciona o token de acesso para autenticação no backend
-            if (window.pdfAccessToken) {
-                dashboardUrl.searchParams.set('token', window.pdfAccessToken);
+            // Desativa o botão e mostra o spinner
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Preparando...';
+
+            try {
+                // 1. Fazer um fetch para obter um token de uso único do backend
+                const tokenResponse = await fetch('request_pdf_token.php');
+                if (!tokenResponse.ok) {
+                    throw new Error('Falha ao obter o token de autorização para o PDF.');
+                }
+                const { token } = await tokenResponse.json();
+
+                if (!token) {
+                    throw new Error('Token inválido recebido do servidor.');
+                }
+
+                // 2. Construir a URL da página de impressão com o token de uso único
+                const dashboardUrl = new URL(window.location.href);
+                dashboardUrl.searchParams.set('pdf', '1');
+                dashboardUrl.searchParams.set('token', token);
+
+                // 3. Construir a URL final da API, deixando URLSearchParams cuidar da codificação
+                const apiBaseUrl = 'https://api.weboost.pt/puppeteer/pdf';
+                const apiParams = new URLSearchParams({
+                    url: dashboardUrl.toString(),
+                    format: 'A4',
+                    landscape: 'false',
+                    margin_top: '10mm',
+                    margin_right: '10mm',
+                    margin_bottom: '10mm',
+                    margin_left: '10mm'
+                });
+                const finalApiUrl = `${apiBaseUrl}?${apiParams.toString()}`;
+
+                // 4. Abrir a URL da API em uma nova aba
+                window.open(finalApiUrl, '_blank');
+
+            } catch (error) {
+                console.error("Erro ao gerar PDF:", error);
+                alert("Ocorreu um erro ao gerar o relatório em PDF. Tente novamente.");
+            } finally {
+                // Restaura o botão após um pequeno atraso
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalBtnHTML;
+                }, 1000);
             }
-
-            // 2. Construir a URL final da API, deixando URLSearchParams cuidar da codificação
-            const apiBaseUrl = 'https://api.weboost.pt/puppeteer/pdf';
-            const apiParams = new URLSearchParams({
-                url: dashboardUrl.toString(), // Passar a URL literal diretamente
-                format: 'A4',
-                landscape: 'false',
-                margin_top: '10mm',
-                margin_right: '10mm',
-                margin_bottom: '10mm',
-                margin_left: '10mm'
-            });
-
-            const finalApiUrl = `${apiBaseUrl}?${apiParams.toString()}`;
-
-            // 3. Redirecionar para a API para baixar o PDF
-            window.open(finalApiUrl, '_blank');
         });
     }
 

@@ -1,12 +1,18 @@
 <?php
-// --- Configurações de Segurança e Ambiente ---
-define('PDF_ACCESS_TOKEN', 'weboost-secret-token-for-pdf-generation-12345');
+// Inicia a sessão para armazenar tokens de PDF
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// Flag para verificar se a visualização é para PDF
-$is_pdf_view = isset($_GET['pdf']) && $_GET['pdf'] == '1';
-
-// Flag para verificar se a requisição é autenticada para gerar PDF (via token)
-$is_authenticated_for_pdf = $is_pdf_view && isset($_GET['token']) && $_GET['token'] === PDF_ACCESS_TOKEN;
+// Flag para verificar se a requisição é autenticada para gerar PDF (via token de sessão de uso único)
+$is_authenticated_for_pdf = false;
+if ($is_pdf_view && isset($_GET['token']) && isset($_SESSION['pdf_access_token'])) {
+    if (hash_equals($_SESSION['pdf_access_token'], $_GET['token'])) {
+        $is_authenticated_for_pdf = true;
+        // Invalida o token após o uso para garantir que seja de uso único
+        unset($_SESSION['pdf_access_token']);
+    }
+}
 
 // Parâmetros da URL com valores padrão
 $currentView = $_GET['view'] ?? 'geral';
@@ -35,6 +41,7 @@ $viewContextMap = [
     'view-customer' => 'admin',
     'list-users' => 'admin',
     'crud-user' => 'admin',
+    'settings' => 'admin', // Associando settings ao contexto de admin por padrão
 ];
 
 // Contexto efetivo para menu/seleção de cliente e título
@@ -47,5 +54,6 @@ $viewTitles = [
     'view-customer' => 'Administração / Visualizar Cliente',
     'list-users' => 'Administração / Usuários',
     'crud-user' => 'Administração / Manutenção de Usuário',
+    'settings' => 'Configurações',
 ];
 ?>

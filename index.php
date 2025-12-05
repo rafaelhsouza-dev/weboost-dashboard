@@ -18,6 +18,8 @@ if ($currentView === 'admin') {
     include 'views/crud-user.php';
 } elseif ($currentView === 'view-customer') {
     include 'views/view-customer.php';
+} elseif ($currentView === 'settings') {
+    include 'views/settings.php';
 } else { // Para qualquer cliente
     include 'views/cliente.php';
 }
@@ -56,10 +58,6 @@ if ($is_pdf_view) {
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
-    <script>
-        // Passa o token de acesso do PDF para o JavaScript de forma segura
-        window.pdfAccessToken = '<?php echo PDF_ACCESS_TOKEN; ?>';
-    </script>
 </head>
 
 <body>
