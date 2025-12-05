@@ -4,6 +4,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Flag para verificar se a visualização é para PDF
+$is_pdf_view = isset($_GET['pdf']) && $_GET['pdf'] == '1';
+
 // Flag para verificar se a requisição é autenticada para gerar PDF (via token de sessão de uso único)
 $is_authenticated_for_pdf = false;
 if ($is_pdf_view && isset($_GET['token']) && isset($_SESSION['pdf_access_token'])) {
