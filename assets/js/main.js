@@ -197,16 +197,15 @@ document.addEventListener('DOMContentLoaded', function () {
             pdfContainer.style.position = 'fixed';
             pdfContainer.style.left = '-9999px'; // Move it off-screen
             pdfContainer.style.top = '0';
-            pdfContainer.style.width = '1120px'; // A4 paper width at 96 DPI is ~794px, giving more room to avoid squeezing
-            pdfContainer.style.height = 'auto';
+            pdfContainer.setAttribute('data-theme', 'light'); // Force light theme on the container
             pdfContainer.style.background = 'white';
             pdfContainer.style.padding = '20px'; // Add padding for aesthetics
             document.body.appendChild(pdfContainer);
 
-            // 3. Clone the content, force light theme and append
+            // 3. Clone the content and append
             const contentClone = sourceContent.cloneNode(true);
-            contentClone.setAttribute('data-theme', 'light');
-            contentClone.classList.add('pdf-export'); // A class for any specific PDF styles
+            // contentClone.setAttribute('data-theme', 'light'); // Redundant if parent container has it
+            // contentClone.classList.add('pdf-export'); // No longer needed, as we control sizing via html2pdf options
             pdfContainer.appendChild(contentClone);
 
             // 4. Function to re-render a chart in the clone
@@ -216,7 +215,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Deep copy options and force light theme
                     const clonedOptions = JSON.parse(JSON.stringify(originalChart.w.globals.initialOptions));
                     clonedOptions.chart.background = '#ffffff';
-                    clonedOptions.theme = { mode: 'light' };
                     clonedOptions.tooltip = { theme: 'light' };
                     const textColor = '#212529';
                     clonedOptions.xaxis.labels.style.colors = textColor;
@@ -224,6 +222,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     clonedOptions.grid.borderColor = '#e9ecef';
                     if (clonedOptions.legend && clonedOptions.legend.labels) {
                         clonedOptions.legend.labels.colors = textColor;
+                    }
+                    // For visitors chart specifically
+                    if (selector === '#visitorsChart') {
+                        clonedOptions.theme = { mode: 'light', palette: 'palette1' }; // Ensure consistent palette
                     }
                     
                     const chart = new ApexCharts(clonedEl, clonedOptions);
@@ -254,17 +256,14 @@ document.addEventListener('DOMContentLoaded', function () {
             
             // 5. Generate PDF from the prepared clone
             const pdfOptions = {
-                margin: [0.4, 0.4, 0.6, 0.4], // top, left, bottom, right in inches
+                margin: [0.5, 0.5, 0.5, 0.5], // top, left, bottom, right in inches for more equal margins
                 filename: `relatorio-weboost-${new Date().toISOString().slice(0, 10)}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: {
                     scale: 2, // Higher scale for better quality
                     useCORS: true,
                     letterRendering: true,
-                    scrollX: 0,
-                    scrollY: -window.scrollY,
-                    windowWidth: pdfContainer.scrollWidth,
-                    windowHeight: pdfContainer.scrollHeight
+                    // Remove explicit windowWidth/Height, scrollX/Y - let html2pdf manage for better fitting
                 },
                 jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
                 pagebreak: { mode: 'css', before: '.page-break' }
@@ -275,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const pageWidth = pdf.internal.pageSize.getWidth();
                 const pageHeight = pdf.internal.pageSize.getHeight();
                 pdf.setFontSize(8);
-                pdf.setTextColor('#6c757d');
+                pdf.setTextColor('#6c757d'); // Changed to a slightly darker gray for better visibility
 
                 for (let i = 1; i <= pageCount; i++) {
                     pdf.setPage(i);
