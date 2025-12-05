@@ -243,31 +243,38 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (origem === 'indicacao') {
             let gestoresOptions = gestores.map(g => `<option value="${g}">${g}</option>`).join('');
             html = `
-                <div class="row g-2">
-                    <div class="col-md-6">
-                        <label class="form-label">Indicação Interna</label>
-                        <select name="origem_indicacao_interna" class="form-select"><option value="">-- Nenhum --</option>${gestoresOptions}</select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Indicação Externa</label>
-                        <input type="text" name="origem_indicacao_externa" class="form-control" placeholder="Ex: amigo do cliente...">
-                    </div>
+                <div class="mb-3">
+                    <label class="form-label">Indicação Interna (funcionário da agência)</label>
+                    <select name="origem_indicacao_interna" class="form-select">
+                        <option value="">-- Nenhum --</option>
+                        ${gestoresOptions}
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label">Indicação Externa (pessoa/empresa)</label>
+                    <input type="text" name="origem_indicacao_externa" class="form-control" placeholder="Ex: amigo do cliente, antigo fornecedor...">
                 </div>
             `;
         } else if (origem === 'parceria') {
             html = `
-                <label class="form-label">Nome do Parceiro</label>
-                <input type="text" name="origem_parceiro_externo" class="form-control" placeholder="Ex: empresa que passou o contacto">
+                <div>
+                    <label class="form-label">Nome do Parceiro</label>
+                    <input type="text" name="origem_parceiro_externo" class="form-control" placeholder="Ex: empresa que passou o contacto">
+                </div>
             `;
         } else if (origem === 'feira_evento') {
             html = `
-                <label class="form-label">Nome do Evento</label>
-                <input type="text" name="origem_evento_externo" class="form-control" placeholder="Ex: Web Summit 2025">
+                <div>
+                    <label class="form-label">Nome do Evento / Detalhe</label>
+                    <input type="text" name="origem_evento_externo" class="form-control" placeholder="Ex: stand na feira X, palestra no ISEG...">
+                </div>
             `;
         } else if (origem && origem !== '') {
             html = `
-                <label class="form-label">Detalhe da Origem</label>
-                <input type="text" name="origem_detalhe" class="form-control" placeholder="Ex: campanha Verão 2025, formulário do site...">
+                <div>
+                    <label class="form-label">Detalhe da Origem</label>
+                    <input type="text" name="origem_detalhe" class="form-control" placeholder="Ex: campanha Verão 2025, formulário do site...">
+                </div>
             `;
         }
 
