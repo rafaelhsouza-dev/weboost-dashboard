@@ -13,10 +13,10 @@ $users = [
     <!-- Page Header -->
     <div class="row mb-4">
         <div class="col-12 d-flex justify-content-between align-items-center">
-            <h3 class="mb-0">Usuários</h3>
-            <a href="index.php?view=crud-user" class="btn btn-primary">
+            <h3 class="mb-0">Utilizadores</h3>
+            <a href="index.php?view=edit-user" class="btn btn-primary">
                 <span class="material-symbols-rounded align-middle me-1">add</span>
-                Novo Usuário
+                Novo Utilizador
             </a>
         </div>
     </div>
@@ -62,7 +62,7 @@ $users = [
                             <td><?php echo htmlspecialchars($user['role']); ?></td>
                             <td><span class="fw-bold <?php echo $status_class; ?>"><?php echo htmlspecialchars($user['status']); ?></span></td>
                             <td class="text-end">
-                                <a href="index.php?view=crud-user&id=<?php echo $user['id']; ?>" class="action-icon p-2" title="Editar"><span class="material-symbols-rounded">edit</span></a>
+                                <a href="index.php?view=edit-user&id=<?php echo $user['id']; ?>" class="action-icon p-2" title="Editar"><span class="material-symbols-rounded">edit</span></a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
