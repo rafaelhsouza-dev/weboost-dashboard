@@ -78,6 +78,11 @@ button#datePresetPicker {
     min-height: 40px !important;
     max-height: 40px !important;
 }
+button, .btn {
+    min-height: 40px;
+    max-height: 40px;
+    border-radius: 0 !important;
+}
 
 /* Card Styles */
 .card {
