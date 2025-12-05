@@ -1,9 +1,30 @@
 <?php
 // Inclui as variáveis de configuração que serão usadas em toda a página
 include 'includes/config.php';
+
+// Carrega o conteúdo principal da página com base na view
+ob_start();
+if ($currentView === 'admin') {
+    include 'views/admin.php';
+} elseif ($currentView === 'geral') {
+    include 'views/geral.php';
+} elseif ($currentView === 'create-customer') {
+    include 'views/create-customer.php';
+} else { // Para qualquer cliente
+    include 'views/cliente.php';
+}
+$mainContent = ob_get_clean();
+
+// Se for a visualização de PDF, carrega um template limpo
+if ($is_pdf_view) {
+    include 'includes/pdf_header.php';
+    echo $mainContent;
+    include 'includes/pdf_footer.php';
+} else {
+    // Caso contrário, carrega o layout padrão do dashboard
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -38,18 +59,7 @@ include 'includes/config.php';
         
         <?php include 'includes/header.php'; ?>
 
-        <?php
-        // Carrega o conteúdo principal da página com base na view
-        if ($currentView === 'admin') {
-            include 'views/admin.php';
-        } elseif ($currentView === 'geral') {
-            include 'views/geral.php';
-        } elseif ($currentView === 'create-customer') {
-            include 'views/create-customer.php';
-        } else { // Para qualquer cliente
-            include 'views/cliente.php';
-        }
-        ?>
+        <?php echo $mainContent; ?>
         
     </main>
 
@@ -58,3 +68,6 @@ include 'includes/config.php';
 </body>
 
 </html>
+<?php
+} // Fim do else
+?>

@@ -1,4 +1,7 @@
 <?php
+// Flag para verificar se a visualização é para PDF
+$is_pdf_view = isset($_GET['pdf']) && $_GET['pdf'] == '1';
+
 // Parâmetros da URL com valores padrão
 $currentView = $_GET['view'] ?? 'geral';
 // Define o fuso horário para evitar problemas com as funções de data

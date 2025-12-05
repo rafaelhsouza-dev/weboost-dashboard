@@ -4,8 +4,6 @@
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<!-- html2pdf.js for PDF Export -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <!-- Auth JS -->
 <script src="assets/js/auth.js"></script>
 <!-- Main JS -->
