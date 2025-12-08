@@ -1,14 +1,10 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { SeoReport } from "../types";
 
-const apiKey = import.meta.env.VITE_API_KEY_GEMINI;
+const apiKey = "sua_chave_gemini_aqui";
 const MODEL_NAME = "gemini-2.5-flash";
 
-if (!apiKey) {
-  console.error("ERRO: VITE_API_KEY_GEMINI não configurada.");
-}
-
-const ai = new GoogleGenAI({ apiKey: apiKey || "dummy_key_to_prevent_crash_on_init" });
+const ai = new GoogleGenAI({ apiKey });
 
 // Helper: Robust JSON extraction (same as Scraper)
 function extractJson(text: string): any {
@@ -73,8 +69,6 @@ export const generateSeoAudit = async (
   competitorUrls: string = ""
 ): Promise<SeoReport> => {
   
-  if (!apiKey) throw new Error("API Key do Gemini não configurada no ficheiro .env");
-
   // 1. Try to get Real Content
   const realHtml = await fetchHtmlContent(url);
   

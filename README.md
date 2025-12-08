@@ -48,32 +48,6 @@ O projeto foi construído para performance e escalabilidade:
 
 ---
 
-## 🔐 Configuração e Segurança (.env)
-
-**IMPORTANTE:** Para que a aplicação funcione corretamente (login, IA e Webhooks), você deve criar um arquivo `.env` na raiz do projeto. 
-Como este é um projeto Vite, as variáveis devem começar com `VITE_`.
-
-Copie o conteúdo abaixo para o seu arquivo `.env`:
-
-```env
-# --- INTEGRAÇÃO COM IA (GOOGLE GEMINI) ---
-# Obter chave em: https://aistudio.google.com/app/apikey
-VITE_API_KEY_GEMINI=sua_chave_gemini_aqui
-
-# --- INTEGRAÇÃO WEBHOOK (N8N / ZAPIER) ---
-# URL para onde os leads do Scraper serão enviados via POST
-VITE_WEBHOOK_URL_SCRAPER_AI=https://webhook.rhsdigital.com.br/webhook/scrap-ai
-
-# --- LOGIN TEMPORÁRIO (ADMINISTRADOR) ---
-# Credenciais para acesso ao sistema enquanto não há backend real
-VITE_ADMIN_EMAIL=admin@retentix.com
-VITE_ADMIN_PASSWORD=admin123
-```
-
-> **Nota de Segurança**: Nunca suba o arquivo `.env` para o repositório Git público se contiver chaves de produção.
-
----
-
 ## 📂 Estrutura do Projeto
 
 ```bash
@@ -101,17 +75,16 @@ VITE_ADMIN_PASSWORD=admin123
     npm install
     ```
 
-2.  **Configurar Variáveis**:
-    Crie o arquivo `.env` na raiz com as chaves indicadas acima.
-
-3.  **Iniciar Servidor**:
+2.  **Iniciar Servidor**:
     ```bash
     npm run dev
     ```
 
-4.  **Aceder**:
+3.  **Aceder**:
     Abra `http://localhost:5173` no navegador.
-    *   **Login**: Utilize o email e senha definidos no `.env` (Padrão: `admin@retentix.com` / `admin123`).
+    *   **Login**: As credenciais de login para o ambiente de desenvolvimento estão agora incorporadas no código (`admin@retentix.com` / `admin123`).
+
+> **Nota**: As variáveis de ambiente, como a chave da API do Gemini, foram incorporadas diretamente no código-fonte para simplificar a configuração. Para um ambiente de produção, é altamente recomendável voltar a usar um sistema de gestão de segredos ou ficheiros `.env`.
 
 ---
 

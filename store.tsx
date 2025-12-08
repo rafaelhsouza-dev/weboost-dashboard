@@ -80,21 +80,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return new Promise<boolean>((resolve) => {
       setTimeout(() => {
         // Obter credenciais do ambiente
-        const validEmail = import.meta.env.VITE_ADMIN_EMAIL;
-        const validPass = import.meta.env.VITE_ADMIN_PASSWORD;
+        const validEmail = "admin@retentix.com";
+        const validPass = "admin123";
 
-        // Se as variaveis não estiverem definidas, fallback para validação simples (não recomendado, mas evita bloqueio total se .env falhar)
-        const isEnvConfigured = validEmail && validPass;
-        
-        let isValid = false;
-
-        if (isEnvConfigured) {
-          isValid = (email === validEmail && pass === validPass);
-        } else {
-          // Fallback temporário apenas se o .env não existir (para desenvolvimento)
-          console.warn("Aviso: Variáveis de login (VITE_ADMIN_EMAIL) não configuradas no .env. Aceitando qualquer input não vazio.");
-          isValid = email.length > 0 && pass.length > 0;
-        }
+        const isValid = (email === validEmail && pass === validPass);
 
         if (isValid) {
           setUser(MOCK_USER);
@@ -102,7 +91,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           setCurrentTenant(defaultTenant);
           resolve(true);
         } else {
-          alert(isEnvConfigured ? "Credenciais inválidas." : "Erro de configuração de ambiente.");
+          alert("Credenciais inválidas.");
           resolve(false);
         }
       }, 800);

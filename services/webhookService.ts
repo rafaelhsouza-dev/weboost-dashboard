@@ -1,7 +1,7 @@
 import { Lead } from '../types';
 
 // The Webhook URL must be configured via environment variables for security
-const WEBHOOK_URL = import.meta.env.VITE_WEBHOOK_URL_SCRAPER_AI;
+const WEBHOOK_URL = "https://webhook.rhsdigital.com.br/webhook/scrap-ai";
 
 export async function sendLeadsToWebhook(leads: Lead[]): Promise<boolean> {
   if (leads.length === 0) {

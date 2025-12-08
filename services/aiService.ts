@@ -60,7 +60,7 @@ export async function* fetchLeadsStream(
     leadCount: number
 ): AsyncGenerator<Omit<Lead, 'id' | 'webhookStatus'>> {
   
-  const apiKey = import.meta.env.VITE_API_KEY_GEMINI;
+  const apiKey = "sua_chave_gemini_aqui";
   
   if (!apiKey) {
     console.error("ERRO CRÍTICO: VITE_API_KEY_GEMINI não definida no .env");
