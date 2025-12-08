@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../store';
 import { Button } from './Button';
 import { Input } from './Input';
+import retentixColor from '../imgs/retentix-color.webp';
 
 export const Login: React.FC = () => {
   const { login } = useApp();
@@ -28,7 +29,7 @@ export const Login: React.FC = () => {
 
       <div className="w-full max-w-md p-8 bg-white/90 dark:bg-[#1a1a1a]/95 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700 z-10 mx-4">
         <div className="text-center mb-8 flex flex-col items-center">
-          <img src="imgs/retentix-color.webp" alt="Retentix Logo" className="h-12 w-auto mb-4" />
+          <img src={retentixColor} alt="Retentix Logo" className="h-12 w-auto mb-4" />
           <h1 className="text-xl font-bold text-gray-900 dark:text-white">Bem-vindo de volta</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Acesse a sua conta para gerir o seu negócio</p>
         </div>
