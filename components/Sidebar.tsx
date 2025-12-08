@@ -1,31 +1,4 @@
-import React from 'react';
-import { useApp } from '../store';
-import { TenancyType } from '../types';
-import retentixIcon from '../imgs/retentix-icon.webp';
-import retentixColor from '../imgs/retentix-color.webp';
-import { 
-  LayoutDashboard, 
-  Users, 
-  Settings, 
-  LogOut, 
-  PieChart, 
-  Megaphone, 
-  Database,
-  ChevronLeft,
-  ChevronRight,
-  Briefcase,
-  FileText,
-  Building2,
-  ChevronsUpDown,
-  Layers,
-  FileSignature,
-  Handshake,
-  CalendarDays,
-  UserPlus2,
-  Bot,
-  ScanSearch
-} from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Combobox } from './Combobox';
 
 export const Sidebar: React.FC = () => {
   const { 
@@ -115,38 +88,20 @@ export const Sidebar: React.FC = () => {
         </div>
 
         <div className="p-4 border-b border-gray-200 dark:border-gray-800">
-          <div className="relative group">
-            <div className={`
-              flex items-center gap-2 p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 
-              border border-gray-200 dark:border-gray-700 cursor-pointer hover:border-primary/50 transition-colors
-              ${sidebarCollapsed ? 'md:justify-center' : 'justify-between'}
-            `}>
-               <div className="flex items-center gap-2 overflow-hidden w-full">
-                  <div className="w-8 h-8 rounded bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-primary shrink-0">
-                    {currentTenant?.type === TenancyType.INTERNAL ? <Briefcase size={16}/> : <Building2 size={16}/>}
-                  </div>
-                  
-                  <div className={`flex flex-col truncate ${sidebarCollapsed ? 'md:hidden' : ''}`}>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{currentTenant?.name}</span>
-                    <span className="text-[10px] text-gray-500 uppercase tracking-wider">
-                       {currentTenant?.type === 'ADMIN' ? 'Administrador' : currentTenant?.type === 'INTERNAL' ? 'Retentix' : 'Cliente'}
-                    </span>
-                  </div>
-               </div>
-               
-               <ChevronsUpDown size={16} className={`text-gray-400 ${sidebarCollapsed ? 'md:hidden' : ''}`} />
-               
-               <select 
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  onChange={(e) => setTenant(e.target.value)}
-                  value={currentTenant?.id}
-               >
-                  {availableTenants.map(t => (
-                    <option key={t.id} value={t.id}>{t.name}</option>
-                  ))}
-               </select>
-            </div>
-          </div>
+           {sidebarCollapsed ? (
+              <div className="w-full flex justify-center">
+                 <div className="w-10 h-10 rounded bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-primary shrink-0">
+                    {currentTenant?.type === TenancyType.INTERNAL ? <Briefcase size={20}/> : <Building2 size={20}/>}
+                 </div>
+              </div>
+           ) : (
+             <Combobox 
+                options={availableTenants.map(t => ({ value: t.id, label: t.name }))}
+                value={currentTenant?.id ?? ''}
+                onChange={(value) => setTenant(value as string)}
+                placeholder="Selecionar Tenant"
+             />
+           )}
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
