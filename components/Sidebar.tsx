@@ -1,3 +1,30 @@
+import React from 'react';
+import { useApp } from '../store';
+import { TenancyType } from '../types';
+import retentixIcon from '../imgs/retentix-icon.webp';
+import retentixColor from '../imgs/retentix-color.webp';
+import { 
+  LayoutDashboard, 
+  Users, 
+  Settings, 
+  LogOut, 
+  PieChart, 
+  Megaphone, 
+  Database,
+  ChevronLeft,
+  ChevronRight,
+  Briefcase,
+  FileText,
+  Building2,
+  Layers,
+  FileSignature,
+  Handshake,
+  CalendarDays,
+  UserPlus2,
+  Bot,
+  ScanSearch
+} from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import { Combobox } from './Combobox';
 
 export const Sidebar: React.FC = () => {
