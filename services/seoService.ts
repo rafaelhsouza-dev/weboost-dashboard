@@ -1,7 +1,8 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { SeoReport } from "../types";
 
-const apiKey = "AIzaSyAzXi2yTRm4E7vOKlbpNfntHlhd02m6Fs4";
+// Never hardcode API keys. Expect it from environment (e.g., Vite env)
+const apiKey = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_KEY_GEMINI) || process.env?.VITE_API_KEY_GEMINI || "";
 const MODEL_NAME = "gemini-2.5-flash";
 
 const ai = new GoogleGenAI({ apiKey });
@@ -69,6 +70,11 @@ export const generateSeoAudit = async (
   competitorUrls: string = ""
 ): Promise<SeoReport> => {
   
+  if (!apiKey) {
+    console.error("Chave de API do Gemini não configurada (VITE_API_KEY_GEMINI)");
+    throw new Error("Chave de API do Gemini não configurada.");
+  }
+
   // 1. Try to get Real Content
   const realHtml = await fetchHtmlContent(url);
   
@@ -115,112 +121,20 @@ export const generateSeoAudit = async (
   `;
 
   try {
+    // Tools like googleSearch/googleMaps are not available on public Generative Language API.
+    // Also, contents must be structured as role/parts.
     const response = await ai.models.generateContent({
       model: MODEL_NAME,
-      contents: prompt,
-      config: {
-        // We use googleSearch as fallback if HTML fetch failed or for competitive info
-        tools: [{ googleSearch: {} }],
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            url: { type: Type.STRING },
-            userObjective: { type: Type.STRING },
-            timestamp: { type: Type.STRING },
-            score: { type: Type.INTEGER },
-            scoreJustification: { type: Type.STRING },
-            objectiveAnalysis: {
-              type: Type.OBJECT,
-              properties: {
-                alignmentScore: { type: Type.INTEGER },
-                analysis: { type: Type.STRING },
-                missingTopics: { type: Type.ARRAY, items: { type: Type.STRING } }
-              },
-              nullable: true
-            },
-            technical: {
-              type: Type.OBJECT,
-              properties: {
-                infrastructure: {
-                  type: Type.OBJECT,
-                  properties: {
-                    sitemap: { type: Type.OBJECT, properties: { name: {type: Type.STRING}, status: {type: Type.STRING}, details: {type: Type.STRING} } },
-                    robotsTxt: { type: Type.OBJECT, properties: { name: {type: Type.STRING}, status: {type: Type.STRING}, details: {type: Type.STRING} } },
-                    aiProtocols: { type: Type.OBJECT, properties: { name: {type: Type.STRING}, status: {type: Type.STRING}, details: {type: Type.STRING} } }
-                  }
-                },
-                titleTag: {
-                  type: Type.OBJECT,
-                  properties: {
-                    value: { type: Type.STRING },
-                    length: { type: Type.INTEGER },
-                    status: { type: Type.STRING },
-                    recommendation: { type: Type.STRING },
-                    suggestedValue: { type: Type.STRING }
-                  }
-                },
-                metaDescription: {
-                  type: Type.OBJECT,
-                  properties: {
-                    value: { type: Type.STRING },
-                    length: { type: Type.INTEGER },
-                    status: { type: Type.STRING },
-                    recommendation: { type: Type.STRING },
-                    suggestedValue: { type: Type.STRING }
-                  }
-                },
-                h1: { type: Type.OBJECT, properties: { value: { type: Type.STRING }, status: { type: Type.STRING } } },
-                coreKeywords: {
-                  type: Type.ARRAY,
-                  items: {
-                    type: Type.OBJECT,
-                    properties: { keyword: { type: Type.STRING }, volume: { type: Type.STRING }, difficulty: { type: Type.INTEGER } }
-                  }
-                },
-                primaryTopicCluster: { type: Type.STRING },
-                fleschKincaidGrade: { type: Type.NUMBER },
-                coreWebVitals: {
-                  type: Type.OBJECT,
-                  properties: { lcp: { type: Type.STRING }, fid: { type: Type.STRING }, cls: { type: Type.STRING }, status: { type: Type.STRING } }
-                },
-                mobileFriendly: { type: Type.BOOLEAN },
-                structuredData: {
-                  type: Type.ARRAY,
-                  items: {
-                    type: Type.OBJECT,
-                    properties: { type: { type: Type.STRING }, status: { type: Type.STRING }, details: { type: Type.STRING } }
-                  }
-                }
-              }
-            },
-            ranking: {
-              type: Type.OBJECT,
-              properties: {
-                searchIntent: { type: Type.STRING },
-                intentMatch: { type: Type.STRING },
-                gapAnalysis: { type: Type.STRING },
-                competitors: {
-                  type: Type.ARRAY,
-                  items: { type: Type.OBJECT, properties: { name: { type: Type.STRING }, keywordOverlap: { type: Type.INTEGER } } }
-                }
-              }
-            },
-            recommendations: {
-              type: Type.OBJECT,
-              properties: {
-                traditional: { type: Type.ARRAY, items: { type: Type.STRING } },
-                aiGeo: { type: Type.ARRAY, items: { type: Type.STRING } },
-                schemaSuggestion: { type: Type.OBJECT, properties: { type: { type: Type.STRING }, reasoning: { type: Type.STRING }, codeSnippet: { type: Type.STRING } } },
-                topicalAuthorityTip: { type: Type.STRING }
-              }
-            }
-          }
-        }
-      }
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: prompt }],
+        },
+      ],
     });
 
-    const text = response.text;
+    // New SDK exposes text() as a function on the response object
+    const text = typeof (response as any).text === 'function' ? (response as any).text() : (response as any).text;
     if (!text) throw new Error("Sem resposta da IA");
     
     // Robust parsing

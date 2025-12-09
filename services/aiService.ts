@@ -60,7 +60,8 @@ export async function* fetchLeadsStream(
     leadCount: number
 ): AsyncGenerator<Omit<Lead, 'id' | 'webhookStatus'>> {
   
-  const apiKey = "AIzaSyAzXi2yTRm4E7vOKlbpNfntHlhd02m6Fs4";
+  // Read API key from environment (Vite or Node env)
+  const apiKey = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_KEY_GEMINI) || process.env?.VITE_API_KEY_GEMINI || "";
   
   if (!apiKey) {
     console.error("ERRO CRÍTICO: VITE_API_KEY_GEMINI não definida no .env");
@@ -110,15 +111,17 @@ IMPORTANTE: A sua resposta inteira DEVE ser um objeto JSON envolvido num único 
   try {
     const stream = await ai.models.generateContentStream({
       model: "gemini-2.5-flash",
-      contents: prompt,
-      config: {
-        tools: [{ googleMaps: {} }, { googleSearch: {} }],
-        toolConfig: { retrievalConfig: { latLng: { latitude: coordinates.lat, longitude: coordinates.lng } } },
-      },
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: prompt }],
+        },
+      ],
     });
 
     for await (const chunk of stream) {
-      fullResponseText += chunk.text;
+      const piece = typeof (chunk as any).text === 'function' ? (chunk as any).text() : (chunk as any).text;
+      if (piece) fullResponseText += piece;
       const parsedLeads = extractJson(fullResponseText);
       
       for (const lead of parsedLeads) {
