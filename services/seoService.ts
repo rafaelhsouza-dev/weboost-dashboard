@@ -1,7 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { SeoReport } from "../types";
 
-const apiKey = "sua_chave_gemini_aqui";
+const apiKey = "AIzaSyAzXi2yTRm4E7vOKlbpNfntHlhd02m6Fs4";
 const MODEL_NAME = "gemini-2.5-flash";
 
 const ai = new GoogleGenAI({ apiKey });
