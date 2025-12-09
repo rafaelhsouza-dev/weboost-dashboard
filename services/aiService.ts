@@ -1,4 +1,5 @@
-import { Lead } from "../types";
+import { Lead, WebhookStatus } from "../types";
+
 
 /**
  * Serviço para buscar leads da API externa
@@ -12,6 +13,100 @@ import { Lead } from "../types";
 
 // API endpoint for fetching leads
 const API_ENDPOINT = 'https://api.weboost.pt/gemini/fetch-leads';
+
+interface ApiLead {
+  generatedDate: string;
+  companyName: string;
+  category: string;
+  description: string | null;
+  address: string | null;
+  city: string | null;
+  country: string | null;
+  coordinates: { lat: number; lng: number; } | null;
+  contacts: {
+    phone: string | null;
+    email: string | null;
+    website: string | null;
+  };
+  socialMedia: {
+    linkedin: string | null;
+    facebook: string | null;
+    instagram: string | null;
+    youtube: string | null;
+    twitter: string | null;
+    tiktok: string | null;
+    pinterest: string | null;
+  };
+  details: {
+    foundingYear: number | null;
+    employeeCount: string | null;
+    rating: number | null;
+    reviewCount: number | null;
+    businessHours: any | null;
+  };
+  status: 'New' | 'Contacted' | 'Qualified' | 'Lost';
+  id: string;
+  webhookStatus: WebhookStatus;
+}
+
+function mapApiLeadToLead(apiLead: ApiLead, index: number): Omit<Lead, 'id' | 'webhookStatus'> {
+  // A simple quality score based on available data.
+  let qualityScore = 50;
+  const reasoning = [];
+  if (apiLead.contacts.website) {
+    qualityScore += 10;
+    reasoning.push("Website disponível.");
+  }
+  if (apiLead.contacts.email) {
+    qualityScore += 5;
+    reasoning.push("Email disponível.");
+  }
+  if (apiLead.contacts.phone) {
+    qualityScore += 5;
+    reasoning.push("Telefone disponível.");
+  }
+  if (apiLead.socialMedia.linkedin) {
+    qualityScore += 5;
+    reasoning.push("LinkedIn disponível.");
+  }
+  if (apiLead.details.rating && apiLead.details.rating > 0) {
+    qualityScore += 10;
+    reasoning.push("Avaliações disponíveis.");
+  }
+  if (apiLead.description) {
+      qualityScore += 5;
+      reasoning.push("Descrição disponível.");
+  }
+  if (qualityScore > 100) qualityScore = 100;
+
+  return {
+    ...apiLead,
+    phone: apiLead.contacts.phone,
+    email: apiLead.contacts.email,
+    website: apiLead.contacts.website,
+    linkedIn: apiLead.socialMedia.linkedin,
+    facebook: apiLead.socialMedia.facebook,
+    instagram: apiLead.socialMedia.instagram,
+    youtube: apiLead.socialMedia.youtube,
+    twitter: apiLead.socialMedia.twitter,
+    tiktok: apiLead.socialMedia.tiktok,
+    foundingYear: apiLead.details.foundingYear,
+    employeeCount: apiLead.details.employeeCount,
+    rating: apiLead.details.rating,
+    reviewCount: apiLead.details.reviewCount,
+    businessHours: apiLead.details.businessHours,
+    coordinates: apiLead.coordinates ? { lat: apiLead.coordinates.lat, lon: apiLead.coordinates.lng } : null,
+
+    // Fill in missing fields with default values
+    leadNumber: index + 1,
+    searchCity: apiLead.city, 
+    searchCountry: apiLead.country,
+    qualityScore: qualityScore,
+    qualityReasoning: reasoning.length > 0 ? reasoning.join(" ") : "Dados básicos disponíveis.",
+    contacted: false,
+    notes: "",
+  };
+}
 
 
 /**
@@ -72,8 +167,8 @@ export async function* fetchLeadsStream(
 
     // Yield each lead from the response
     if (data && data.leads && Array.isArray(data.leads)) {
-      for (const lead of data.leads) {
-        yield lead;
+      for (const [index, apiLead] of (data.leads as ApiLead[]).entries()) {
+        yield mapApiLeadToLead(apiLead, index);
       }
     }
   } catch (error) {
