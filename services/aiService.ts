@@ -80,7 +80,17 @@ function mapApiLeadToLead(apiLead: ApiLead, index: number): Omit<Lead, 'id' | 'w
   if (qualityScore > 100) qualityScore = 100;
 
   return {
-    ...apiLead,
+    // Manually map fields from apiLead that are also in Lead
+    generatedDate: apiLead.generatedDate,
+    companyName: apiLead.companyName,
+    category: apiLead.category,
+    description: apiLead.description,
+    address: apiLead.address,
+    city: apiLead.city,
+    country: apiLead.country,
+    status: apiLead.status,
+
+    // Flatten nested objects
     phone: apiLead.contacts.phone,
     email: apiLead.contacts.email,
     website: apiLead.contacts.website,
