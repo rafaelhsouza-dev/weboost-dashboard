@@ -18,7 +18,7 @@ Este projeto utiliza tecnologias de ponta, incluindo Inteligência Artificial (G
 1.  **AI Scraper & Enriquecimento**:
     *   Prospeção de leads baseada em geolocalização (Google Maps).
     *   Enriquecimento de dados (Email, Redes Sociais, Telefones).
-    *   Exportação via Webhook (n8n).
+    *   Integração com API externa para obtenção de leads.
 2.  **Auditoria SEO & GEO**:
     *   Análise técnica de sites em tempo real (Fetch HTML real).
     *   Validação de Schema (JSON-LD) e Core Web Vitals.
@@ -55,9 +55,8 @@ O projeto foi construído para performance e escalabilidade:
 ├── components/      # UI Reutilizável (Tables, Forms, Charts, AI Components)
 ├── pages/           # Vistas (Admin, Dashboards, Ferramentas AI)
 ├── services/        # Lógica de Negócio e Integrações
-│   ├── aiService.ts      # Streaming e Parsing do Gemini
+│   ├── aiService.ts      # Integração com API externa para leads
 │   ├── seoService.ts     # Lógica de Auditoria SEO (HTML Proxy + AI)
-│   ├── webhookService.ts # Integração n8n
 │   └── mockService.ts    # Dados estáticos
 ├── store/           # Gestão de Estado Global (Auth & Tenancy)
 ├── App.tsx          # Roteamento e Layouts Protegidos

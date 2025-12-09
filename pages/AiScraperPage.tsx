@@ -4,20 +4,18 @@ import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { MapPicker } from '../components/MapPicker';
 import LeadsTable from '../components/LeadsTable';
-import { Bot, Search, Loader2, Download, Send } from 'lucide-react';
+import { Bot, Search, Loader2, Download } from 'lucide-react';
 import { Lead, WebhookStatus } from '../types';
 import { fetchLeadsStream } from '../services/aiService';
-import { sendLeadsToWebhook } from '../services/webhookService';
 
 export const AiScraperPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('Restaurantes Italianos');
   const [radius, setRadius] = useState(5); // km
   const [maxLeads, setMaxLeads] = useState(10);
   const [coordinates, setCoordinates] = useState({ lat: 38.7223, lng: -9.1393 }); // Lisbon default
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [isSendingWebhook, setIsSendingWebhook] = useState(false);
 
   const handleLocationChange = (lat: number, lng: number) => {
     setCoordinates({ lat, lng });
@@ -29,7 +27,7 @@ export const AiScraperPage: React.FC = () => {
 
     try {
       const stream = fetchLeadsStream(searchTerm, coordinates, radius, maxLeads);
-      
+
       let count = 0;
       for await (const partialLead of stream) {
         if (count >= maxLeads) break;
@@ -37,7 +35,7 @@ export const AiScraperPage: React.FC = () => {
         const newLead: Lead = {
           ...partialLead,
           id: `lead-${Date.now()}-${count}`, // Temporary ID
-          webhookStatus: WebhookStatus.IDLE
+          webhookStatus: WebhookStatus.IDLE // Keeping this for compatibility with the Lead type
         };
 
         setLeads(prev => [...prev, newLead]);
@@ -52,28 +50,6 @@ export const AiScraperPage: React.FC = () => {
     }
   };
 
-  const handleSendToWebhook = async () => {
-    if (leads.length === 0) return;
-
-    setIsSendingWebhook(true);
-    
-    // Update local status to sending
-    setLeads(prev => prev.map(l => ({ ...l, webhookStatus: WebhookStatus.SENDING })));
-
-    const success = await sendLeadsToWebhook(leads);
-
-    // Update status based on result
-    const finalStatus = success ? WebhookStatus.SUCCESS : WebhookStatus.ERROR;
-    setLeads(prev => prev.map(l => ({ ...l, webhookStatus: finalStatus })));
-    
-    if (success) {
-      alert(`Sucesso! ${leads.length} leads enviados para o webhook.`);
-    } else {
-      alert("Falha ao enviar para o webhook. Verifique a consola.");
-    }
-
-    setIsSendingWebhook(false);
-  };
 
   return (
     <div className="space-y-6">
@@ -92,7 +68,7 @@ export const AiScraperPage: React.FC = () => {
           <h3 className="font-semibold flex items-center gap-2 text-gray-900 dark:text-white">
             <Search size={18} /> Configuração da Pesquisa
           </h3>
-          
+
           <div>
             <Input 
               label="Termo de Pesquisa (Nicho)" 
@@ -150,18 +126,14 @@ export const AiScraperPage: React.FC = () => {
           <div className="flex justify-between items-center">
              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Resultados Encontrados ({leads.length})</h3>
              <div className="flex gap-2">
-                <Button variant="secondary" size="sm" onClick={handleSendToWebhook} disabled={isSendingWebhook}>
-                  <Send size={16} className="mr-2"/> 
-                  {isSendingWebhook ? 'A enviar...' : 'Enviar para Webhook'}
-                </Button>
                 <Button variant="outline" size="sm">
                   <Download size={16} className="mr-2"/> Exportar CSV
                 </Button>
              </div>
           </div>
-          
+
           <LeadsTable leads={leads} />
-          
+
           <div className="mt-4 p-4 bg-gray-900 text-green-400 rounded-lg font-mono text-xs overflow-x-auto border border-gray-800">
              <pre>{JSON.stringify({ leads: leads.slice(0, 1) }, null, 2)}</pre>
              <p className="text-gray-500 mt-2">... (exibindo 1 de {leads.length} para preview JSON)</p>

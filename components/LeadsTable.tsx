@@ -1,34 +1,18 @@
 import React from 'react';
-import { Lead, WebhookStatus } from '../types';
-import { CheckCircle, Clock, AlertCircle, Send, Globe, Facebook, Linkedin, Instagram, Youtube, Twitter } from 'lucide-react';
+import { Lead } from '../types';
+import { Globe, Facebook, Linkedin, Instagram, Youtube, Twitter } from 'lucide-react';
 
 interface LeadsTableProps {
   leads: Lead[];
 }
 
-// Helper icons component mapping
-const WebhookStatusIndicator: React.FC<{ status: WebhookStatus }> = ({ status }) => {
-  switch (status) {
-    case WebhookStatus.IDLE:
-      return <span className="flex items-center text-gray-400"><Clock className="w-4 h-4 mr-1.5" /> Inativo</span>;
-    case WebhookStatus.SENDING:
-      return <span className="flex items-center text-blue-500 animate-pulse"><Send className="w-4 h-4 mr-1.5" /> A enviar...</span>;
-    case WebhookStatus.SUCCESS:
-      return <span className="flex items-center text-green-500"><CheckCircle className="w-4 h-4 mr-1.5" /> Enviado</span>;
-    case WebhookStatus.ERROR:
-      return <span className="flex items-center text-red-500"><AlertCircle className="w-4 h-4 mr-1.5" /> Erro</span>;
-    default:
-      return null;
-  }
-};
-
 const LeadsTable: React.FC<LeadsTableProps> = ({ leads }) => {
   const headers = [
-    'Estado do Webhook', 'Nome da Empresa', 'Categoria', 'Telefone', 'Email', 'Website', 'Morada',
+    'Nome da Empresa', 'Categoria', 'Telefone', 'Email', 'Website', 'Morada',
     'Avaliação', 'Avaliações', 'Nº Empregados', 'Ano Fundação', 'Pontuação', 'Justificação', 'Descrição', 
     'LinkedIn', 'Facebook', 'Instagram', 'YouTube', 'Twitter', 'TikTok'
   ];
-  
+
   const renderLink = (url: string | null, text: string) => {
     if (!url) return <span className="text-gray-400 dark:text-gray-600">N/D</span>;
     return <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline">{text}</a>;
@@ -50,7 +34,6 @@ const LeadsTable: React.FC<LeadsTableProps> = ({ leads }) => {
         <tbody className="bg-white dark:bg-[#1a1a1a] divide-y divide-gray-100 dark:divide-gray-800">
           {leads.map((lead) => (
             <tr key={lead.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-              <td className="px-6 py-4 whitespace-nowrap text-sm"><WebhookStatusIndicator status={lead.webhookStatus} /></td>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{lead.companyName}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{lead.category}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{lead.phone || 'N/D'}</td>
