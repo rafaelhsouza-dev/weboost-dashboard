@@ -97,11 +97,11 @@ export const Sidebar: React.FC = () => {
         <div className="h-16 flex items-center justify-center border-b border-gray-200 dark:border-gray-800 relative bg-white dark:bg-[#151515]">
           <div className="flex items-center gap-3">
             {sidebarCollapsed ? (
-               <img src="imgs/retentix-icon.webp" alt="Retentix" className="w-8 h-8 object-contain md:block hidden" />
+               <img src="/imgs/retentix-icon.webp" alt="Retentix" className="w-8 h-8 object-contain md:block hidden" />
             ) : (
-               <img src="imgs/retentix-color.webp" alt="Retentix" className="h-8 w-auto object-contain" />
+               <img src="/imgs/retentix-color.webp" alt="Retentix" className="h-8 w-auto object-contain" />
             )}
-            <img src="imgs/retentix-color.webp" alt="Retentix" className="h-8 w-auto object-contain md:hidden block" />
+            <img src="/imgs/retentix-color.webp" alt="Retentix" className="h-8 w-auto object-contain md:hidden block" />
           </div>
           
           <button 
