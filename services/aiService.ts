@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import { Lead } from "../types";
 
 // Configuração da API Key
-const API_KEY = 'AIzaSyAzXi2yTRm4E7vOKlbpNfntHlhd02m6Fs4'; 
+const API_KEY = 'AIzaSyB5rmBSAsvRHCKzyScQi7f1Czxn5U52B5U';
 
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 
