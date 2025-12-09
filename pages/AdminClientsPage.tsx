@@ -111,7 +111,7 @@ export const AdminClientsPage: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Gestor Principal</label>
                     <select className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2.5 text-sm dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
                       <option>-- Selecionar Gestor --</option>
-                      <option>Rafael Souza</option>
+                      <option>Admin Retentix</option>
                       <option>Ana Silva</option>
                       <option>Pedro Santos</option>
                     </select>

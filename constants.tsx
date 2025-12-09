@@ -4,9 +4,9 @@ import { Users, DollarSign, TrendingUp, Activity, BarChart3, ShoppingBag, Target
 // --- Users ---
 export const MOCK_USER: User = {
   id: 'u1',
-  name: 'Rafael Souza',
-  email: 'rafael.souza@retentix.com',
-  avatar: 'https://i.pravatar.cc/150?u=rafael',
+  name: 'Admin Retentix',
+  email: 'admin@retentix.com',
+  avatar: 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg',
   role: Role.ADMIN,
   allowedTenants: ['t1', 't2', 't3']
 };
