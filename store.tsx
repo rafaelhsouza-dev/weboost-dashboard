@@ -89,7 +89,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           setCurrentTenant(defaultTenant);
           resolve(true);
         } else {
-          alert("Credenciais inválidas. Tente admin@retentix.com / admin123");
+          alert("Credenciais inválidas. Tente admin@retentix.io / retentix#2025");
           resolve(false);
         }
       }, 800);

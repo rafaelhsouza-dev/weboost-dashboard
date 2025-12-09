@@ -7,8 +7,8 @@ import { RetentixLogo } from './RetentixLogo';
 export const Login: React.FC = () => {
   const { login } = useApp();
   // Pre-filled credentials for ease of use
-  const [email, setEmail] = useState('admin@retentix.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('admin@retentix.io');
+  const [password, setPassword] = useState('retentix#2025');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {

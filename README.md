@@ -82,7 +82,7 @@ O projeto foi construído para performance e escalabilidade:
 
 3.  **Aceder**:
     Abra `http://localhost:5173` no navegador.
-    *   **Login Padrão**: `admin@retentix.com` / `admin123`.
+    *   **Login Padrão**: `admin@retentix.io` / `retentix#2025`.
 
 ---
 
