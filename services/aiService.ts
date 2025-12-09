@@ -1,23 +1,22 @@
 import { GoogleGenAI } from "@google/genai";
 import { Lead } from "../types";
-import { getGeminiApiKey } from "./config";
+
+// Configuração da API Key
+const API_KEY = 'AIzaSyAzXi2yTRm4E7vOKlbpNfntHlhd02m6Fs4'; 
+
+const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 // Helper to find and parse JSON from a streaming text chunk
 function extractJson(text: string): any[] {
-  // This regex is designed to find JSON objects within a larger string,
-  // even if they are incomplete. It's a pragmatic approach for streaming.
   const jsonObjects = [];
-  // Regex to find content between ```json and ```
   const codeBlockMatch = text.match(/```json\s*([\s\S]*?)\s*```/);
   const content = codeBlockMatch ? codeBlockMatch[1] : text;
 
-  // Find where the leads array starts
   const leadsArrayMatch = content.match(/"leads"\s*:\s*(\[[\s\S]*)/);
   if (!leadsArrayMatch) return [];
   
   let arrayContent = leadsArrayMatch[1];
   
-  // A simple stack-based parser to find complete objects
   let openBraces = 0;
   let currentObject = '';
   let inString = false;
@@ -61,16 +60,6 @@ export async function* fetchLeadsStream(
     leadCount: number
 ): AsyncGenerator<Omit<Lead, 'id' | 'webhookStatus'>> {
   
-  // Resolve API key from multiple code-based sources (window config, localStorage, env)
-  const apiKey = getGeminiApiKey();
-  
-  if (!apiKey) {
-    console.error("ERRO CRÍTICO: VITE_API_KEY_GEMINI não definida no .env");
-    throw new Error("Chave de API do Gemini não configurada.");
-  }
-
-  const ai = new GoogleGenAI({ apiKey });
-
   const prompt = `É um especialista de classe mundial em geração de leads com capacidades avançadas de web-scraping.
 A sua tarefa é encontrar uma lista de até ${leadCount} leads de negócio com base nos seguintes critérios: '${searchQuery}' num raio de ${radiusKm}km à volta das coordenadas latitude ${coordinates.lat} e longitude ${coordinates.lng}.
 
@@ -112,21 +101,18 @@ IMPORTANTE: A sua resposta inteira DEVE ser um objeto JSON envolvido num único 
   try {
     const stream = await ai.models.generateContentStream({
       model: "gemini-2.5-flash",
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: prompt }],
-        },
-      ],
+      contents: prompt,
+      config: {
+        tools: [{ googleMaps: {} }, { googleSearch: {} }],
+        toolConfig: { retrievalConfig: { latLng: { latitude: coordinates.lat, longitude: coordinates.lng } } },
+      },
     });
 
     for await (const chunk of stream) {
-      const piece = typeof (chunk as any).text === 'function' ? (chunk as any).text() : (chunk as any).text;
-      if (piece) fullResponseText += piece;
+      fullResponseText += chunk.text;
       const parsedLeads = extractJson(fullResponseText);
       
       for (const lead of parsedLeads) {
-        // Use companyName + address as a unique key to avoid yielding duplicates
         const leadId = `${lead.companyName}-${lead.address}`; 
         if (!yieldedLeadIds.has(leadId) && lead.companyName) {
             yield lead;
@@ -136,6 +122,6 @@ IMPORTANTE: A sua resposta inteira DEVE ser um objeto JSON envolvido num único 
     }
   } catch (error) {
     console.error("Error fetching leads from Gemini:", error);
-    throw new Error("Falha ao obter uma resposta válida da IA. O modelo pode não conseguir encontrar leads para esta consulta ou o formato da resposta estava incorreto.");
+    throw new Error("Falha ao obter uma resposta válida da IA.");
   }
 }

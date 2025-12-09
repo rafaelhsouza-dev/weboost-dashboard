@@ -82,18 +82,7 @@ O projeto foi construído para performance e escalabilidade:
 
 3.  **Aceder**:
     Abra `http://localhost:5173` no navegador.
-    *   **Login**: As credenciais de login para o ambiente de desenvolvimento estão agora incorporadas no código (`admin@retentix.com` / `admin123`).
-
-> **Nota**: As variáveis de ambiente, como a chave da API do Gemini, foram incorporadas diretamente no código-fonte para simplificar a configuração. Para um ambiente de produção, é altamente recomendável voltar a usar um sistema de gestão de segredos ou ficheiros `.env`.
-
----
-
-## 📝 Roadmap Futuro
-
-- [ ] Integração Backend (Node.js/Supabase).
-- [ ] Autenticação Real (Auth0 ou Firebase).
-- [ ] Exportação PDF Nativa dos Relatórios SEO.
-- [ ] Dashboard Financeiro (Stripe integration).
+    *   **Login Padrão**: `admin@retentix.com` / `admin123`.
 
 ---
 

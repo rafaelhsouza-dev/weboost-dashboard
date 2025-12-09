@@ -6,7 +6,7 @@ export const MOCK_USER: User = {
   id: 'u1',
   name: 'Rafael Souza',
   email: 'rafael.souza@retentix.com',
-  avatar: 'https://www.nicepng.com/png/detail/144-1446162_pin-businessman-clipart-png-flat-user-icon.png',
+  avatar: 'https://i.pravatar.cc/150?u=rafael',
   role: Role.ADMIN,
   allowedTenants: ['t1', 't2', 't3']
 };

@@ -24,7 +24,7 @@ interface AppState {
 const AppContext = createContext<AppState | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Initialize state from LocalStorage if available (Best Practice for UX)
+  // Initialize state from LocalStorage if available
   const [user, setUser] = useState<User | null>(() => {
     const saved = localStorage.getItem('retentix_user');
     return saved ? JSON.parse(saved) : null;
@@ -79,19 +79,17 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const login = async (email: string, pass: string) => {
     return new Promise<boolean>((resolve) => {
       setTimeout(() => {
-        // Obter credenciais do ambiente
-        const validEmail = "admin@retentix.com";
-        const validPass = "retentix@#2025";
-
-        const isValid = (email === validEmail && pass === validPass);
-
-        if (isValid) {
+        // Hardcoded credentials for demo purposes (No .env)
+        const validEmail = 'admin@retentix.io';
+        const validPass = 'retentix#2025';
+        
+        if (email === validEmail && pass === validPass) {
           setUser(MOCK_USER);
           const defaultTenant = MOCK_TENANTS.find(t => t.id === 't1') || MOCK_TENANTS[0];
           setCurrentTenant(defaultTenant);
           resolve(true);
         } else {
-          alert("Credenciais inválidas.");
+          alert("Credenciais inválidas. Tente admin@retentix.com / admin123");
           resolve(false);
         }
       }, 800);
@@ -113,7 +111,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const toggleLanguage = () => setLanguage(prev => prev === 'pt' ? 'en' : 'pt');
   const toggleSidebar = () => setSidebarCollapsed(prev => !prev);
 
-  // Security: Filter tenants allowed for user
   const availableTenants = user?.role === Role.ADMIN 
     ? MOCK_TENANTS 
     : MOCK_TENANTS.filter(t => user?.allowedTenants.includes(t.id));

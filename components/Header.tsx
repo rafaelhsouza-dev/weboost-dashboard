@@ -67,7 +67,7 @@ export const Header: React.FC = () => {
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{user?.role}</p>
           </div>
           <img 
-            src={user?.avatar || "https://picsum.photos/100"}
+            src={user?.avatar || "https://picsum.photos/100"} 
             alt="User" 
             className="w-8 h-8 md:w-9 md:h-9 rounded-full ring-2 ring-white dark:ring-gray-800 object-cover" 
           />

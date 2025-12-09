@@ -1,22 +1,14 @@
 import { Lead } from '../types';
 
-// The Webhook URL must be configured via environment variables for security
-const WEBHOOK_URL = "https://webhook.rhsdigital.com.br/webhook/scrap-ai";
+const WEBHOOK_URL = 'https://webhook.rhsdigital.com.br/webhook/scrap-ai';
 
 export async function sendLeadsToWebhook(leads: Lead[]): Promise<boolean> {
   if (leads.length === 0) {
-    return true; // Nothing to send
-  }
-
-  if (!WEBHOOK_URL) {
-    console.error("CRITICAL: VITE_WEBHOOK_URL_SCRAPER_AI is not defined. Cannot send data.");
-    alert("Configuração ausente: WEBHOOK_URL não encontrada no ficheiro .env.");
-    return false;
+    return true; 
   }
   
   try {
-    // We remove client-side only properties from each lead before sending
-    // Keep 'webhookStatus' out of the payload sent to external service
+    // Remove properties internal to the frontend before sending
     const payload = leads.map(lead => {
       const { id, webhookStatus, ...leadData } = lead;
       return leadData;
