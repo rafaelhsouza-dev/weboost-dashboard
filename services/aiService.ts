@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { Lead } from "../types";
+import { getGeminiApiKey } from "./config";
 
 // Helper to find and parse JSON from a streaming text chunk
 function extractJson(text: string): any[] {
@@ -60,8 +61,8 @@ export async function* fetchLeadsStream(
     leadCount: number
 ): AsyncGenerator<Omit<Lead, 'id' | 'webhookStatus'>> {
   
-  // Read API key from environment (Vite or Node env)
-  const apiKey = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_KEY_GEMINI) || process.env?.VITE_API_KEY_GEMINI || "";
+  // Resolve API key from multiple code-based sources (window config, localStorage, env)
+  const apiKey = getGeminiApiKey();
   
   if (!apiKey) {
     console.error("ERRO CRÍTICO: VITE_API_KEY_GEMINI não definida no .env");

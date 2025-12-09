@@ -1,11 +1,8 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { SeoReport } from "../types";
+import { getGeminiApiKey } from "./config";
 
-// Never hardcode API keys. Expect it from environment (e.g., Vite env)
-const apiKey = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_KEY_GEMINI) || process.env?.VITE_API_KEY_GEMINI || "";
 const MODEL_NAME = "gemini-2.5-flash";
-
-const ai = new GoogleGenAI({ apiKey });
 
 // Helper: Robust JSON extraction (same as Scraper)
 function extractJson(text: string): any {
@@ -70,10 +67,12 @@ export const generateSeoAudit = async (
   competitorUrls: string = ""
 ): Promise<SeoReport> => {
   
+  const apiKey = getGeminiApiKey();
   if (!apiKey) {
     console.error("Chave de API do Gemini não configurada (VITE_API_KEY_GEMINI)");
     throw new Error("Chave de API do Gemini não configurada.");
   }
+  const ai = new GoogleGenAI({ apiKey });
 
   // 1. Try to get Real Content
   const realHtml = await fetchHtmlContent(url);
