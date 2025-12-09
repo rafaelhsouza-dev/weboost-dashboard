@@ -81,7 +81,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setTimeout(() => {
         // Obter credenciais do ambiente
         const validEmail = "admin@retentix.com";
-        const validPass = "admin123";
+        const validPass = "retentix@#2025";
 
         const isValid = (email === validEmail && pass === validPass);
 
