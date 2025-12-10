@@ -4,16 +4,16 @@ import { Users, DollarSign, TrendingUp, Activity, BarChart3, ShoppingBag, Target
 // --- Users ---
 export const MOCK_USER: User = {
   id: 'u1',
-  name: 'Admin Retentix',
-  email: 'admin@retentix.com',
+  name: 'Admin Weboost',
+  email: 'admin@weboost.com',
   avatar: 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg',
   role: Role.ADMIN,
-  allowedTenants: ['t1', 't2', 't3']
+  allowedTenants: ['t1', 't2', 't3', 't4']
 };
 
 // --- Tenants ---
 export const MOCK_TENANTS: Tenant[] = [
-  { id: 't1', name: 'Retentix (Utilizador)', type: TenancyType.INTERNAL },
+  { id: 't1', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL },
   { id: 't2', name: 'TechSolutions Lda', type: TenancyType.CLIENT },
   { id: 't3', name: 'Marketing Pro', type: TenancyType.CLIENT },
   { id: 't4', name: 'Admin System', type: TenancyType.ADMIN },

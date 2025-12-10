@@ -15,7 +15,7 @@ export const Header: React.FC = () => {
     if (path === '/marketing') return 'Campanhas & Marketing';
     if (path === '/reports') return 'Relatórios & Exportação';
     if (path === '/users') return 'Gestão de Utilizadores';
-    if (path === '/tenants') return 'Gestão de Clientes (Tenants)';
+    if (path === '/tenants') return 'Gestão de Clientes';
     if (path === '/services') return 'Catálogo de Serviços';
     return 'Dashboard';
   };

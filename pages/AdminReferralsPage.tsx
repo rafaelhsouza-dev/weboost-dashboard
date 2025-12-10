@@ -43,7 +43,7 @@ export const AdminReferralsPage: React.FC = () => {
     { value: 'c1', label: 'TechSolutions Lda (Cliente)' },
     { value: 'c2', label: 'Marketing Pro (Cliente)' },
     { value: 'p1', label: 'Agência Digital X (Parceiro)' },
-    { value: 'u1', label: 'Admin Retentix (Funcionário)' },
+    { value: 'u1', label: 'Admin Weboost (Funcionário)' },
   ];
 
   const statusOptions = [

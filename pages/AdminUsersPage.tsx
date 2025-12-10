@@ -17,7 +17,7 @@ interface User {
 export const AdminUsersPage: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([
-    { id: 1, name: 'Admin Retentix', email: 'rafael@retentix.com', role: 'Administrador', tenant: 'Admin System' },
+    { id: 1, name: 'Admin Weboost', email: 'rafael@weboost.com', role: 'Administrador', tenant: 'Admin System' },
     { id: 2, name: 'Ana Silva', email: 'ana@techsolutions.com', role: 'Gestor', tenant: 'TechSolutions Lda' },
     { id: 3, name: 'Pedro Santos', email: 'pedro@marketing.com', role: 'Funcionário', tenant: 'Marketing Pro' },
   ]);

@@ -70,7 +70,7 @@ export const AdminClientsPage: React.FC = () => {
       <div className="flex justify-between items-center">
         <div>
            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Gestão de Clientes</h1>
-           <p className="text-gray-500 dark:text-gray-400 text-sm">Gerencie os tenants da plataforma Retentix.</p>
+           <p className="text-gray-500 dark:text-gray-400 text-sm">Gerencie os clientes da plataforma Weboost.</p>
         </div>
         <Button onClick={() => setIsFormOpen(true)}>
           <Plus size={18} className="mr-2" />
@@ -111,7 +111,7 @@ export const AdminClientsPage: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Gestor Principal</label>
                     <select className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2.5 text-sm dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
                       <option>-- Selecionar Gestor --</option>
-                      <option>Admin Retentix</option>
+                      <option>Admin Weboost</option>
                       <option>Ana Silva</option>
                       <option>Pedro Santos</option>
                     </select>
@@ -123,11 +123,21 @@ export const AdminClientsPage: React.FC = () => {
              <div className="space-y-4">
                <h4 className="text-sm font-bold uppercase text-gray-400 tracking-wider border-t border-gray-100 dark:border-gray-800 pt-4">Dados da Empresa</h4>
                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="md:col-span-2"><Input label="Nome da Marca / Empresa" placeholder="Ex: Retentix Solutions" required /></div>
-                  <Input label="Nome Fiscal" placeholder="Ex: Retentix Lda" />
+                  <div className="md:col-span-3"><Input label="Nome da Marca / Empresa" placeholder="Ex: Weboost Solutions" required /></div>
+                  <Input label="Nome Fiscal" placeholder="Ex: Weboost Lda" />
                   <Input label="NIF" placeholder="Ex: 500123456" />
-                  <Input label="Setor de Atividade" placeholder="Ex: Tecnologia" />
+                  <div>
+                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Setor de Atividade</label>
+                   <select className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2.5 text-sm dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                     <option>-- Selecionar --</option>
+                     <option>Tecnologia</option>
+                     <option>Moda</option>
+                     <option>Alimentos</option>
+                     <option>Outros</option>
+                   </select>
+                  </div>
                   <Input label="URL Website" placeholder="https://" />
+                  <Input label="URL Ecommerce" placeholder="https://" />
                   <div className="md:col-span-3">
                      <Input label="Morada Completa" placeholder="Rua Exemplo, 123, Lisboa" />
                   </div>
@@ -238,7 +248,7 @@ export const AdminClientsPage: React.FC = () => {
       <DataTable 
         data={clients}
         columns={columns}
-        title="Lista de Clientes (Tenants)"
+        title="Lista de Clientes"
       />
     </div>
   );

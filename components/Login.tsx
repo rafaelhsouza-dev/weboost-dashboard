@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { useApp } from '../store';
 import { Button } from './Button';
 import { Input } from './Input';
-import { RetentixLogo } from './RetentixLogo';
+import { WeboostLogo } from './WeboostLogo';
 
 export const Login: React.FC = () => {
   const { login } = useApp();
   // Pre-filled credentials for ease of use
-  const [email, setEmail] = useState('admin@retentix.io');
-  const [password, setPassword] = useState('retentix#2025');
+  const [email, setEmail] = useState('admin@weboost.io');
+  const [password, setPassword] = useState('weboost#2025');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -19,14 +19,14 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#1f3ab9] via-[#111111] to-[#992091] bg-[length:200%_200%] animate-gradient-shift">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#111111] via-[#111111] to-[#00FF85] bg-[length:200%_200%] animate-gradient-shift">
       <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px] z-0"></div>
       <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] z-0 opacity-50" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-secondary/20 rounded-full blur-[100px] z-0 opacity-50" />
 
       <div className="w-full max-w-md p-8 bg-white/90 dark:bg-[#1a1a1a]/95 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700 z-10 mx-4">
         <div className="text-center mb-8 flex flex-col items-center">
-          <img src="/imgs/retentix-color.webp" alt="Retentix Logo" className="h-12 w-auto mb-4" />
+          <img src="/imgs/weboost-color.webp" alt="Weboost Logo" className="h-12 w-auto mb-4" />
           <h1 className="text-xl font-bold text-gray-900 dark:text-white">Bem-vindo de volta</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Acesse a sua conta para gerir o seu negócio</p>
         </div>
@@ -64,7 +64,7 @@ export const Login: React.FC = () => {
         </form>
 
         <div className="mt-6 text-center text-xs text-gray-400">
-          &copy; Retentix. Todos os direitos reservados.
+          &copy; Weboost. Todos os direitos reservados.
         </div>
       </div>
     </div>

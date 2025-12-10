@@ -1,6 +1,6 @@
-# Retentix - Plataforma SaaS de Retenção e Marketing
+# Weboost - Plataforma SaaS de Retenção e Marketing
 
-Bem-vindo ao repositório do **Retentix**, uma plataforma SaaS moderna e responsiva focada em CRM (Customer Relationship Management), CDP (Customer Data Platform) e Agência de Marketing Digital.
+Bem-vindo ao repositório do **Weboost**, uma plataforma SaaS moderna e responsiva focada em CRM (Customer Relationship Management), CDP (Customer Data Platform) e Agência de Marketing Digital.
 
 Este projeto utiliza tecnologias de ponta, incluindo Inteligência Artificial (Google Gemini) para prospeção de leads e análise de SEO, operando numa arquitetura *Multi-Tenancy*.
 
@@ -81,8 +81,8 @@ O projeto foi construído para performance e escalabilidade:
 
 3.  **Aceder**:
     Abra `http://localhost:5173` no navegador.
-    *   **Login Padrão**: `admin@retentix.io` / `retentix#2025`.
+    *   **Login Padrão**: `admin@weboost.io` / `weboost#2025`.
 
 ---
 
-**Retentix** - *Potenciar a Retenção, Maximizar o Valor com IA.*
+**Weboost** - *Potenciar a Retenção, Maximizar o Valor com IA.*

@@ -5,14 +5,14 @@ interface LogoProps {
   variant?: 'full' | 'icon';
 }
 
-export const RetentixLogo: React.FC<LogoProps> = ({ className = '', variant = 'full' }) => {
+export const WeboostLogo: React.FC<LogoProps> = ({ className = '', variant = 'full' }) => {
   return (
     <svg 
       viewBox="0 0 200 50" 
       fill="none" 
       xmlns="http://www.w3.org/2000/svg" 
       className={className}
-      aria-label="Retentix Logo"
+      aria-label="Weboost Logo"
     >
       <defs>
         <linearGradient id="logo_gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
@@ -46,7 +46,7 @@ export const RetentixLogo: React.FC<LogoProps> = ({ className = '', variant = 'f
             fontSize="28" 
             className="fill-gray-900 dark:fill-white"
           >
-            Retentix
+            Weboost
           </text>
           {/* Ponto colorido no final */}
           <circle cx="125" cy="30" r="3" fill="#992091" />

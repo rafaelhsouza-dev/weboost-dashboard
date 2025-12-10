@@ -17,6 +17,12 @@ import { AdminEventsPage } from './pages/AdminEventsPage';
 import { AdminReferralsPage } from './pages/AdminReferralsPage';
 import { AiScraperPage } from './pages/AiScraperPage';
 import { SeoAnalysisPage } from './pages/SeoAnalysisPage';
+import AdminSettingsPage from "./pages/AdminSettingsPage";
+import ClientDashboardPage from "./pages/ClientDashboardPage";
+import ClientSettingsPage from "./pages/ClientSettingsPage";
+import UserDashboardPage from "./pages/UserDashboardPage";
+import UserSettingsPage from "./pages/UserSettingsPage";
+import ClientReportsPage from "./pages/ClientReportsPage";
 
 const ProtectedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, sidebarCollapsed } = useApp();
@@ -74,9 +80,18 @@ const AppContent: React.FC = () => {
         <Route path="/partners" element={<ProtectedLayout><AdminPartnersPage /></ProtectedLayout>} />
         <Route path="/events" element={<ProtectedLayout><AdminEventsPage /></ProtectedLayout>} />
         <Route path="/referrals" element={<ProtectedLayout><AdminReferralsPage /></ProtectedLayout>} />
+        <Route path="/admin/settings" element={<ProtectedLayout><AdminSettingsPage /></ProtectedLayout>} />
 
-        <Route path="/reports" element={<ProtectedLayout><PlaceholderPage title="Relatórios e Exportações" /></ProtectedLayout>} />
+        {/* Client Routes */}
+        <Route path="/client/dashboard" element={<ProtectedLayout><ClientDashboardPage /></ProtectedLayout>} />
         <Route path="/campaigns" element={<ProtectedLayout><MarketingPage /></ProtectedLayout>} />
+        <Route path="/reports" element={<ProtectedLayout><ClientReportsPage /></ProtectedLayout>} />
+        <Route path="/client/settings" element={<ProtectedLayout><ClientSettingsPage /></ProtectedLayout>} />
+
+        {/* User Routes */}
+        <Route path="/user/dashboard" element={<ProtectedLayout><UserDashboardPage /></ProtectedLayout>} />
+        <Route path="/user/settings" element={<ProtectedLayout><UserSettingsPage /></ProtectedLayout>} />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </HashRouter>

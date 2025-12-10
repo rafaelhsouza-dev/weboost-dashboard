@@ -26,15 +26,18 @@ const AppContext = createContext<AppState | undefined>(undefined);
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Initialize state from LocalStorage if available
   const [user, setUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem('retentix_user');
-    return saved ? JSON.parse(saved) : null;
+    const saved = localStorage.getItem('weboost_user');
+    const loadedUser = saved ? JSON.parse(saved) : null;
+    console.log('AppProvider: Initializing user from localStorage:', loadedUser);
+    return loadedUser;
   });
 
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const saved = localStorage.getItem('retentix_theme');
+    const saved = localStorage.getItem('weboost_theme');
     return (saved === 'dark' || saved === 'light') ? saved : 'light';
   });
 
+  // currentTenant should not be initialized from localStorage here, but managed by useEffect
   const [currentTenant, setCurrentTenant] = useState<Tenant | null>(null);
   const [language, setLanguage] = useState<Language>('pt');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -47,22 +50,53 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } else {
       root.classList.remove('dark');
     }
-    localStorage.setItem('retentix_theme', theme);
+    localStorage.setItem('weboost_theme', theme);
   }, [theme]);
 
-  // Effect: Handle User Persistence & Tenant Initialization
+  // Effect: Handle User Persistence and INITIAL Tenant Resolution
   useEffect(() => {
+    console.log('useEffect [user]: Running. User:', user);
     if (user) {
-      localStorage.setItem('retentix_user', JSON.stringify(user));
-      // If user is logged in but no tenant selected, select default
-      if (!currentTenant) {
-        const defaultTenant = MOCK_TENANTS.find(t => t.id === 't1') || MOCK_TENANTS[0];
-        setCurrentTenant(defaultTenant);
+      localStorage.setItem('weboost_user', JSON.stringify(user));
+
+      // Determine available tenants for the current user
+      const userAvailableTenants = user.role === Role.ADMIN
+        ? MOCK_TENANTS
+        : MOCK_TENANTS.filter(t => user.allowedTenants.includes(t.id));
+
+      let resolvedTenant: Tenant | null = null;
+
+      // Try to load a saved tenant from localStorage first
+      const savedTenantId = localStorage.getItem('weboost_currentTenantId');
+      console.log('useEffect [user]: Saved Tenant ID from localStorage:', savedTenantId);
+      if (savedTenantId) {
+        resolvedTenant = userAvailableTenants.find(t => t.id === savedTenantId) || null;
+      }
+
+      // If no resolved tenant (either not saved or not allowed for user), fall back to default logic
+      if (!resolvedTenant) {
+        resolvedTenant = userAvailableTenants.find(t => t.id === 't1') || userAvailableTenants[0] || null;
+        console.log('useEffect [user]: Falling back to default tenant:', resolvedTenant);
+      }
+      
+      console.log('useEffect [user]: Setting currentTenant to:', resolvedTenant);
+      setCurrentTenant(resolvedTenant);
+      // Persist the resolved tenant immediately
+      if (resolvedTenant) {
+        localStorage.setItem('weboost_currentTenantId', resolvedTenant.id);
+      } else {
+        localStorage.removeItem('weboost_currentTenantId');
       }
     } else {
-      localStorage.removeItem('retentix_user');
+      // If no user, clear user and tenant from localStorage
+      console.log('useEffect [user]: No user found. Clearing localStorage and currentTenant.');
+      localStorage.removeItem('weboost_user');
+      localStorage.removeItem('weboost_currentTenantId');
+      setCurrentTenant(null);
     }
-  }, [user, currentTenant]);
+  }, [user]); // This effect ONLY depends on user to run once on user change/load
+
+
 
   // Effect: Responsive Sidebar
   useEffect(() => {
@@ -80,16 +114,28 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return new Promise<boolean>((resolve) => {
       setTimeout(() => {
         // Hardcoded credentials for demo purposes (No .env)
-        const validEmail = 'admin@retentix.io';
-        const validPass = 'retentix#2025';
+        const validEmail = 'admin@weboost.io';
+        const validPass = 'weboost#2025';
         
         if (email === validEmail && pass === validPass) {
+          console.log('Login: Valid credentials. Setting user to MOCK_USER.');
           setUser(MOCK_USER);
-          const defaultTenant = MOCK_TENANTS.find(t => t.id === 't1') || MOCK_TENANTS[0];
-          setCurrentTenant(defaultTenant);
+          // For ADMIN user, always set default tenant to 't4' (Admin System)
+          const adminTenant = MOCK_TENANTS.find(t => t.id === 't4');
+          if (adminTenant) {
+            console.log('Login: Setting currentTenant to Admin Tenant (t4).');
+            setCurrentTenant(adminTenant);
+            localStorage.setItem('weboost_currentTenantId', adminTenant.id);
+          } else {
+            // Fallback if 't4' is not found, though it should be in MOCK_TENANTS
+            const defaultTenant = MOCK_TENANTS.find(t => t.id === 't1') || MOCK_TENANTS[0];
+            console.log('Login: Admin Tenant (t4) not found. Falling back to default:', defaultTenant);
+            setCurrentTenant(defaultTenant);
+            if (defaultTenant) localStorage.setItem('weboost_currentTenantId', defaultTenant.id);
+          }
           resolve(true);
         } else {
-          alert("Credenciais inválidas. Tente admin@retentix.io / retentix#2025");
+          alert("Credenciais inválidas. Tente admin@weboost.io / weboost#2025");
           resolve(false);
         }
       }, 800);
@@ -97,14 +143,23 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const logout = () => {
+    console.log('Logout: Clearing user and tenant from state and localStorage.');
     setUser(null);
     setCurrentTenant(null);
-    localStorage.removeItem('retentix_user');
+    localStorage.removeItem('weboost_user');
+    localStorage.removeItem('weboost_currentTenantId');
   };
 
   const setTenant = (tenantId: string) => {
+    console.log('setTenant: Attempting to set tenant to ID:', tenantId);
     const t = MOCK_TENANTS.find(mt => mt.id === tenantId);
-    if (t) setCurrentTenant(t);
+    if (t) {
+      setCurrentTenant(t);
+      localStorage.setItem('weboost_currentTenantId', t.id); // Persist on manual change
+      console.log('setTenant: Successfully set currentTenant to:', t);
+    } else {
+      console.log('setTenant: Tenant with ID not found:', tenantId);
+    }
   };
 
   const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');

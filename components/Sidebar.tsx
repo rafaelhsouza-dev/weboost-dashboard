@@ -23,7 +23,7 @@ import {
   Bot,
   ScanSearch
 } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export const Sidebar: React.FC = () => {
   const { 
@@ -37,45 +37,59 @@ export const Sidebar: React.FC = () => {
   } = useApp();
   
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleTenantChange = (tenantId: string) => {
+    const tenant = availableTenants.find(t => t.id === tenantId);
+    if (tenant) {
+      setTenant(tenantId);
+      switch (tenant.type) {
+        case TenancyType.ADMIN:
+          navigate('/');
+          break;
+        case TenancyType.CLIENT:
+          navigate('/client/dashboard');
+          break;
+        case TenancyType.INTERNAL:
+          navigate('/user/dashboard');
+          break;
+        default:
+          navigate('/');
+          break;
+      }
+    }
+  };
 
   const getMenuItems = () => {
-    const baseItems = [
-      { id: 'home', label: 'Dashboard', icon: LayoutDashboard, path: '/' },
-    ];
-
-    if (!currentTenant) return baseItems;
+    if (!currentTenant) return [];
 
     switch (currentTenant.type) {
       case TenancyType.ADMIN:
         return [
-          ...baseItems,
-          { id: 'tenants', label: 'Clientes (Empresas)', icon: Building2, path: '/tenants' },
+          { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/' },
+          { id: 'tenants', label: 'Clientes', icon: Building2, path: '/tenants' },
           { id: 'contracts', label: 'Contratos', icon: FileSignature, path: '/contracts' },
-          { id: 'services', label: 'Catálogo de Serviços', icon: Layers, path: '/services' },
-          { id: 'users', label: 'Utilizadores do Sistema', icon: Users, path: '/users' },
+          { id: 'services', label: 'Serviços', icon: Layers, path: '/services' },
+          { id: 'users', label: 'Utilizadores', icon: Users, path: '/users' },
           { id: 'partners', label: 'Parceiros', icon: Handshake, path: '/partners' },
           { id: 'events', label: 'Feiras e Eventos', icon: CalendarDays, path: '/events' },
           { id: 'referrals', label: 'Indicações', icon: UserPlus2, path: '/referrals' },
-          { id: 'scraper', label: 'AI Scraper', icon: Bot, path: '/scraper' },
-          { id: 'seo', label: 'Analisar SEO/GEO', icon: ScanSearch, path: '/seo-analysis' },
-          { id: 'reports', label: 'Relatórios Globais', icon: FileText, path: '/reports' },
+          { id: 'settings', label: 'Configurações', icon: Settings, path: '/admin/settings' },
         ];
       case TenancyType.CLIENT:
         return [
-          ...baseItems,
-          { id: 'campaigns', label: 'Minhas Campanhas', icon: Megaphone, path: '/campaigns' },
+          { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/client/dashboard' },
+          { id: 'campaigns', label: 'Campanhas', icon: Megaphone, path: '/campaigns' },
           { id: 'reports', label: 'Relatórios', icon: FileText, path: '/reports' },
+          { id: 'settings', label: 'Configurações', icon: Settings, path: '/client/settings' },
         ];
       case TenancyType.INTERNAL:
       default:
         return [
-          ...baseItems,
-          { id: 'crm', label: 'CRM', icon: Briefcase, path: '/crm' },
-          { id: 'cdp', label: 'CDP (Clientes)', icon: Database, path: '/cdp' },
+          { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/user/dashboard' },
           { id: 'scraper', label: 'AI Scraper', icon: Bot, path: '/scraper' },
           { id: 'seo', label: 'Analisar SEO/GEO', icon: ScanSearch, path: '/seo-analysis' },
-          { id: 'marketing', label: 'Marketing', icon: Megaphone, path: '/marketing' },
-          { id: 'analytics', label: 'Analytics', icon: PieChart, path: '/analytics' },
+          { id: 'settings', label: 'Configurações', icon: Settings, path: '/user/settings' },
         ];
     }
   };
@@ -97,11 +111,11 @@ export const Sidebar: React.FC = () => {
         <div className="h-16 flex items-center justify-center border-b border-gray-200 dark:border-gray-800 relative bg-white dark:bg-[#151515]">
           <div className="flex items-center gap-3">
             {sidebarCollapsed ? (
-               <img src="/imgs/retentix-icon.webp" alt="Retentix" className="w-8 h-8 object-contain md:block hidden" />
+               <img src="/imgs/weboost-icon.webp" alt="Weboost" className="w-8 h-8 object-contain md:block hidden" />
             ) : (
-               <img src="/imgs/retentix-color.webp" alt="Retentix" className="h-8 w-auto object-contain" />
+               <img src="/imgs/weboost-color.webp" alt="Weboost" className="h-8 w-auto object-contain" />
             )}
-            <img src="/imgs/retentix-color.webp" alt="Retentix" className="h-8 w-auto object-contain md:hidden block" />
+            <img src="/imgs/weboost-color.webp" alt="Weboost" className="h-8 w-auto object-contain md:hidden block" />
           </div>
           
           <button 
@@ -127,7 +141,7 @@ export const Sidebar: React.FC = () => {
                   <div className={`flex flex-col truncate ${sidebarCollapsed ? 'md:hidden' : ''}`}>
                     <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{currentTenant?.name}</span>
                     <span className="text-[10px] text-gray-500 uppercase tracking-wider">
-                       {currentTenant?.type === 'ADMIN' ? 'Administrador' : currentTenant?.type === 'INTERNAL' ? 'Retentix' : 'Cliente'}
+                       {currentTenant?.type === 'ADMIN' ? 'Administrador' : currentTenant?.type === 'INTERNAL' ? 'Weboost' : 'Cliente'}
                     </span>
                   </div>
                </div>
@@ -136,7 +150,7 @@ export const Sidebar: React.FC = () => {
                
                <select 
                   className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  onChange={(e) => setTenant(e.target.value)}
+                  onChange={(e) => handleTenantChange(e.target.value)}
                   value={currentTenant?.id}
                >
                   {availableTenants.map(t => (
@@ -160,12 +174,12 @@ export const Sidebar: React.FC = () => {
                 className={`
                   flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
                   ${isActive 
-                    ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-blue-400' 
+                    ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-[#16a34a]' 
                     : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}
                   ${sidebarCollapsed ? 'md:justify-center' : ''}
                 `}
               >
-                <item.icon size={20} className={isActive ? 'text-primary dark:text-blue-400' : 'text-gray-500'} />
+                <item.icon size={20} className={isActive ? 'text-primary dark:text-[#16a34a]' : 'text-gray-500'} />
                 
                 <span className={`text-sm font-medium ${sidebarCollapsed ? 'md:hidden' : ''}`}>
                    {item.label}
@@ -176,15 +190,6 @@ export const Sidebar: React.FC = () => {
         </nav>
 
         <div className="p-3 border-t border-gray-200 dark:border-gray-800 space-y-1">
-          <button className={`
-            w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 
-            hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 transition-colors
-            ${sidebarCollapsed ? 'md:justify-center' : ''}
-          `}>
-            <Settings size={20} />
-            <span className={`text-sm font-medium ${sidebarCollapsed ? 'md:hidden' : ''}`}>Configurações</span>
-          </button>
-          
           <button 
             onClick={logout}
             className={`
