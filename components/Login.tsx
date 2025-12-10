@@ -17,12 +17,16 @@ export const Login: React.FC = () => {
     setLoading(true);
     setError(null);
     
+    console.log('Login attempt with:', email);
+    
     try {
       const success = await login(email, password);
       if (!success) {
+        console.log('Login failed - credentials invalid');
         setError('Credenciais inválidas. Por favor, tente novamente.');
       }
     } catch (err) {
+      console.error('Login error caught in component:', err);
       setError(err instanceof Error ? err.message : 'Ocorreu um erro ao fazer login.');
     } finally {
       setLoading(false);

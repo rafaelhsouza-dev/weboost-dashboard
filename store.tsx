@@ -113,6 +113,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const login = async (email: string, pass: string) => {
     try {
+      console.log('Login: Attempting API login with email:', email);
+      
       // Try to use the real API first
       const { user: apiUser, accessToken } = await loginWithApi(email, pass);
       
@@ -126,6 +128,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       const userAvailableTenants = apiUser.role === Role.ADMIN
         ? MOCK_TENANTS
         : MOCK_TENANTS.filter(t => apiUser.allowedTenants.includes(t.id));
+
+      console.log('Login: Available tenants for user:', userAvailableTenants);
 
       let resolvedTenant: Tenant | null = null;
 
@@ -175,7 +179,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         }
         return true;
       } else {
-        alert(error instanceof Error ? error.message : "Credenciais inválidas. Tente admin@weboost.io / weboost#2025");
+        // Show error message in the UI
+        const errorMessage = error instanceof Error ? error.message : "Credenciais inválidas. Tente admin@weboost.io / weboost#2025";
+        console.error('Login failed:', errorMessage);
         return false;
       }
     }

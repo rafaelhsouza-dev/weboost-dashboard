@@ -93,14 +93,37 @@ export const loginWithApi = async (email: string, password: string): Promise<{ u
     });
 
     if (!response.ok) {
-      const errorData: LoginError = await response.json();
-      let errorMessage = 'Falha no login. Por favor, verifique suas credenciais.';
-      
-      if (errorData.detail && errorData.detail.length > 0) {
-        errorMessage = errorData.detail.map(e => e.msg).join(', ');
+      try {
+        const errorData = await response.json();
+        console.log('API Error Response:', errorData); // Debug log
+        let errorMessage = 'Falha no login. Por favor, verifique suas credenciais.';
+        
+        // Handle different error formats
+        if (errorData.detail && Array.isArray(errorData.detail) && errorData.detail.length > 0) {
+          // Standard validation error format
+          errorMessage = errorData.detail.map((e: any) => e.msg).join(', ');
+        } else if (errorData.detail && typeof errorData.detail === 'string') {
+          // Simple string error
+          errorMessage = errorData.detail;
+        } else if (errorData.message) {
+          // Error with message field
+          errorMessage = errorData.message;
+        } else if (typeof errorData === 'string') {
+          // Plain string response
+          errorMessage = errorData;
+        } else if (errorData.error) {
+          // Error with error field
+          errorMessage = errorData.error;
+        }
+        
+        console.log('Final error message:', errorMessage); // Debug log
+        throw new Error(errorMessage);
+      } catch (parseError) {
+        console.error('Failed to parse error response:', parseError);
+        // If we can't parse the error response
+        const statusText = response.statusText || `HTTP error! status: ${response.status}`;
+        throw new Error(statusText);
       }
-      
-      throw new Error(errorMessage);
     }
 
     const data: LoginResponse = await response.json();
