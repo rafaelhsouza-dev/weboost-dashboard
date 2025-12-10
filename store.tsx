@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Tenant, Language, Role } from './types';
 import { MOCK_USER, MOCK_TENANTS } from './constants';
+import { loginWithApi, logoutFromApi, checkAuth } from './services/authService';
 
 interface AppState {
   user: User | null;
@@ -13,7 +14,7 @@ interface AppState {
   
   // Actions
   login: (email: string, pass: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
   setTenant: (tenantId: string) => void;
   toggleTheme: () => void;
   toggleLanguage: () => void;
@@ -111,43 +112,93 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   }, []);
 
   const login = async (email: string, pass: string) => {
-    return new Promise<boolean>((resolve) => {
-      setTimeout(() => {
-        // Hardcoded credentials for demo purposes (No .env)
-        const validEmail = 'admin@weboost.io';
-        const validPass = 'weboost#2025';
+    try {
+      // Try to use the real API first
+      const { user: apiUser, accessToken } = await loginWithApi(email, pass);
+      
+      console.log('Login: API login successful. Setting user:', apiUser);
+      setUser(apiUser);
+      
+      // Store access token
+      localStorage.setItem('weboost_access_token', accessToken);
+      
+      // Determine available tenants for the current user
+      const userAvailableTenants = apiUser.role === Role.ADMIN
+        ? MOCK_TENANTS
+        : MOCK_TENANTS.filter(t => apiUser.allowedTenants.includes(t.id));
+
+      let resolvedTenant: Tenant | null = null;
+
+      // Try to load a saved tenant from localStorage first
+      const savedTenantId = localStorage.getItem('weboost_currentTenantId');
+      console.log('Login: Saved Tenant ID from localStorage:', savedTenantId);
+      if (savedTenantId) {
+        resolvedTenant = userAvailableTenants.find(t => t.id === savedTenantId) || null;
+      }
+
+      // If no resolved tenant (either not saved or not allowed for user), fall back to default logic
+      if (!resolvedTenant) {
+        resolvedTenant = userAvailableTenants.find(t => t.id === 't1') || userAvailableTenants[0] || null;
+        console.log('Login: Falling back to default tenant:', resolvedTenant);
+      }
+      
+      console.log('Login: Setting currentTenant to:', resolvedTenant);
+      setCurrentTenant(resolvedTenant);
+      // Persist the resolved tenant immediately
+      if (resolvedTenant) {
+        localStorage.setItem('weboost_currentTenantId', resolvedTenant.id);
+      } else {
+        localStorage.removeItem('weboost_currentTenantId');
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Login error:', error);
+      
+      // Fallback to mock login for development/offline mode
+      if (email === 'admin@weboost.io' && pass === 'weboost#2025') {
+        console.log('Login: Using fallback mock credentials.');
+        setUser(MOCK_USER);
         
-        if (email === validEmail && pass === validPass) {
-          console.log('Login: Valid credentials. Setting user to MOCK_USER.');
-          setUser(MOCK_USER);
-          // For ADMIN user, always set default tenant to 't4' (Admin System)
-          const adminTenant = MOCK_TENANTS.find(t => t.id === 't4');
-          if (adminTenant) {
-            console.log('Login: Setting currentTenant to Admin Tenant (t4).');
-            setCurrentTenant(adminTenant);
-            localStorage.setItem('weboost_currentTenantId', adminTenant.id);
-          } else {
-            // Fallback if 't4' is not found, though it should be in MOCK_TENANTS
-            const defaultTenant = MOCK_TENANTS.find(t => t.id === 't1') || MOCK_TENANTS[0];
-            console.log('Login: Admin Tenant (t4) not found. Falling back to default:', defaultTenant);
-            setCurrentTenant(defaultTenant);
-            if (defaultTenant) localStorage.setItem('weboost_currentTenantId', defaultTenant.id);
-          }
-          resolve(true);
+        // For ADMIN user, always set default tenant to 't4' (Admin System)
+        const adminTenant = MOCK_TENANTS.find(t => t.id === 't4');
+        if (adminTenant) {
+          console.log('Login: Setting currentTenant to Admin Tenant (t4).');
+          setCurrentTenant(adminTenant);
+          localStorage.setItem('weboost_currentTenantId', adminTenant.id);
         } else {
-          alert("Credenciais inválidas. Tente admin@weboost.io / weboost#2025");
-          resolve(false);
+          // Fallback if 't4' is not found, though it should be in MOCK_TENANTS
+          const defaultTenant = MOCK_TENANTS.find(t => t.id === 't1') || MOCK_TENANTS[0];
+          console.log('Login: Admin Tenant (t4) not found. Falling back to default:', defaultTenant);
+          setCurrentTenant(defaultTenant);
+          if (defaultTenant) localStorage.setItem('weboost_currentTenantId', defaultTenant.id);
         }
-      }, 800);
-    });
+        return true;
+      } else {
+        alert(error instanceof Error ? error.message : "Credenciais inválidas. Tente admin@weboost.io / weboost#2025");
+        return false;
+      }
+    }
   };
 
-  const logout = () => {
+  const logout = async () => {
     console.log('Logout: Clearing user and tenant from state and localStorage.');
-    setUser(null);
-    setCurrentTenant(null);
-    localStorage.removeItem('weboost_user');
-    localStorage.removeItem('weboost_currentTenantId');
+    try {
+      await logoutFromApi();
+      setUser(null);
+      setCurrentTenant(null);
+      localStorage.removeItem('weboost_user');
+      localStorage.removeItem('weboost_currentTenantId');
+      localStorage.removeItem('weboost_access_token');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Even if API logout fails, clear local state
+      setUser(null);
+      setCurrentTenant(null);
+      localStorage.removeItem('weboost_user');
+      localStorage.removeItem('weboost_currentTenantId');
+      localStorage.removeItem('weboost_access_token');
+    }
   };
 
   const setTenant = (tenantId: string) => {

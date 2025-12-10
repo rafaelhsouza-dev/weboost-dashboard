@@ -3,19 +3,30 @@ import { useApp } from '../store';
 import { Button } from './Button';
 import { Input } from './Input';
 import { WeboostLogo } from './WeboostLogo';
+import { AlertCircle } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const { login } = useApp();
-  // Pre-filled credentials for ease of use
-  const [email, setEmail] = useState('admin@weboost.io');
-  const [password, setPassword] = useState('weboost#2025');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await login(email, password);
-    setLoading(false);
+    setError(null);
+    
+    try {
+      const success = await login(email, password);
+      if (!success) {
+        setError('Credenciais inválidas. Por favor, tente novamente.');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Ocorreu um erro ao fazer login.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,6 +69,13 @@ export const Login: React.FC = () => {
             </div>
           </div>
 
+          {error && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 flex items-center gap-2 text-sm text-red-700 dark:text-red-300">
+              <AlertCircle size={16} className="shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+          
           <Button type="submit" fullWidth disabled={loading} className="shadow-lg shadow-primary/25">
             {loading ? 'A entrar...' : 'Entrar na Plataforma'}
           </Button>
