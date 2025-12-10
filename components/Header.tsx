@@ -21,7 +21,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="h-16 w-full bg-white dark:bg-[#151515] border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-4 md:px-6 sticky top-0 z-30 transition-colors duration-300">
+    <header className="h-16 w-full bg-[#eee] dark:bg-[#151515] border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-4 md:px-6 sticky top-0 z-30 transition-colors duration-300">
       
       <div className="flex items-center gap-3">
         <button 

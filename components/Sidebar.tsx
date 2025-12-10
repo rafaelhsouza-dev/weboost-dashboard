@@ -106,9 +106,9 @@ export const Sidebar: React.FC = () => {
       )}
 
       <aside 
-        className={`fixed inset-y-0 left-0 z-50 h-screen bg-white dark:bg-[#151515] border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ease-in-out ${sidebarCollapsed ? '-translate-x-full md:translate-x-0 md:w-20' : 'translate-x-0 w-72'}`}
+        className={`fixed inset-y-0 left-0 z-50 h-screen bg-[#eee] dark:bg-[#151515] border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ease-in-out ${sidebarCollapsed ? '-translate-x-full md:translate-x-0 md:w-20' : 'translate-x-0 w-72'}`}
       >
-        <div className="h-16 flex items-center justify-center border-b border-gray-200 dark:border-gray-800 relative bg-white dark:bg-[#151515]">
+        <div className="h-16 flex items-center justify-center border-b border-gray-200 dark:border-gray-800 relative bg-[#a1a1a1] dark:bg-[#151515]">
           <div className="flex items-center gap-3">
             {sidebarCollapsed ? (
                <img src="/imgs/weboost-icon.webp" alt="Weboost" className="w-8 h-8 object-contain md:block hidden" />
