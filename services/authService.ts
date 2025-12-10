@@ -5,24 +5,49 @@ const API_BASE_URL = 'https://api.weboost.pt';
 const LOGIN_ENDPOINT = `${API_BASE_URL}/auth/login`;
 
 // Map API roles to our application roles
-const mapApiRoleToAppRole = (apiRoles: string[]): Role => {
-  if (apiRoles.includes('admin') || apiRoles.includes('ADMIN')) return Role.ADMIN;
-  if (apiRoles.includes('manager') || apiRoles.includes('MANAGER')) return Role.MANAGER;
-  if (apiRoles.includes('client') || apiRoles.includes('CLIENT')) return Role.CLIENT;
-  return Role.EMPLOYEE; // Default role
+const mapApiRoleToAppRole = (apiRoles: number[]): Role => {
+  // Roles mapping:
+  // 1 = ti (Acesso completo com nível desenvolvimento) -> ADMIN
+  // 2 = admin (Acesso completo ao sistema) -> ADMIN
+  // 3 = manager (Pode gerir clientes e operações) -> MANAGER
+  // 4 = client (Pode operar funcionalidades para cliente) -> CLIENT
+  // 5 = employee (Funcionário padrão) -> EMPLOYEE
+  // 6-10 = employee_* (Funcionários especializados) -> EMPLOYEE
+  
+  // Check for admin roles (highest priority)
+  if (apiRoles.includes(1) || apiRoles.includes(2)) return Role.ADMIN;
+  
+  // Check for manager role
+  if (apiRoles.includes(3)) return Role.MANAGER;
+  
+  // Check for client role
+  if (apiRoles.includes(4)) return Role.CLIENT;
+  
+  // Default to employee for all other roles (5-10)
+  return Role.EMPLOYEE;
+};
+
+// Customer ID to name mapping (this should be fetched from API or configured)
+const CUSTOMER_NAMES: Record<number, string> = {
+  1: 'TechSolutions Lda',
+  2: 'Marketing Pro',
+  3: 'Restaurante O Tacho',
+  4: 'Weboost Interno',
+  5: 'Cliente Premium',
+  6: 'Parceiro Estratégico',
+  7: 'Projeto Especial'
 };
 
 // Map API customers to our tenants
-const mapApiCustomersToTenants = (apiCustomers: any[]): Tenant[] => {
+const mapApiCustomersToTenants = (apiCustomers: number[]): Tenant[] => {
   if (!apiCustomers || apiCustomers.length === 0) {
-    return [
-      { id: 't1', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL }
-    ];
+    return []; // Internal tenant is added separately
   }
 
-  return apiCustomers.map((customer, index) => ({
-    id: `c${index + 1}`,
-    name: customer.name || `Cliente ${index + 1}`,
+  // Customers are now just IDs, we need to map them to tenant objects
+  return apiCustomers.map((customerId) => ({
+    id: `c${customerId}`,
+    name: CUSTOMER_NAMES[customerId] || `Cliente ${customerId}`,
     type: TenancyType.CLIENT
   }));
 };
@@ -32,12 +57,12 @@ const mapApiUserToAppUser = (apiUser: any): User => {
   const role = mapApiRoleToAppRole(apiUser.roles || []);
   const tenants = mapApiCustomersToTenants(apiUser.customers || []);
   
-  // Add admin tenant if user is admin
-  if (role === Role.ADMIN) {
+  // Add admin tenant if user has admin roles (1 or 2)
+  if (apiUser.roles && (apiUser.roles.includes(1) || apiUser.roles.includes(2))) {
     tenants.unshift({ id: 'admin', name: 'Admin System', type: TenancyType.ADMIN });
   }
   
-  // Add internal tenant for all users
+  // Add internal tenant for all users (this is the user's personal dashboard)
   tenants.unshift({ id: 'internal', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL });
 
   return {
@@ -58,8 +83,8 @@ interface LoginResponse {
     name: string;
     email: string;
     avatar_url: string;
-    roles: string[];
-    customers: any[];
+    roles: number[]; // Roles are now numbers
+    customers: number[]; // Customers are now just IDs
   };
 }
 
@@ -128,8 +153,12 @@ export const loginWithApi = async (email: string, password: string): Promise<{ u
 
     const data: LoginResponse = await response.json();
     
+    console.log('API Login Response:', data); // Debug log
+    
     // Map API user to our application user
     const appUser = mapApiUserToAppUser(data.user);
+    
+    console.log('Mapped User:', appUser); // Debug log
     
     return {
       user: appUser,
