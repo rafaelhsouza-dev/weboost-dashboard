@@ -7,6 +7,7 @@ interface AppState {
   user: User | null;
   currentTenant: Tenant | null;
   availableTenants: Tenant[];
+  tenantsLoaded: boolean;
   isAuthenticated: boolean;
   theme: 'light' | 'dark';
   language: Language;
@@ -41,6 +42,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   // currentTenant should not be initialized from localStorage here, but managed by useEffect
   const [currentTenant, setCurrentTenant] = useState<Tenant | null>(null);
   const [allTenants, setAllTenants] = useState<Tenant[]>([]);
+  const [tenantsLoaded, setTenantsLoaded] = useState(false);
   const [language, setLanguage] = useState<Language>('pt');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -60,18 +62,40 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const loadTenants = async () => {
       try {
         const tenants = await getAllTenants();
-        console.log('Loaded tenants:', tenants);
+        console.log('Loaded tenants from API:', tenants);
         setAllTenants(tenants);
+        setTenantsLoaded(true);
       } catch (error) {
         console.error('Failed to load tenants:', error);
         // In production, we should handle this error appropriately
         // For now, we'll just log it and leave tenants as empty array
         // The app will show appropriate error messages to the user
+        setTenantsLoaded(true); // Set to true even on error to avoid infinite loading
       }
     };
     
     loadTenants();
   }, []);
+
+  // Effect: Update user's allowedTenants with real tenant data when tenants are loaded
+  useEffect(() => {
+    if (user && tenantsLoaded && allTenants.length > 0) {
+      console.log('Updating user allowedTenants with real tenant data');
+      
+      // Create updated user with real tenant names
+      const updatedUser = {
+        ...user,
+        // Update allowedTenants to include real tenant names for display purposes
+        allowedTenantsWithNames: user.allowedTenants.map(tenantId => {
+          const tenant = allTenants.find(t => t.id === tenantId);
+          return tenant ? tenant : { id: tenantId, name: `Cliente ${tenantId}` };
+        })
+      };
+      
+      console.log('Updated user with tenant names:', updatedUser);
+      // Note: We don't setUser here to avoid infinite loops, just log for debugging
+    }
+  }, [user, tenantsLoaded, allTenants]);
 
   // Effect: Handle User Persistence and INITIAL Tenant Resolution
   useEffect(() => {
@@ -95,8 +119,22 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
       // If no resolved tenant (either not saved or not allowed for user), fall back to default logic
       if (!resolvedTenant) {
-        resolvedTenant = userAvailableTenants.find(t => t.id === 'internal') || userAvailableTenants[0] || null;
-        console.log('useEffect [user]: Falling back to default tenant:', resolvedTenant);
+        // Check if user has internal tenant available
+        const hasInternalTenant = userAvailableTenants.some(t => t.id === 'internal');
+        console.log('useEffect [user]: Has internal tenant:', hasInternalTenant);
+        
+        if (hasInternalTenant) {
+          // For roles 1, 2, 3, 5-10: always default to internal tenant
+          resolvedTenant = userAvailableTenants.find(t => t.id === 'internal') || null;
+          console.log('useEffect [user]: Selected internal tenant (priority for roles with internal access)');
+        } else {
+          // For role 4 (client): default to first client (since they don't have internal access)
+          resolvedTenant = 
+            userAvailableTenants.find(t => t.type === TenancyType.CLIENT) ||
+            userAvailableTenants[0] ||
+            null;
+          console.log('useEffect [user]: Selected first client (no internal access)');
+        }
       }
       
       console.log('useEffect [user]: Setting currentTenant to:', resolvedTenant);
@@ -114,7 +152,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       localStorage.removeItem('weboost_currentTenantId');
       setCurrentTenant(null);
     }
-  }, [user]); // This effect ONLY depends on user to run once on user change/load
+  }, [user, allTenants]); // Now depends on both user and allTenants
 
 
 
@@ -133,6 +171,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const login = async (email: string, pass: string) => {
     try {
       console.log('Login: Attempting API login with email:', email);
+      
+      // Wait for tenants to be loaded before proceeding with login
+      if (!tenantsLoaded) {
+        console.log('Login: Waiting for tenants to load...');
+        // In a real app, we might want to show a loading indicator here
+        // For now, we'll just wait a bit and check again
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        if (!tenantsLoaded) {
+          console.error('Login: Tenants not loaded after waiting');
+          return false;
+        }
+      }
       
       // Try to use the real API first
       const { user: apiUser, accessToken } = await loginWithApi(email, pass);
@@ -240,15 +290,22 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const toggleLanguage = () => setLanguage(prev => prev === 'pt' ? 'en' : 'pt');
   const toggleSidebar = () => setSidebarCollapsed(prev => !prev);
 
-  const availableTenants = user?.role === Role.ADMIN 
-    ? allTenants 
-    : allTenants.filter(t => user?.allowedTenants.includes(t.id));
+  const availableTenants = tenantsLoaded 
+    ? (user?.role === Role.ADMIN 
+        ? allTenants 
+        : allTenants.filter(t => user?.allowedTenants.includes(t.id)))
+    : [];
+    
+  console.log('User allowed tenants:', user?.allowedTenants);
+  console.log('All tenants:', allTenants);
+  console.log('Filtered available tenants:', availableTenants);
 
   return (
     <AppContext.Provider value={{
       user,
       currentTenant,
       availableTenants,
+      tenantsLoaded,
       isAuthenticated: !!user,
       theme,
       language,

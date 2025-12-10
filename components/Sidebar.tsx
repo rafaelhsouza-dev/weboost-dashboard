@@ -31,6 +31,7 @@ export const Sidebar: React.FC = () => {
     toggleSidebar, 
     currentTenant, 
     availableTenants, 
+    tenantsLoaded,
     setTenant,
     logout,
     setSidebarCollapsed
@@ -40,6 +41,8 @@ export const Sidebar: React.FC = () => {
   const navigate = useNavigate();
 
   const handleTenantChange = (tenantId: string) => {
+    console.log('Available tenants for user:', availableTenants);
+    console.log('Trying to change to tenant:', tenantId);
     const tenant = availableTenants.find(t => t.id === tenantId);
     if (tenant) {
       setTenant(tenantId);
@@ -139,22 +142,29 @@ export const Sidebar: React.FC = () => {
                   </div>
                   
                   <div className={`flex flex-col truncate ${sidebarCollapsed ? 'md:hidden' : ''}`}>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{currentTenant?.name}</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      {currentTenant?.name || (tenantsLoaded ? 'Nenhum tenant' : 'Carregando...')}
+                    </span>
                     <span className="text-[10px] text-gray-500 uppercase tracking-wider">
                        {currentTenant?.type === 'ADMIN' ? 'Administrador' : currentTenant?.type === 'INTERNAL' ? 'Weboost' : 'Cliente'}
                     </span>
                   </div>
                </div>
                
-               <ChevronsUpDown size={16} className={`text-gray-400 ${sidebarCollapsed ? 'md:hidden' : ''}`} />
+               {availableTenants.length > 1 && (
+                 <ChevronsUpDown size={16} className={`text-gray-400 ${sidebarCollapsed ? 'md:hidden' : ''}`} />
+               )}
                
                <select 
                   className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                   onChange={(e) => handleTenantChange(e.target.value)}
                   value={currentTenant?.id}
+                  disabled={availableTenants.length <= 1 || !tenantsLoaded}
                >
                   {availableTenants.map(t => (
-                    <option key={t.id} value={t.id}>{t.name}</option>
+                    <option key={t.id} value={t.id}>
+                      {t.name} {t.id !== 'internal' && t.id !== 'admin' ? `(${t.id})` : ''}
+                    </option>
                   ))}
                </select>
             </div>
