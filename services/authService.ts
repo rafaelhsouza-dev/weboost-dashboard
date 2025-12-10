@@ -43,17 +43,6 @@ const getRoleDisplayName = (apiRoles: number[]): string => {
   return 'Usuário';
 };
 
-// Customer ID to name mapping (this should be fetched from API or configured)
-const CUSTOMER_NAMES: Record<number, string> = {
-  1: 'TechSolutions Lda',
-  2: 'Marketing Pro',
-  3: 'Restaurante O Tacho',
-  4: 'Weboost Interno',
-  5: 'Cliente Premium',
-  6: 'Parceiro Estratégico',
-  7: 'Projeto Especial'
-};
-
 // Map API customers to our tenants
 const mapApiCustomersToTenants = (apiCustomers: number[]): Tenant[] => {
   if (!apiCustomers || apiCustomers.length === 0) {
@@ -61,9 +50,10 @@ const mapApiCustomersToTenants = (apiCustomers: number[]): Tenant[] => {
   }
 
   // Customers are now just IDs, we need to map them to tenant objects
+  // The actual customer names will be fetched from the customer service
   return apiCustomers.map((customerId) => ({
     id: `c${customerId}`,
-    name: CUSTOMER_NAMES[customerId] || `Cliente ${customerId}`,
+    name: `Cliente ${customerId}`, // Temporary name, will be updated from customer service
     type: TenancyType.CLIENT
   }));
 };

@@ -28,6 +28,12 @@ export interface Tenant {
   name: string;
   type: TenancyType;
   logoUrl?: string;
+  email?: string;
+  phone?: string | null;
+  address?: string | null;
+  city?: string | null;
+  country?: string | null;
+  zip?: string | null;
 }
 
 export interface MenuItem {

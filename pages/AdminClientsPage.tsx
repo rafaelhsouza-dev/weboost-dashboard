@@ -15,9 +15,10 @@ interface Contact {
 export const AdminClientsPage: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [clients, setClients] = useState([
-    { id: 1, name: 'TechSolutions Lda', nif: '505123456', plan: 'Enterprise', users: 12, status: 'Ativo' },
-    { id: 2, name: 'Marketing Pro', nif: '501987654', plan: 'Business', users: 5, status: 'Ativo' },
-    { id: 3, name: 'Restaurante O Tacho', nif: '509111222', plan: 'Starter', users: 2, status: 'Pendente' },
+    { id: 1, name: 'Cliente A', nif: '505123456', plan: 'Enterprise', users: 12, status: 'Ativo' },
+    { id: 2, name: 'Cliente B', nif: '501987654', plan: 'Business', users: 5, status: 'Ativo' },
+    { id: 3, name: 'Cliente C', nif: '509111222', plan: 'Starter', users: 2, status: 'Pendente' },
+    { id: 4, name: 'Cliente D', nif: '507777888', plan: 'Business', users: 3, status: 'Ativo' },
   ]);
 
   // Dynamic contacts state

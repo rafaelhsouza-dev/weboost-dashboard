@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DataTable, Column } from '../components/DataTable';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { Plus, X, UserPlus } from 'lucide-react';
 import { Card } from '../components/Card';
-import { MOCK_TENANTS } from '../constants';
+import { getAllTenants } from '../services/customerService';
+import { Tenant } from '../types';
 
 interface User {
   id: number;
@@ -16,11 +17,28 @@ interface User {
 
 export const AdminUsersPage: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [tenants, setTenants] = useState<Tenant[]>([]);
   const [users, setUsers] = useState<User[]>([
     { id: 1, name: 'Admin Weboost', email: 'rafael@weboost.com', role: 'Administrador', tenant: 'Admin System' },
-    { id: 2, name: 'Ana Silva', email: 'ana@techsolutions.com', role: 'Gestor', tenant: 'TechSolutions Lda' },
-    { id: 3, name: 'Pedro Santos', email: 'pedro@marketing.com', role: 'Funcionário', tenant: 'Marketing Pro' },
+    { id: 2, name: 'Ana Silva', email: 'ana@cliente.com', role: 'Gestor', tenant: 'Cliente 1' },
+    { id: 3, name: 'Pedro Santos', email: 'pedro@cliente.com', role: 'Funcionário', tenant: 'Cliente 2' },
+    { id: 4, name: 'Maria João', email: 'maria@cliente.com', role: 'Funcionário', tenant: 'Cliente 3' },
   ]);
+
+  useEffect(() => {
+    const loadTenants = async () => {
+      try {
+        const loadedTenants = await getAllTenants();
+        setTenants(loadedTenants);
+      } catch (error) {
+        console.error('Failed to load tenants for user form:', error);
+        // In production, we should handle this error appropriately
+        // For now, we'll just log it and leave tenants as empty array
+      }
+    };
+    
+    loadTenants();
+  }, []);
 
   const columns: Column<User>[] = [
     { header: 'Nome', accessor: 'name', className: 'font-medium' },
@@ -66,7 +84,7 @@ export const AdminUsersPage: React.FC = () => {
              <div>
                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Cliente (Tenant) Associado</label>
                <select className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2.5 text-sm dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
-                 {MOCK_TENANTS.map(t => (
+                 {tenants.map(t => (
                    <option key={t.id} value={t.id}>{t.name}</option>
                  ))}
                </select>

@@ -40,10 +40,12 @@ export const AdminReferralsPage: React.FC = () => {
 
   // Mock list of potential referrers (Clients, Partners, Employees)
   const referrerOptions = [
-    { value: 'c1', label: 'TechSolutions Lda (Cliente)' },
-    { value: 'c2', label: 'Marketing Pro (Cliente)' },
-    { value: 'p1', label: 'Agência Digital X (Parceiro)' },
-    { value: 'u1', label: 'Admin Weboost (Funcionário)' },
+    { value: 'c1', label: 'Cliente 1' },
+    { value: 'c2', label: 'Cliente 2' },
+    { value: 'c3', label: 'Cliente 3' },
+    { value: 'c4', label: 'Cliente 4' },
+    { value: 'p1', label: 'Parceiro 1' },
+    { value: 'u1', label: 'Funcionário 1' },
   ];
 
   const statusOptions = [

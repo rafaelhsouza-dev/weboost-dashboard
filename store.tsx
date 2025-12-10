@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Tenant, Language, Role } from './types';
-import { MOCK_USER, MOCK_TENANTS } from './constants';
 import { loginWithApi, logoutFromApi, checkAuth } from './services/authService';
+import { getAllTenants } from './services/customerService';
 
 interface AppState {
   user: User | null;
@@ -40,6 +40,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   // currentTenant should not be initialized from localStorage here, but managed by useEffect
   const [currentTenant, setCurrentTenant] = useState<Tenant | null>(null);
+  const [allTenants, setAllTenants] = useState<Tenant[]>([]);
   const [language, setLanguage] = useState<Language>('pt');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -54,6 +55,24 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     localStorage.setItem('weboost_theme', theme);
   }, [theme]);
 
+  // Effect: Load all tenants on app initialization
+  useEffect(() => {
+    const loadTenants = async () => {
+      try {
+        const tenants = await getAllTenants();
+        console.log('Loaded tenants:', tenants);
+        setAllTenants(tenants);
+      } catch (error) {
+        console.error('Failed to load tenants:', error);
+        // In production, we should handle this error appropriately
+        // For now, we'll just log it and leave tenants as empty array
+        // The app will show appropriate error messages to the user
+      }
+    };
+    
+    loadTenants();
+  }, []);
+
   // Effect: Handle User Persistence and INITIAL Tenant Resolution
   useEffect(() => {
     console.log('useEffect [user]: Running. User:', user);
@@ -62,8 +81,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
       // Determine available tenants for the current user
       const userAvailableTenants = user.role === Role.ADMIN
-        ? MOCK_TENANTS
-        : MOCK_TENANTS.filter(t => user.allowedTenants.includes(t.id));
+        ? allTenants
+        : allTenants.filter(t => user.allowedTenants.includes(t.id));
 
       let resolvedTenant: Tenant | null = null;
 
@@ -126,8 +145,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       
       // Determine available tenants for the current user
       const userAvailableTenants = apiUser.role === Role.ADMIN
-        ? MOCK_TENANTS
-        : MOCK_TENANTS.filter(t => apiUser.allowedTenants.includes(t.id));
+        ? allTenants
+        : allTenants.filter(t => apiUser.allowedTenants.includes(t.id));
 
       console.log('Login: Available tenants for user:', userAvailableTenants);
 
@@ -178,36 +197,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } catch (error) {
       console.error('Login error:', error);
       
-      // Fallback to mock login for development/offline mode
-      if (email === 'admin@weboost.io' && pass === 'weboost#2025') {
-        console.log('Login: Using fallback mock credentials.');
-        setUser(MOCK_USER);
-        
-        // Use the same priority logic for mock user
-        const userAvailableTenants = MOCK_USER.role === Role.ADMIN
-          ? MOCK_TENANTS
-          : MOCK_TENANTS.filter(t => MOCK_USER.allowedTenants.includes(t.id));
-        
-        // Priority order: internal > admin > first client
-        const resolvedTenant = 
-          userAvailableTenants.find(t => t.id === 'internal') ||
-          userAvailableTenants.find(t => t.id === 'admin') ||
-          userAvailableTenants.find(t => t.type === TenancyType.CLIENT) ||
-          userAvailableTenants[0] ||
-          null;
-        
-        if (resolvedTenant) {
-          console.log('Login: Setting currentTenant to:', resolvedTenant);
-          setCurrentTenant(resolvedTenant);
-          localStorage.setItem('weboost_currentTenantId', resolvedTenant.id);
-        }
-        return true;
-      } else {
-        // Show error message in the UI
-        const errorMessage = error instanceof Error ? error.message : "Credenciais inválidas. Tente admin@weboost.io / weboost#2025";
-        console.error('Login failed:', errorMessage);
-        return false;
-      }
+      // Show error message in the UI
+      const errorMessage = error instanceof Error ? error.message : "Credenciais inválidas";
+      console.error('Login failed:', errorMessage);
+      return false;
     }
   };
 
@@ -233,7 +226,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const setTenant = (tenantId: string) => {
     console.log('setTenant: Attempting to set tenant to ID:', tenantId);
-    const t = MOCK_TENANTS.find(mt => mt.id === tenantId);
+    const t = allTenants.find(mt => mt.id === tenantId);
     if (t) {
       setCurrentTenant(t);
       localStorage.setItem('weboost_currentTenantId', t.id); // Persist on manual change
@@ -248,8 +241,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const toggleSidebar = () => setSidebarCollapsed(prev => !prev);
 
   const availableTenants = user?.role === Role.ADMIN 
-    ? MOCK_TENANTS 
-    : MOCK_TENANTS.filter(t => user?.allowedTenants.includes(t.id));
+    ? allTenants 
+    : allTenants.filter(t => user?.allowedTenants.includes(t.id));
 
   return (
     <AppContext.Provider value={{

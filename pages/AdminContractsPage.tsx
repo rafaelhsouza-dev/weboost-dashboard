@@ -17,8 +17,8 @@ interface Contract {
 export const AdminContractsPage: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [contracts, setContracts] = useState<Contract[]>([
-    { id: 1, client: 'TechSolutions Lda', startDate: '2024-01-15', value: '€1,200.00', billing: 'Mensal', status: 'Ativo' },
-    { id: 2, client: 'Marketing Pro', startDate: '2023-11-01', value: '€2,500.00', billing: 'Trimestral', status: 'Ativo' },
+    { id: 1, client: 'Cliente A', startDate: '2024-01-15', value: '€1,200.00', billing: 'Mensal', status: 'Ativo' },
+    { id: 2, client: 'Cliente B', startDate: '2023-11-01', value: '€2,500.00', billing: 'Trimestral', status: 'Ativo' },
   ]);
 
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
@@ -58,9 +58,11 @@ export const AdminContractsPage: React.FC = () => {
   ];
 
   const clientOptions = [
-    { value: 'c1', label: 'TechSolutions Lda' },
-    { value: 'c2', label: 'Marketing Pro' },
-    { value: 'c3', label: 'Restaurante O Tacho' },
+    { value: 'c1', label: 'Cliente 1' },
+    { value: 'c2', label: 'Cliente 2' },
+    { value: 'c3', label: 'Cliente 3' },
+    { value: 'c4', label: 'Cliente 4' },
+    { value: 'c5', label: 'Cliente 5' },
   ];
 
   const [formData, setFormData] = useState({
