@@ -9,15 +9,20 @@ export const MOCK_USER: User = {
   avatar: 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg',
   role: Role.ADMIN,
   roleDisplayName: 'Administrador',
-  allowedTenants: ['internal', 'admin', 't1', 't2', 't3', 't4']
+  allowedTenants: ['internal', 'admin', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7']
 };
 
 // --- Tenants ---
 export const MOCK_TENANTS: Tenant[] = [
-  { id: 't1', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL },
-  { id: 't2', name: 'TechSolutions Lda', type: TenancyType.CLIENT },
-  { id: 't3', name: 'Marketing Pro', type: TenancyType.CLIENT },
-  { id: 't4', name: 'Admin System', type: TenancyType.ADMIN },
+  { id: 'internal', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL },
+  { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN },
+  { id: 'c1', name: 'TechSolutions Lda', type: TenancyType.CLIENT },
+  { id: 'c2', name: 'Marketing Pro', type: TenancyType.CLIENT },
+  { id: 'c3', name: 'Restaurante O Tacho', type: TenancyType.CLIENT },
+  { id: 'c4', name: 'Weboost Interno', type: TenancyType.CLIENT },
+  { id: 'c5', name: 'Cliente Premium', type: TenancyType.CLIENT },
+  { id: 'c6', name: 'Parceiro Estratégico', type: TenancyType.CLIENT },
+  { id: 'c7', name: 'Projeto Especial', type: TenancyType.CLIENT },
 ];
 
 // --- KPIs ---

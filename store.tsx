@@ -76,7 +76,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
       // If no resolved tenant (either not saved or not allowed for user), fall back to default logic
       if (!resolvedTenant) {
-        resolvedTenant = userAvailableTenants.find(t => t.id === 't1') || userAvailableTenants[0] || null;
+        resolvedTenant = userAvailableTenants.find(t => t.id === 'internal') || userAvailableTenants[0] || null;
         console.log('useEffect [user]: Falling back to default tenant:', resolvedTenant);
       }
       
@@ -142,21 +142,27 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
       // If no resolved tenant (either not saved or not allowed for user), use priority logic
       if (!resolvedTenant) {
+        console.log('Login: No saved tenant found, selecting by priority...');
+        console.log('Login: Available tenants:', userAvailableTenants);
+        
         // Check if user has internal tenant available
         const hasInternalTenant = userAvailableTenants.some(t => t.id === 'internal');
+        console.log('Login: Has internal tenant:', hasInternalTenant);
         
         if (hasInternalTenant) {
           // For roles 1, 2, 3, 5-10: always default to internal tenant
           resolvedTenant = userAvailableTenants.find(t => t.id === 'internal') || null;
+          console.log('Login: Selected internal tenant (priority for roles with internal access)');
         } else {
           // For role 4 (client): default to first client (since they don't have internal access)
           resolvedTenant = 
             userAvailableTenants.find(t => t.type === TenancyType.CLIENT) ||
             userAvailableTenants[0] ||
             null;
+          console.log('Login: Selected first client (no internal access)');
         }
         
-        console.log('Login: Selected tenant by priority:', resolvedTenant);
+        console.log('Login: Final selected tenant:', resolvedTenant);
       }
       
       console.log('Login: Setting currentTenant to:', resolvedTenant);
