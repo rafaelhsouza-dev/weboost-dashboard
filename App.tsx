@@ -23,6 +23,7 @@ import ClientSettingsPage from "./pages/ClientSettingsPage";
 import UserDashboardPage from "./pages/UserDashboardPage";
 import UserSettingsPage from "./pages/UserSettingsPage";
 import ClientReportsPage from "./pages/ClientReportsPage";
+import { TenantDashboard } from "./pages/TenantDashboard";
 import { useAuthCheck } from './services/useAuth';
 
 const ProtectedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -67,7 +68,7 @@ const AppContent: React.FC = () => {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<ProtectedLayout><DashboardHome /></ProtectedLayout>} />
+        <Route path="/" element={<ProtectedLayout><TenantDashboard /></ProtectedLayout>} />
         <Route path="/crm" element={<ProtectedLayout><CrmPage /></ProtectedLayout>} />
         <Route path="/marketing" element={<ProtectedLayout><MarketingPage /></ProtectedLayout>} />
         <Route path="/cdp" element={<ProtectedLayout><PlaceholderPage title="CDP - Dados de Cliente" /></ProtectedLayout>} />

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ClientDashboardPage: React.FC = () => {
+export const ClientDashboardPage: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center h-[50vh] text-center">
       <div className="w-16 h-16 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 text-2xl">

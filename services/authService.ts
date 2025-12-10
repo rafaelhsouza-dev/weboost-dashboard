@@ -27,6 +27,22 @@ const mapApiRoleToAppRole = (apiRoles: number[]): Role => {
   return Role.EMPLOYEE;
 };
 
+// Map API roles to display names
+const getRoleDisplayName = (apiRoles: number[]): string => {
+  // Priority: show the highest priority role name
+  if (apiRoles.includes(1)) return 'TI';
+  if (apiRoles.includes(2)) return 'Administrador';
+  if (apiRoles.includes(3)) return 'Gestor';
+  if (apiRoles.includes(4)) return 'Cliente';
+  if (apiRoles.includes(5)) return 'Funcionário';
+  if (apiRoles.includes(6)) return 'Performance';
+  if (apiRoles.includes(7)) return 'Foto/Vídeo';
+  if (apiRoles.includes(8)) return 'Design';
+  if (apiRoles.includes(9)) return 'Desenvolvimento';
+  if (apiRoles.includes(10)) return 'Marketing';
+  return 'Usuário';
+};
+
 // Customer ID to name mapping (this should be fetched from API or configured)
 const CUSTOMER_NAMES: Record<number, string> = {
   1: 'TechSolutions Lda',
@@ -55,6 +71,7 @@ const mapApiCustomersToTenants = (apiCustomers: number[]): Tenant[] => {
 // Map API user to our application user
 const mapApiUserToAppUser = (apiUser: any): User => {
   const role = mapApiRoleToAppRole(apiUser.roles || []);
+  const roleDisplayName = getRoleDisplayName(apiUser.roles || []);
   const tenants = mapApiCustomersToTenants(apiUser.customers || []);
   
   // Add admin tenant if user has admin roles (1 or 2)
@@ -71,6 +88,7 @@ const mapApiUserToAppUser = (apiUser: any): User => {
     email: apiUser.email || '',
     avatar: apiUser.avatar_url || 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg',
     role: role,
+    roleDisplayName: roleDisplayName, // Add display name for UI
     allowedTenants: tenants.map(t => t.id)
   };
 };

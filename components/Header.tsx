@@ -64,7 +64,7 @@ export const Header: React.FC = () => {
         <div className="pl-1 md:pl-2 flex items-center gap-3">
           <div className="text-right hidden lg:block">
             <p className="text-sm font-medium text-gray-900 dark:text-white leading-none">{user?.name}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{user?.role}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{user?.roleDisplayName || user?.role}</p>
           </div>
           <img 
             src={user?.avatar || "https://picsum.photos/100"} 

@@ -19,6 +19,7 @@ export interface User {
   email: string;
   avatar: string;
   role: Role;
+  roleDisplayName?: string; // Display name for the role (e.g., "TI", "Administrador")
   allowedTenants: string[]; // IDs of tenants this user can access
 }
 
