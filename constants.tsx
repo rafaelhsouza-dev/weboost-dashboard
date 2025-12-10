@@ -9,7 +9,8 @@ export const MOCK_USER: User = {
   avatar: 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg',
   role: Role.ADMIN,
   roleDisplayName: 'Administrador',
-  allowedTenants: ['t1', 't2', 't3', 't4']
+  allowedTenants: ['internal', 'admin', 't1', 't2', 't3', 't4'],
+  defaultToInternal: true
 };
 
 // --- Tenants ---

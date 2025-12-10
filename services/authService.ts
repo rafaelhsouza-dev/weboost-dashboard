@@ -74,13 +74,16 @@ const mapApiUserToAppUser = (apiUser: any): User => {
   const roleDisplayName = getRoleDisplayName(apiUser.roles || []);
   const tenants = mapApiCustomersToTenants(apiUser.customers || []);
   
-  // Add admin tenant if user has admin roles (1 or 2)
-  if (apiUser.roles && (apiUser.roles.includes(1) || apiUser.roles.includes(2))) {
+  // Add admin tenant ONLY for roles 1, 2, 3 (TI, Admin, Manager)
+  if (apiUser.roles && (apiUser.roles.includes(1) || apiUser.roles.includes(2) || apiUser.roles.includes(3))) {
     tenants.unshift({ id: 'admin', name: 'Admin System', type: TenancyType.ADMIN });
   }
   
-  // Add internal tenant for all users (this is the user's personal dashboard)
-  tenants.unshift({ id: 'internal', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL });
+  // Add internal tenant for all users EXCEPT role 4 (client)
+  // Role 4 (client) should only see their own client, not the internal tenant
+  if (apiUser.roles && !apiUser.roles.includes(4)) {
+    tenants.unshift({ id: 'internal', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL });
+  }
 
   return {
     id: apiUser.id.toString(),
@@ -89,7 +92,10 @@ const mapApiUserToAppUser = (apiUser: any): User => {
     avatar: apiUser.avatar_url || 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg',
     role: role,
     roleDisplayName: roleDisplayName, // Add display name for UI
-    allowedTenants: tenants.map(t => t.id)
+    allowedTenants: tenants.map(t => t.id),
+    // Flag to indicate if user should default to internal tenant
+    // Roles 1, 2, 3 default to internal, role 4 defaults to their client, roles 5-10 default to internal
+    defaultToInternal: apiUser.roles && (apiUser.roles.some(r => [1, 2, 3, 5, 6, 7, 8, 9, 10].includes(r)))
   };
 };
 

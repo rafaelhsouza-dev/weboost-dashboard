@@ -142,13 +142,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
       // If no resolved tenant (either not saved or not allowed for user), use priority logic
       if (!resolvedTenant) {
-        // Priority order: internal > admin > first client
-        resolvedTenant = 
-          userAvailableTenants.find(t => t.id === 'internal') ||
-          userAvailableTenants.find(t => t.id === 'admin') ||
-          userAvailableTenants.find(t => t.type === TenancyType.CLIENT) ||
-          userAvailableTenants[0] ||
-          null;
+        if (apiUser.defaultToInternal) {
+          // For roles 1, 2, 3, 5-10: default to internal tenant
+          resolvedTenant = userAvailableTenants.find(t => t.id === 'internal') || null;
+        } else {
+          // For role 4 (client): default to first client (since they don't have internal access)
+          resolvedTenant = 
+            userAvailableTenants.find(t => t.type === TenancyType.CLIENT) ||
+            userAvailableTenants[0] ||
+            null;
+        }
         
         console.log('Login: Selected tenant by priority:', resolvedTenant);
       }
