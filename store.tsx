@@ -140,10 +140,17 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         resolvedTenant = userAvailableTenants.find(t => t.id === savedTenantId) || null;
       }
 
-      // If no resolved tenant (either not saved or not allowed for user), fall back to default logic
+      // If no resolved tenant (either not saved or not allowed for user), use priority logic
       if (!resolvedTenant) {
-        resolvedTenant = userAvailableTenants.find(t => t.id === 't1') || userAvailableTenants[0] || null;
-        console.log('Login: Falling back to default tenant:', resolvedTenant);
+        // Priority order: internal > admin > first client
+        resolvedTenant = 
+          userAvailableTenants.find(t => t.id === 'internal') ||
+          userAvailableTenants.find(t => t.id === 'admin') ||
+          userAvailableTenants.find(t => t.type === TenancyType.CLIENT) ||
+          userAvailableTenants[0] ||
+          null;
+        
+        console.log('Login: Selected tenant by priority:', resolvedTenant);
       }
       
       console.log('Login: Setting currentTenant to:', resolvedTenant);
@@ -164,18 +171,23 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         console.log('Login: Using fallback mock credentials.');
         setUser(MOCK_USER);
         
-        // For ADMIN user, always set default tenant to 't4' (Admin System)
-        const adminTenant = MOCK_TENANTS.find(t => t.id === 't4');
-        if (adminTenant) {
-          console.log('Login: Setting currentTenant to Admin Tenant (t4).');
-          setCurrentTenant(adminTenant);
-          localStorage.setItem('weboost_currentTenantId', adminTenant.id);
-        } else {
-          // Fallback if 't4' is not found, though it should be in MOCK_TENANTS
-          const defaultTenant = MOCK_TENANTS.find(t => t.id === 't1') || MOCK_TENANTS[0];
-          console.log('Login: Admin Tenant (t4) not found. Falling back to default:', defaultTenant);
-          setCurrentTenant(defaultTenant);
-          if (defaultTenant) localStorage.setItem('weboost_currentTenantId', defaultTenant.id);
+        // Use the same priority logic for mock user
+        const userAvailableTenants = MOCK_USER.role === Role.ADMIN
+          ? MOCK_TENANTS
+          : MOCK_TENANTS.filter(t => MOCK_USER.allowedTenants.includes(t.id));
+        
+        // Priority order: internal > admin > first client
+        const resolvedTenant = 
+          userAvailableTenants.find(t => t.id === 'internal') ||
+          userAvailableTenants.find(t => t.id === 'admin') ||
+          userAvailableTenants.find(t => t.type === TenancyType.CLIENT) ||
+          userAvailableTenants[0] ||
+          null;
+        
+        if (resolvedTenant) {
+          console.log('Login: Setting currentTenant to:', resolvedTenant);
+          setCurrentTenant(resolvedTenant);
+          localStorage.setItem('weboost_currentTenantId', resolvedTenant.id);
         }
         return true;
       } else {
