@@ -92,10 +92,7 @@ const mapApiUserToAppUser = (apiUser: any): User => {
     avatar: apiUser.avatar_url || 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg',
     role: role,
     roleDisplayName: roleDisplayName, // Add display name for UI
-    allowedTenants: tenants.map(t => t.id),
-    // Flag to indicate if user should default to internal tenant
-    // Roles 1, 2, 3 default to internal, role 4 defaults to their client, roles 5-10 default to internal
-    defaultToInternal: apiUser.roles && (apiUser.roles.some(r => [1, 2, 3, 5, 6, 7, 8, 9, 10].includes(r)))
+    allowedTenants: tenants.map(t => t.id)
   };
 };
 

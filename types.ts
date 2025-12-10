@@ -21,7 +21,6 @@ export interface User {
   role: Role;
   roleDisplayName?: string; // Display name for the role (e.g., "TI", "Administrador")
   allowedTenants: string[]; // IDs of tenants this user can access
-  defaultToInternal?: boolean; // Whether this user should default to internal tenant
 }
 
 export interface Tenant {
