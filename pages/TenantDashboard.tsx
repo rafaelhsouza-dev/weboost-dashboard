@@ -5,7 +5,7 @@ import { TenancyType } from '../types';
 import { DashboardHome } from './DashboardHome';
 import { UserDashboardPage } from './UserDashboardPage';
 import { ClientDashboardPage } from './ClientDashboardPage';
-import { AdminClientsPage } from './AdminClientsPage';
+import { AdminDashboardPage } from './AdminDashboardPage';
 
 export const TenantDashboard: React.FC = () => {
   const { currentTenant } = useApp();
@@ -22,7 +22,7 @@ export const TenantDashboard: React.FC = () => {
     
     case TenancyType.ADMIN:
       // Admin tenant - show admin dashboard
-      return <AdminClientsPage />;
+      return <AdminDashboardPage />;
     
     case TenancyType.CLIENT:
       // Client tenant - show client dashboard
