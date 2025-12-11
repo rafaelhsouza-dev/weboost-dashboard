@@ -133,6 +133,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       // Ensure admin users always have access to internal and admin tenants
       let userAvailableTenants = allTenants;
       
+      // If no tenants loaded yet, use essential tenants for admin users
+      if (allTenants.length === 0 && user.role === Role.ADMIN) {
+        userAvailableTenants = [
+          { id: 'internal', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL },
+          { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN }
+        ];
+      }
+      
       if (user.role !== Role.ADMIN) {
         userAvailableTenants = allTenants.filter(t => user.allowedTenants.includes(t.id));
       }
@@ -233,9 +241,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       localStorage.setItem('weboost_access_token', accessToken);
       
       // Determine available tenants for the current user
-      const userAvailableTenants = apiUser.role === Role.ADMIN
-        ? allTenants
-        : allTenants.filter(t => apiUser.allowedTenants.includes(t.id));
+      // If no tenants loaded yet, use essential tenants for admin users
+      let userAvailableTenants = allTenants;
+      if (allTenants.length === 0 && apiUser.role === Role.ADMIN) {
+        userAvailableTenants = [
+          { id: 'internal', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL },
+          { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN }
+        ];
+      } else if (apiUser.role !== Role.ADMIN) {
+        userAvailableTenants = allTenants.filter(t => apiUser.allowedTenants.includes(t.id));
+      }
 
       console.log('Login: Available tenants for user:', userAvailableTenants);
 
