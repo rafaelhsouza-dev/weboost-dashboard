@@ -64,13 +64,17 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         const tenants = await getAllTenants();
         console.log('Loaded tenants from API:', tenants);
         setAllTenants(tenants);
-        setTenantsLoaded(true);
       } catch (error) {
         console.error('Failed to load tenants:', error);
-        // In production, we should handle this error appropriately
-        // For now, we'll just log it and leave tenants as empty array
-        // The app will show appropriate error messages to the user
-        setTenantsLoaded(true); // Set to true even on error to avoid infinite loading
+        // If there's an error loading tenants, use fallback tenants
+        console.log('Using fallback tenants due to API error');
+        const fallbackTenants = [
+          { id: 'internal', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL },
+          { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN }
+        ];
+        setAllTenants(fallbackTenants);
+      } finally {
+        setTenantsLoaded(true); // Always set to true to avoid infinite loading
       }
     };
     

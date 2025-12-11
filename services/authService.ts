@@ -187,12 +187,17 @@ export const loginWithApi = async (email: string, password: string): Promise<{ u
   }
 };
 
+// Function to get the current access token
+export const getAccessToken = (): string | null => {
+  return localStorage.getItem('weboost_access_token');
+};
+
 // Function to check if user is authenticated (check for valid token)
 export const checkAuth = async (): Promise<boolean> => {
   try {
     // In a real implementation, we would check the token validity
     // For now, we'll just check if we have a token in localStorage
-    const token = localStorage.getItem('weboost_access_token');
+    const token = getAccessToken();
     return !!token;
   } catch (error) {
     console.error('Auth check error:', error);

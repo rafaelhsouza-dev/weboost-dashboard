@@ -1,8 +1,8 @@
 import { Tenant, TenancyType } from '../types';
+import { apiGet, handleApiResponse } from './apiClient';
 
 // API Configuration
-const API_BASE_URL = 'https://api.weboost.pt';
-const CUSTOMERS_ENDPOINT = `${API_BASE_URL}/customers/customers`;
+const CUSTOMERS_ENDPOINT = '/customers/customers';
 
 interface ApiCustomer {
   id: number;
@@ -36,38 +36,19 @@ interface CustomerError {
 
 export const fetchCustomersFromApi = async (): Promise<Tenant[]> => {
   try {
-    const response = await fetch(`${CUSTOMERS_ENDPOINT}?page=1&per_page=50`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-      },
-      credentials: 'include' // Important for authentication
-    });
-
-    if (!response.ok) {
-      try {
-        const errorData = await response.json();
-        console.error('API Error Response:', errorData);
-        let errorMessage = 'Failed to fetch customers.';
-        
-        if (errorData.detail && Array.isArray(errorData.detail) && errorData.detail.length > 0) {
-          errorMessage = errorData.detail.map((e: any) => e.msg).join(', ');
-        } else if (errorData.detail && typeof errorData.detail === 'string') {
-          errorMessage = errorData.detail;
-        } else if (errorData.message) {
-          errorMessage = errorData.message;
-        }
-        
-        console.error('Customer fetch error:', errorMessage);
-        throw new Error(errorMessage);
-      } catch (parseError) {
-        console.error('Failed to parse error response:', parseError);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-    }
-
-    const data: CustomersResponse = await response.json();
+    console.log('Fetching customers from API...');
+    
+    // Use the new apiClient to make authenticated request
+    const response = await apiGet(`${CUSTOMERS_ENDPOINT}?page=1&per_page=50`);
+    const data: CustomersResponse = await handleApiResponse(response);
+    
     console.log('API Customers Response:', data);
+    
+    // Verify if customers array exists and is valid
+    if (!data.customers || !Array.isArray(data.customers)) {
+      console.warn('Invalid customers data format received:', data);
+      return []; // Return empty array instead of throwing error
+    }
     
     // Map API customers to our tenant format
     const customerTenants = data.customers.map(customer => ({
@@ -90,11 +71,18 @@ export const fetchCustomersFromApi = async (): Promise<Tenant[]> => {
   } catch (error) {
     console.error('Customer fetch error:', error);
     
+    // Improved error handling for different scenarios
     if (error instanceof Error) {
+      // If it's a 500 error, log it but don't crash the app
+      if (error.message.includes('500')) {
+        console.error('API server error (500). This might be a backend issue.');
+        return []; // Return empty array to allow app to continue
+      }
       throw error;
     }
     
-    throw new Error('Failed to fetch customers. Please try again.');
+    console.error('Unknown error fetching customers:', error);
+    return []; // Return empty array for any other unexpected errors
   }
 };
 
