@@ -12,6 +12,7 @@ import {
   Database,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Briefcase,
   FileText,
   Building2,
@@ -152,7 +153,7 @@ export const Sidebar: React.FC = () => {
                </div>
                
                {availableTenants.length > 1 && (
-                 <ChevronsUpDown size={16} className={`text-gray-400 ${sidebarCollapsed ? 'md:hidden' : ''}`} />
+                 <ChevronDown size={16} className={`text-gray-400 ${sidebarCollapsed ? 'md:hidden' : ''}`} />
                )}
                
             </div>

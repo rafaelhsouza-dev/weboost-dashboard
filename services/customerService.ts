@@ -38,6 +38,10 @@ export const fetchCustomersFromApi = async (): Promise<Tenant[]> => {
   try {
     console.log('Fetching customers from API...');
     
+    // Check if token is available
+    const token = getAccessToken();
+    console.log('Token available for customers request:', token ? 'YES' : 'NO');
+    
     // Use the new apiClient to make authenticated request
     const response = await apiGet(`${CUSTOMERS_ENDPOINT}?page=1&per_page=50`);
     const data: CustomersResponse = await handleApiResponse(response);
