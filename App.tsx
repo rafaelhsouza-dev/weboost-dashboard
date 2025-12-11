@@ -77,7 +77,7 @@ const AppContent: React.FC = () => {
         <Route path="/seo-analysis" element={<ProtectedLayout><SeoAnalysisPage /></ProtectedLayout>} />
         
         {/* Admin Routes */}
-        <Route path="/tenants" element={<ProtectedLayout><AdminClientsPage /></ProtectedLayout>} />
+        <Route path="/clients" element={<ProtectedLayout><AdminClientsPage /></ProtectedLayout>} />
         <Route path="/users" element={<ProtectedLayout><AdminUsersPage /></ProtectedLayout>} />
         <Route path="/services" element={<ProtectedLayout><AdminServicesPage /></ProtectedLayout>} />
         <Route path="/contracts" element={<ProtectedLayout><AdminContractsPage /></ProtectedLayout>} />

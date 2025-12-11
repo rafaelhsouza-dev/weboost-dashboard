@@ -5,7 +5,7 @@ import { BarChart2, Users, Activity, DollarSign, FileText, Plus } from 'lucide-r
 export const AdminDashboardPage: React.FC = () => {
   const { currentTenant } = useApp();
 
-  // Mock data - replace with real API data when available
+  // Mock data - with real API data when available
   const stats = [
     { title: 'Clientes Ativos', value: '12', icon: <Users className="h-6 w-6 text-primary" /> },
     { title: 'Usuários Ativos', value: '45', icon: <Activity className="h-6 w-6 text-green-500" /> },
