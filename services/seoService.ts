@@ -2,8 +2,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { SeoReport } from "../types";
 
-// COLOQUE A SUA API KEY AQUI
-const API_KEY = 'AIzaSyB5rmBSAsvRHCKzyScQi7f1Czxn5U52B5U';
+const API_KEY = 'chave_api';
 const MODEL_NAME = "gemini-2.5-flash";
 
 const ai = new GoogleGenAI({ apiKey: API_KEY });
