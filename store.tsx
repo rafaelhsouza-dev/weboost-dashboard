@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, Tenant, Language, Role } from './types';
+import { User, Tenant, Language, Role, TenancyType } from './types';
 import { loginWithApi, logoutFromApi, checkAuth } from './services/authService';
 import { getAllTenants } from './services/customerService';
 
@@ -57,9 +57,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     localStorage.setItem('weboost_theme', theme);
   }, [theme]);
 
-  // Effect: Load all tenants on app initialization
+  // Effect: Load all tenants only after user is authenticated
   useEffect(() => {
     const loadTenants = async () => {
+      // Only load tenants if user is authenticated
+      if (!user) {
+        console.log('Skipping tenant loading - no authenticated user');
+        setTenantsLoaded(true); // Set to true to avoid loading state
+        return;
+      }
+      
       try {
         const tenants = await getAllTenants();
         console.log('Loaded tenants from API:', tenants);
@@ -94,7 +101,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     };
     
     loadTenants();
-  }, []);
+  }, [user]); // Now depends on user - only runs when user changes
 
   // Effect: Update user's allowedTenants with real tenant data when tenants are loaded
   useEffect(() => {

@@ -78,6 +78,11 @@ export const fetchCustomersFromApi = async (): Promise<Tenant[]> => {
         console.error('API server error (500). This might be a backend issue.');
         return []; // Return empty array to allow app to continue
       }
+      // If it's a 401 error (not authenticated), return empty array
+      if (error.message.includes('401') || error.message.includes('Not authenticated')) {
+        console.log('Not authenticated - returning empty tenants (user not logged in)');
+        return []; // Return empty array for unauthenticated requests
+      }
       throw error;
     }
     
