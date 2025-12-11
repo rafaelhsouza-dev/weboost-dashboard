@@ -63,7 +63,22 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       try {
         const tenants = await getAllTenants();
         console.log('Loaded tenants from API:', tenants);
-        setAllTenants(tenants);
+        
+        // Ensure we always have internal and admin tenants for admin users
+        const essentialTenants = [
+          { id: 'internal', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL },
+          { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN }
+        ];
+        
+        // Merge API tenants with essential tenants, avoiding duplicates
+        const mergedTenants = [...essentialTenants];
+        tenants.forEach(apiTenant => {
+          if (!mergedTenants.some(t => t.id === apiTenant.id)) {
+            mergedTenants.push(apiTenant);
+          }
+        });
+        
+        setAllTenants(mergedTenants);
       } catch (error) {
         console.error('Failed to load tenants:', error);
         // If there's an error loading tenants, use fallback tenants
@@ -108,9 +123,22 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       localStorage.setItem('weboost_user', JSON.stringify(user));
 
       // Determine available tenants for the current user
-      const userAvailableTenants = user.role === Role.ADMIN
-        ? allTenants
-        : allTenants.filter(t => user.allowedTenants.includes(t.id));
+      // Ensure admin users always have access to internal and admin tenants
+      let userAvailableTenants = allTenants;
+      
+      if (user.role !== Role.ADMIN) {
+        userAvailableTenants = allTenants.filter(t => user.allowedTenants.includes(t.id));
+      }
+      
+      // Ensure admin users always have access to essential tenants
+      if (user.role === Role.ADMIN) {
+        const essentialTenantIds = ['internal', 'admin'];
+        essentialTenantIds.forEach(tenantId => {
+          if (!user.allowedTenants.includes(tenantId)) {
+            user.allowedTenants.push(tenantId);
+          }
+        });
+      }
 
       let resolvedTenant: Tenant | null = null;
 
