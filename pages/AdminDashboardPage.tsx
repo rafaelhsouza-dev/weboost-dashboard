@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApp } from '../store';
-import { Card, BarChart2, Users, Activity, DollarSign } from 'lucide-react';
+import { BarChart2, Users, Activity, DollarSign, FileText, Plus } from 'lucide-react';
 
 export const AdminDashboardPage: React.FC = () => {
   const { currentTenant } = useApp();
@@ -87,7 +87,7 @@ export const AdminDashboardPage: React.FC = () => {
             </button>
             <button className="w-full flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/30 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
               <span>Configurações</span>
-              <Card className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <FileText className="h-4 w-4 text-gray-500 dark:text-gray-400" />
             </button>
           </div>
         </div>
