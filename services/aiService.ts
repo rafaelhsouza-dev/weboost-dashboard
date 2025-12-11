@@ -1,4 +1,5 @@
 import { Lead, WebhookStatus } from "../types";
+import { apiPost, handleApiResponse } from './apiClient';
 
 
 /**
@@ -12,7 +13,7 @@ import { Lead, WebhookStatus } from "../types";
  */
 
 // API endpoint for fetching leads
-const API_ENDPOINT = 'https://api.weboost.pt/gemini/fetch-leads';
+const API_ENDPOINT = '/gemini/fetch-leads';
 
 interface ApiLead {
   generatedDate: string;
@@ -152,28 +153,9 @@ export async function* fetchLeadsStream(
       lead_count: leadCount
     };
 
-    // Make the direct API request
-    const response = await fetch(API_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json', // Adiciona o cabeçalho Accept
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      // Tratamento de erros geral para a chamada direta à API
-      if (response.status === 504) {
-        throw new Error(`Timeout ao acessar a API (Status 504). A requisição demorou muito para ser concluída.`);
-      } else if (response.status === 429) {
-        throw new Error(`Limite de requisições excedido na API (Status 429). Tente novamente mais tarde.`);
-      } else {
-        throw new Error(`A requisição da API falhou com status: ${response.status}`);
-      }
-    }
-
-    const data = await response.json();
+    // Make the authenticated API request using the new apiClient
+    const response = await apiPost(API_ENDPOINT, payload);
+    const data = await handleApiResponse(response);
 
     // Yield each lead from the response
     if (data && data.leads && Array.isArray(data.leads)) {
