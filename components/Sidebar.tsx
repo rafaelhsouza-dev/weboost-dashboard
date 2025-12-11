@@ -133,7 +133,7 @@ export const Sidebar: React.FC = () => {
         <div className="p-4 border-b border-gray-200 dark:border-gray-800">
           <div className="relative group">
             <div className={`
-              flex items-center gap-2 p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 
+              hidden flex items-center gap-2 p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 
               border border-gray-200 dark:border-gray-700 cursor-pointer hover:border-primary/50 transition-colors
               ${sidebarCollapsed ? 'md:justify-center' : 'justify-between'}
             `}>
