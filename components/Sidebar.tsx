@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../store';
 import { TenancyType } from '../types';
+import { Combobox } from './Combobox';
 import { 
   LayoutDashboard, 
   Users, 
@@ -14,7 +15,6 @@ import {
   Briefcase,
   FileText,
   Building2,
-  ChevronsUpDown,
   Layers,
   FileSignature,
   Handshake,
@@ -155,19 +155,23 @@ export const Sidebar: React.FC = () => {
                  <ChevronsUpDown size={16} className={`text-gray-400 ${sidebarCollapsed ? 'md:hidden' : ''}`} />
                )}
                
-               <select 
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  onChange={(e) => handleTenantChange(e.target.value)}
-                  value={currentTenant?.id}
-                  disabled={availableTenants.length <= 1 || !tenantsLoaded}
-               >
-                  {availableTenants.map(t => (
-                    <option key={t.id} value={t.id}>
-                      {t.name} {t.id !== 'internal' && t.id !== 'admin' ? `(${t.id})` : ''}
-                    </option>
-                  ))}
-               </select>
             </div>
+            
+            {/* Custom Combobox for tenant selection */}
+            {availableTenants.length > 1 && tenantsLoaded && (
+              <div className="mt-2">
+                <Combobox
+                  options={availableTenants.map(t => ({
+                    value: t.id,
+                    label: `${t.name} ${t.id !== 'internal' && t.id !== 'admin' ? `(${t.id})` : ''}`
+                  }))}
+                  value={currentTenant?.id || ''}
+                  onChange={(value: string) => handleTenantChange(value)}
+                  placeholder="Selecione um tenant..."
+                  className="w-full"
+                />
+              </div>
+            )}
           </div>
         </div>
 
