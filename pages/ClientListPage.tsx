@@ -196,7 +196,7 @@ export const ClientListPage: React.FC = () => {
                 
                 {/* Page Numbers - Dynamic range */}
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                  // Show first 2 pages, last 2 pages, and pages around current page
+                  // Show 2 pages, last 2 pages, and pages around paged
                   const shouldShow = page <= 2 || page > totalPages - 2 || (page >= currentPage - 1 && page <= currentPage + 1);
                   
                   if (shouldShow) {
