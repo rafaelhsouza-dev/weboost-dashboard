@@ -21,6 +21,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronDown,
+  Clock,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -111,6 +112,7 @@ export const Sidebar: React.FC = () => {
           { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/user/dashboard' },
           { id: 'scraper', label: 'AI Scraper', icon: Bot, path: '/scraper' },
           { id: 'seo', label: 'Analisar SEO/GEO', icon: ScanSearch, path: '/seo-analysis' },
+          { id: 'logs', label: 'Registos de Atividade', icon: Clock, path: '/user/logs' },
           { id: 'settings', label: 'Configurações', icon: Settings, path: '/user/settings' },
         ];
     }

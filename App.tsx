@@ -25,6 +25,7 @@ import UserDashboardPage from "./pages/UserDashboardPage";
 import UserSettingsPage from "./pages/UserSettingsPage";
 import ClientReportsPage from "./pages/ClientReportsPage";
 import { TenantDashboard } from "./pages/TenantDashboard";
+import UserLogsPage from "./pages/UserLogsPage";
 import { useAuthCheck } from './services/useAuth';
 
 const ProtectedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
