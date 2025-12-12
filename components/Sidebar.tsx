@@ -29,6 +29,7 @@ type MenuItemChild = {
   id: string;
   label: string;
   path: string;
+  icon?: React.ElementType; // Add icon property for submenu items
 };
 
 type MenuItem = {
@@ -85,8 +86,8 @@ export const Sidebar: React.FC = () => {
             label: 'Clientes', 
             icon: Building2,
             children: [
-              { id: 'tenants', label: 'Resumo Clientes', path: '/customers' },
-              { id: 'customer-list', label: 'Lista de Clientes', path: '/customer-list' }
+              { id: 'tenants', label: 'Resumo Clientes', path: '/customers', icon: LayoutDashboard },
+              { id: 'customer-list', label: 'Lista de Clientes', path: '/customer-list', icon: Users }
             ]
           },
           { id: 'contracts', label: 'Contratos', icon: FileSignature, path: '/contracts' },
@@ -203,7 +204,11 @@ export const Sidebar: React.FC = () => {
                               ${isActive ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-[#16a34a]' : 'text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}
                             `}
                           >
-                            <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-primary' : 'bg-gray-400'}`}></span>
+                            {child.icon ? (
+                              <child.icon size={16} className={isActive ? 'text-primary dark:text-[#16a34a]' : 'text-gray-400'} />
+                            ) : (
+                              <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-primary' : 'bg-gray-400'}`}></span>
+                            )}
                             <span>{child.label}</span>
                           </Link>
                         );
