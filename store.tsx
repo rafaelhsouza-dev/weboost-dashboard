@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Tenant, Language, Role, TenancyType } from './types';
-import { loginWithApi, logoutFromApi, checkAuth } from './services/authService';
+import { loginWithApi, checkAuth } from './services/authService';
 import { getAllTenants } from './services/customerService';
 
 interface AppState {
@@ -311,7 +311,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const logout = async () => {
     console.log('Logout: Clearing user and tenant from state and localStorage.');
     try {
-      await logoutFromApi();
       setUser(null);
       setCurrentTenant(null);
       localStorage.removeItem('weboost_user');

@@ -204,31 +204,3 @@ export const checkAuth = async (): Promise<boolean> => {
     return false;
   }
 };
-
-// Function to logout (clear tokens)
-export const logoutFromApi = async (): Promise<void> => {
-  try {
-    // In a real implementation, we might call a logout endpoint
-    // For now, we'll just clear local storage
-    localStorage.removeItem('weboost_access_token');
-    localStorage.removeItem('weboost_user');
-    localStorage.removeItem('weboost_currentTenantId');
-    
-    // Clear cookies by making a request to logout endpoint
-    // This is a placeholder - actual implementation would depend on API
-    const response = await fetch(`${API_BASE_URL}/auth/logout`, {
-      method: 'POST',
-      credentials: 'include'
-    });
-    
-    if (!response.ok) {
-      console.warn('Logout endpoint failed, but local data was cleared');
-    }
-  } catch (error) {
-    console.error('Logout error:', error);
-    // Even if logout fails, clear local data
-    localStorage.removeItem('weboost_access_token');
-    localStorage.removeItem('weboost_user');
-    localStorage.removeItem('weboost_currentTenantId');
-  }
-};
