@@ -6,7 +6,7 @@ import { Plus, Mail, MessageSquare, MousePointer, Search, ChevronLeft, ChevronRi
 import { Card } from '../components/Card';
 import { DateRangePicker } from '../components/DateRangePicker';
 
-export const MarketingPage: React.FC = () => {
+export const ClientMarketingPage: React.FC = () => {
   const data = getCampaigns();
 
   const [searchTerm, setSearchTerm] = useState('');

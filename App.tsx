@@ -7,7 +7,7 @@ import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { DashboardHome } from './pages/DashboardHome';
 import { CrmPage } from './pages/CrmPage';
-import { MarketingPage } from './pages/MarketingPage';
+import { ClientMarketingPage } from './pages/ClientMarketingPage';
 import { AdminCustomersListPage } from './pages/AdminCustomersListPage';
 import { AdminClientsPage } from './pages/AdminClientsPage';
 import { AdminUsersPage } from './pages/AdminUsersPage';
@@ -79,7 +79,7 @@ const AppRoutes: React.FC = () => {
     <Routes>
       <Route path="/" element={<ProtectedLayout><TenantDashboard /></ProtectedLayout>} />
       <Route path="/crm" element={<ProtectedLayout><CrmPage /></ProtectedLayout>} />
-      <Route path="/marketing" element={<ProtectedLayout><MarketingPage /></ProtectedLayout>} />
+      <Route path="/marketing" element={<ProtectedLayout><ClientMarketingPage /></ProtectedLayout>} />
       <Route path="/cdp" element={<ProtectedLayout><PlaceholderPage title="CDP - Dados de Cliente" /></ProtectedLayout>} />
       <Route path="/analytics" element={<ProtectedLayout><PlaceholderPage title="Analytics Avançado" /></ProtectedLayout>} />
       <Route path="/scraper" element={<ProtectedLayout><AiScraperPage /></ProtectedLayout>} />
@@ -99,7 +99,7 @@ const AppRoutes: React.FC = () => {
 
       {/* Client Routes */}
       <Route path="/client/dashboard" element={<ProtectedLayout><ClientDashboardPage /></ProtectedLayout>} />
-      <Route path="/campaigns" element={<ProtectedLayout><MarketingPage /></ProtectedLayout>} />
+      <Route path="/campaigns" element={<ProtectedLayout><ClientMarketingPage /></ProtectedLayout>} />
       <Route path="/reports" element={<ProtectedLayout><ClientReportsPage /></ProtectedLayout>} />
       <Route path="/client/settings" element={<ProtectedLayout><ClientSettingsPage /></ProtectedLayout>} />
 
