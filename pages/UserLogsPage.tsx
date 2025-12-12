@@ -36,8 +36,8 @@ export const UserLogsPage: React.FC = () => {
       }
 
       // API only accepts user_id and num_logs parameters
-      // Always fetch 100 logs as requested
-      const response = await apiGet(`/logs/logs/?user_id=${userId}&num_logs=2`);
+      // Always fetch 50 logs as requested
+      const response = await apiGet(`/logs/logs/?user_id=${userId}&num_logs=50`);
       const data = await handleApiResponse(response);
 
       // Handle array response from API

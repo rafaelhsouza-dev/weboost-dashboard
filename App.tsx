@@ -15,6 +15,7 @@ import { AdminServicesPage } from './pages/AdminServicesPage';
 import { AdminContractsPage } from './pages/AdminContractsPage';
 import { AdminPartnersPage } from './pages/AdminPartnersPage';
 import { AdminEventsPage } from './pages/AdminEventsPage';
+import { AdminLogsPage } from './pages/AdminLogsPage';
 import { AdminReferralsPage } from './pages/AdminReferralsPage';
 import { AiScraperPage } from './pages/AiScraperPage';
 import { SeoAnalysisPage } from './pages/SeoAnalysisPage';
@@ -93,6 +94,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/partners" element={<ProtectedLayout><AdminPartnersPage /></ProtectedLayout>} />
       <Route path="/events" element={<ProtectedLayout><AdminEventsPage /></ProtectedLayout>} />
       <Route path="/referrals" element={<ProtectedLayout><AdminReferralsPage /></ProtectedLayout>} />
+      <Route path="/admin/logs" element={<ProtectedLayout><AdminLogsPage /></ProtectedLayout>} />
       <Route path="/admin/settings" element={<ProtectedLayout><AdminSettingsPage /></ProtectedLayout>} />
 
       {/* Client Routes */}

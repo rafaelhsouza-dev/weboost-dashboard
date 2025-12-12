@@ -97,6 +97,7 @@ export const Sidebar: React.FC = () => {
           { id: 'partners', label: 'Parceiros', icon: Handshake, path: '/partners' },
           { id: 'events', label: 'Feiras e Eventos', icon: CalendarDays, path: '/events' },
           { id: 'referrals', label: 'Indicações', icon: UserPlus2, path: '/referrals' },
+          { id: 'logs', label: 'Registos de Atividade', icon: Settings, path: '/admin/logs' },
           { id: 'settings', label: 'Configurações', icon: Settings, path: '/admin/settings' },
         ];
       case TenancyType.CLIENT:
