@@ -8,7 +8,7 @@ import { Bot, Search, Loader2, Download } from 'lucide-react';
 import { Lead, WebhookStatus } from '../types';
 import { fetchLeadsStream } from '../services/aiService';
 
-export const AiScraperPage: React.FC = () => {
+export const UserAiScraperPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('Restaurantes Italianos');
   const [radius, setRadius] = useState(5); // km
   const [maxLeads, setMaxLeads] = useState(10);

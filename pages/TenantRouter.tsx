@@ -2,12 +2,11 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useApp } from '../store';
 import { TenancyType } from '../types';
-import { DashboardHome } from './DashboardHome';
 import { UserDashboardPage } from './UserDashboardPage';
 import { ClientDashboardPage } from './ClientDashboardPage';
 import { AdminDashboardPage } from './AdminDashboardPage';
 
-export const TenantDashboard: React.FC = () => {
+export const TenantRouter: React.FC = () => {
   const { currentTenant } = useApp();
 
   if (!currentTenant) {
@@ -30,6 +29,6 @@ export const TenantDashboard: React.FC = () => {
     
     default:
       // Fallback to home dashboard
-      return <DashboardHome />;
+      return <UserDashboardPage />;
   }
 };
