@@ -3,7 +3,7 @@ import { DataTable, Column } from '../components/DataTable';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { Combobox } from '../components/Combobox';
-import { Plus, X, Handshake, Search } from 'lucide-react';
+import { Plus, X, Handshake, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const AdminPartnersPage: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -11,7 +11,13 @@ export const AdminPartnersPage: React.FC = () => {
   const [partners, setPartners] = useState([
     { id: 1, name: 'Agência Digital X', type: 'Revendedor', contact: 'joao@x.com', status: 'Ativo' },
     { id: 2, name: 'Consultoria Y', type: 'Parceiro Tecnológico', contact: 'ana@y.com', status: 'Ativo' },
+    { id: 3, name: 'Marketing Agency', type: 'Agência de Marketing', contact: 'maria@agency.com', status: 'Ativo' },
+    { id: 4, name: 'Tech Solutions', type: 'Parceiro Tecnológico', contact: 'carlos@tech.com', status: 'Inativo' },
+    { id: 5, name: 'Consulting Group', type: 'Consultor Independente', contact: 'pedro@consult.com', status: 'Ativo' },
+    { id: 6, name: 'Digital Partners', type: 'Revendedor', contact: 'ana@digital.com', status: 'Ativo' },
   ]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3;
 
   // Form State
   const [formData, setFormData] = useState({
@@ -65,6 +71,11 @@ export const AdminPartnersPage: React.FC = () => {
     partner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     partner.type.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredPartners.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedPartners = filteredPartners.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <div className="p-6 space-y-6">
@@ -177,7 +188,135 @@ export const AdminPartnersPage: React.FC = () => {
         </div>
       )}
 
-      <DataTable data={partners} columns={columns} title="Lista de Parceiros" />
+      <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <table className="w-full">
+          <thead className="bg-gray-50 dark:bg-gray-700">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Parceiro</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tipo</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Contacto</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            {paginatedPartners.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                  Nenhum parceiro encontrado
+                </td>
+              </tr>
+            ) : (
+              paginatedPartners.map((partner) => (
+                <tr key={partner.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{partner.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{partner.type}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{partner.contact}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold
+                      ${partner.status === 'Ativo' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'}
+                    `}>
+                      {partner.status}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex flex-col md:flex-row items-center justify-between px-6 py-3 border-t border-gray-200 dark:border-gray-700 gap-4">
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+              Mostrando {paginatedPartners.length} de {filteredPartners.length} parceiros
+            </div>
+            <div className="flex items-center gap-2 flex-wrap justify-center">
+              {/* First Page */}
+              <button
+                onClick={() => setCurrentPage(1)}
+                disabled={currentPage === 1}
+                className="p-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Primeira página"
+              >
+                <div className="flex">
+                  <ChevronLeft className="h-3 w-3" />
+                  <ChevronLeft className="h-3 w-3 -ml-0.5" />
+                </div>
+              </button>
+              
+              {/* Previous Page */}
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="p-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Página anterior"
+              >
+                <ChevronLeft className="h-3 w-3" />
+              </button>
+              
+              {/* Page Numbers - Dynamic range */}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                // Show first 2 pages, last 2 pages, and pages around current page
+                const shouldShow = page <= 2 || page > totalPages - 2 || (page >= currentPage - 1 && page <= currentPage + 1);
+                
+                if (shouldShow) {
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`px-2 py-1 rounded-md text-xs transition-colors ${
+                        currentPage === page
+                          ? 'bg-primary text-white hover:bg-primary/90'
+                          : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+                      }`}
+                      title={`Ir para página ${page}`}
+                    >
+                      {page}
+                    </button>
+                  );
+                }
+                
+                // Show ellipsis for gaps
+                if ((page === 3 && currentPage > 4) || (page === totalPages - 2 && currentPage < totalPages - 3)) {
+                  return (
+                    <span key={`ellipsis-${page}`} className="px-2 py-2 text-gray-500 dark:text-gray-400 text-xs flex items-center">
+                      ...
+                    </span>
+                  );
+                }
+                
+                return null;
+              })}
+              
+              {/* Next Page */}
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="p-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Próxima página"
+              >
+                <ChevronRight className="h-3 w-3" />
+              </button>
+              
+              {/* Last Page */}
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={currentPage === totalPages}
+                className="p-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Última página"
+              >
+                <div className="flex">
+                  <ChevronRight className="h-3 w-3" />
+                  <ChevronRight className="h-3 w-3 -ml-0.5" />
+                </div>
+              </button>
+            </div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              Página {currentPage} de {totalPages}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
