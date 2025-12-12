@@ -63,52 +63,58 @@ const PlaceholderPage: React.FC<{ title: string }> = ({ title }) => (
   </div>
 );
 
-const AppContent: React.FC = () => {
+const AppRoutes: React.FC = () => {
   const { isAuthenticated } = useApp();
   const navigate = useNavigate();
-
-  useAuthCheck(); // Check authentication status on app load
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/');
     }
   }, [isAuthenticated, navigate]);
+
+  return (
+    <Routes>
+      <Route path="/" element={<ProtectedLayout><TenantDashboard /></ProtectedLayout>} />
+      <Route path="/crm" element={<ProtectedLayout><CrmPage /></ProtectedLayout>} />
+      <Route path="/marketing" element={<ProtectedLayout><MarketingPage /></ProtectedLayout>} />
+      <Route path="/cdp" element={<ProtectedLayout><PlaceholderPage title="CDP - Dados de Cliente" /></ProtectedLayout>} />
+      <Route path="/analytics" element={<ProtectedLayout><PlaceholderPage title="Analytics Avançado" /></ProtectedLayout>} />
+      <Route path="/scraper" element={<ProtectedLayout><AiScraperPage /></ProtectedLayout>} />
+      <Route path="/seo-analysis" element={<ProtectedLayout><SeoAnalysisPage /></ProtectedLayout>} />
+      
+      {/* Admin Routes */}
+      <Route path="/customers" element={<ProtectedLayout><AdminClientsPage /></ProtectedLayout>} />
+      <Route path="/customer-list" element={<ProtectedLayout><ClientListPage /></ProtectedLayout>} />
+      <Route path="/users" element={<ProtectedLayout><AdminUsersPage /></ProtectedLayout>} />
+      <Route path="/services" element={<ProtectedLayout><AdminServicesPage /></ProtectedLayout>} />
+      <Route path="/contracts" element={<ProtectedLayout><AdminContractsPage /></ProtectedLayout>} />
+      <Route path="/partners" element={<ProtectedLayout><AdminPartnersPage /></ProtectedLayout>} />
+      <Route path="/events" element={<ProtectedLayout><AdminEventsPage /></ProtectedLayout>} />
+      <Route path="/referrals" element={<ProtectedLayout><AdminReferralsPage /></ProtectedLayout>} />
+      <Route path="/admin/settings" element={<ProtectedLayout><AdminSettingsPage /></ProtectedLayout>} />
+
+      {/* Client Routes */}
+      <Route path="/client/dashboard" element={<ProtectedLayout><ClientDashboardPage /></ProtectedLayout>} />
+      <Route path="/campaigns" element={<ProtectedLayout><MarketingPage /></ProtectedLayout>} />
+      <Route path="/reports" element={<ProtectedLayout><ClientReportsPage /></ProtectedLayout>} />
+      <Route path="/client/settings" element={<ProtectedLayout><ClientSettingsPage /></ProtectedLayout>} />
+
+      {/* User Routes */}
+      <Route path="/user/dashboard" element={<ProtectedLayout><UserDashboardPage /></ProtectedLayout>} />
+      <Route path="/user/settings" element={<ProtectedLayout><UserSettingsPage /></ProtectedLayout>} />
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+};
+
+const AppContent: React.FC = () => {
+  useAuthCheck(); // Check authentication status on app load
   
   return (
     <HashRouter>
-      <Routes>
-        <Route path="/" element={<ProtectedLayout><TenantDashboard /></ProtectedLayout>} />
-        <Route path="/crm" element={<ProtectedLayout><CrmPage /></ProtectedLayout>} />
-        <Route path="/marketing" element={<ProtectedLayout><MarketingPage /></ProtectedLayout>} />
-        <Route path="/cdp" element={<ProtectedLayout><PlaceholderPage title="CDP - Dados de Cliente" /></ProtectedLayout>} />
-        <Route path="/analytics" element={<ProtectedLayout><PlaceholderPage title="Analytics Avançado" /></ProtectedLayout>} />
-        <Route path="/scraper" element={<ProtectedLayout><AiScraperPage /></ProtectedLayout>} />
-        <Route path="/seo-analysis" element={<ProtectedLayout><SeoAnalysisPage /></ProtectedLayout>} />
-        
-        {/* Admin Routes */}
-        <Route path="/customers" element={<ProtectedLayout><AdminClientsPage /></ProtectedLayout>} />
-        <Route path="/customer-list" element={<ProtectedLayout><ClientListPage /></ProtectedLayout>} />
-        <Route path="/users" element={<ProtectedLayout><AdminUsersPage /></ProtectedLayout>} />
-        <Route path="/services" element={<ProtectedLayout><AdminServicesPage /></ProtectedLayout>} />
-        <Route path="/contracts" element={<ProtectedLayout><AdminContractsPage /></ProtectedLayout>} />
-        <Route path="/partners" element={<ProtectedLayout><AdminPartnersPage /></ProtectedLayout>} />
-        <Route path="/events" element={<ProtectedLayout><AdminEventsPage /></ProtectedLayout>} />
-        <Route path="/referrals" element={<ProtectedLayout><AdminReferralsPage /></ProtectedLayout>} />
-        <Route path="/admin/settings" element={<ProtectedLayout><AdminSettingsPage /></ProtectedLayout>} />
-
-        {/* Client Routes */}
-        <Route path="/client/dashboard" element={<ProtectedLayout><ClientDashboardPage /></ProtectedLayout>} />
-        <Route path="/campaigns" element={<ProtectedLayout><MarketingPage /></ProtectedLayout>} />
-        <Route path="/reports" element={<ProtectedLayout><ClientReportsPage /></ProtectedLayout>} />
-        <Route path="/client/settings" element={<ProtectedLayout><ClientSettingsPage /></ProtectedLayout>} />
-
-        {/* User Routes */}
-        <Route path="/user/dashboard" element={<ProtectedLayout><UserDashboardPage /></ProtectedLayout>} />
-        <Route path="/user/settings" element={<ProtectedLayout><UserSettingsPage /></ProtectedLayout>} />
-
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <AppRoutes />
     </HashRouter>
   );
 };
