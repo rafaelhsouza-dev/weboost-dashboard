@@ -93,7 +93,14 @@ export const Sidebar: React.FC = () => {
           },
           { id: 'contracts', label: 'Contratos', icon: FileSignature, path: '/admin/contracts' },
           { id: 'services', label: 'Serviços', icon: Layers, path: '/admin/services' },
-          { id: 'users', label: 'Utilizadores', icon: Users, path: '/admin/users' },
+          {
+            id: 'users',
+            label: 'Utilizadores',
+            icon: Users,
+            children: [
+              { id: 'users', label: 'Utilizadores', path: '/admin/users', icon: Users }
+            ]
+          },
           { id: 'partners', label: 'Parceiros', icon: Handshake, path: '/admin/partners' },
           { id: 'events', label: 'Feiras e Eventos', icon: CalendarDays, path: '/admin/events' },
           { id: 'referrals', label: 'Indicações', icon: UserPlus2, path: '/admin/referrals' },
