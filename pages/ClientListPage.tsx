@@ -173,28 +173,89 @@ export const ClientListPage: React.FC = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between px-6 py-3 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex flex-col md:flex-row items-center justify-between px-6 py-3 border-t border-gray-200 dark:border-gray-700 gap-4">
               <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                 Mostrando {customers.length} de {customers.length} clientes
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap justify-center">
+                {/* First Page */}
+                <button
+                  onClick={() => void fetchCustomers(1, searchTerm)}
+                  disabled={currentPage === 1}
+                  className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Primeira página"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-4 w-4 -ml-1" />
+                </button>
+                
+                {/* Previous Page */}
                 <button
                   onClick={() => void fetchCustomers(currentPage - 1, searchTerm)}
                   disabled={currentPage === 1}
                   className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Página anterior"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Página {currentPage} de {totalPages}
-                </span>
+                
+                {/* Page Numbers - Dynamic range */}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                  // Show first 2 pages, last 2 pages, and pages around current page
+                  const shouldShow = page <= 2 || page > totalPages - 2 || (page >= currentPage - 1 && page <= currentPage + 1);
+                  
+                  if (shouldShow) {
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => void fetchCustomers(page, searchTerm)}
+                        className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                          currentPage === page
+                            ? 'bg-primary text-white hover:bg-primary/90'
+                            : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        }`}
+                        title={`Ir para página ${page}`}
+                      >
+                        {page}
+                      </button>
+                    );
+                  }
+                  
+                  // Show ellipsis for gaps
+                  if ((page === 3 && currentPage > 4) || (page === totalPages - 2 && currentPage < totalPages - 3)) {
+                    return (
+                      <span key={`ellipsis-${page}`} className="px-2 py-2 text-gray-500 dark:text-gray-400 text-sm">
+                        ...
+                      </span>
+                    );
+                  }
+                  
+                  return null;
+                })}
+                
+                {/* Next Page */}
                 <button
                   onClick={() => void fetchCustomers(currentPage + 1, searchTerm)}
                   disabled={currentPage === totalPages}
                   className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Próxima página"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>
+                
+                {/* Last Page */}
+                <button
+                  onClick={() => void fetchCustomers(totalPages, searchTerm)}
+                  disabled={currentPage === totalPages}
+                  className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Última página"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-4 w-4 -ml-1" />
+                </button>
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                Página {currentPage} de {totalPages}
               </div>
             </div>
           )}
