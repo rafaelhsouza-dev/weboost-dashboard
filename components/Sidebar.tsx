@@ -87,8 +87,8 @@ export const Sidebar: React.FC = () => {
             label: 'Clientes', 
             icon: Building2,
             children: [
-              { id: 'tenants', label: 'Resumo Clientes', path: '/admin/customers', icon: LayoutDashboard },
-              { id: 'customer-list', label: 'Lista de Clientes', path: '/admin/customer-list', icon: Users }
+              { id: 'tenants', label: 'Resumo', path: '/admin/customers', icon: LayoutDashboard },
+              { id: 'customer-list', label: 'Clientes', path: '/admin/customer-list', icon: Users }
             ]
           },
           { id: 'contracts', label: 'Contratos', icon: FileSignature, path: '/admin/contracts' },
@@ -98,7 +98,9 @@ export const Sidebar: React.FC = () => {
             label: 'Utilizadores',
             icon: Users,
             children: [
-              { id: 'users', label: 'Utilizadores', path: '/admin/users', icon: Users }
+              { id: 'users', label: 'Resumo', path: '/admin/users', icon: LayoutDashboard },
+              { id: 'users', label: 'Utilizadores', path: '/admin/users', icon: Users },
+              { id: 'users', label: 'Departamentos', path: '/admin/users', icon: Users }
             ]
           },
           { id: 'partners', label: 'Parceiros', icon: Handshake, path: '/admin/partners' },
