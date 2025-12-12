@@ -107,7 +107,7 @@ try {
   // Usa tenants de fallback se a API falhar
   console.log('Using fallback tenants due to API error');
   const fallbackTenants = [
-    { id: 'internal', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL },
+    { id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL },
     { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN }
   ];
   setAllTenants(fallbackTenants);

@@ -72,7 +72,7 @@ const mapApiUserToAppUser = (apiUser: any): User => {
   // Add internal tenant for all users EXCEPT role 4 (client)
   // Role 4 (client) should only see their own client, not the internal tenant
   if (apiUser.roles && !apiUser.roles.includes(4)) {
-    tenants.unshift({ id: 'internal', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL });
+    tenants.unshift({ id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL });
   }
 
   return {

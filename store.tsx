@@ -73,7 +73,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         
         // Ensure we always have internal and admin tenants for admin users
         const essentialTenants = [
-          { id: 'internal', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL },
+          { id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL },
           { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN }
         ];
         
@@ -91,7 +91,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         // If there's an error loading tenants, use fallback tenants
         console.log('Using fallback tenants due to API error');
         const fallbackTenants = [
-          { id: 'internal', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL },
+          { id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL },
           { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN }
         ];
         setAllTenants(fallbackTenants);
@@ -136,7 +136,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       // If no tenants loaded yet, use essential tenants for admin users
       if (allTenants.length === 0 && user.role === Role.ADMIN) {
         userAvailableTenants = [
-          { id: 'internal', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL },
+          { id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL },
           { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN }
         ];
       }
@@ -245,7 +245,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       let userAvailableTenants = allTenants;
       if (allTenants.length === 0 && apiUser.role === Role.ADMIN) {
         userAvailableTenants = [
-          { id: 'internal', name: 'Weboost (Utilizador)', type: TenancyType.INTERNAL },
+          { id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL },
           { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN }
         ];
       } else if (apiUser.role !== Role.ADMIN) {
