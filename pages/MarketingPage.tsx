@@ -28,15 +28,15 @@ export const MarketingPage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="p-6 space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Marketing Automation</h1>
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Marketing Automation</h1>
         </div>
         <div className="flex items-center gap-2">
           <DateRangePicker />
-          <Button variant="secondary">
-            <Plus size={18} className="mr-2" />
+          <Button variant="secondary" className="text-sm font-medium">
+            <Plus size={14} className="mr-2" />
             Nova Campanha
           </Button>
         </div>

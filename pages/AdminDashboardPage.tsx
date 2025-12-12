@@ -15,9 +15,11 @@ export const AdminDashboardPage: React.FC = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-        Dashboard Admin: {currentTenant?.name || 'Carregando...'}
-      </h1>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+        <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-0">
+          Dashboard Admin: {currentTenant?.name || 'Carregando...'}
+        </h1>
+      </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

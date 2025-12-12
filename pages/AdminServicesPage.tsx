@@ -35,14 +35,14 @@ export const AdminServicesPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="p-6 space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
-           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Catálogo de Serviços</h1>
-           <p className="text-gray-500 dark:text-gray-400 text-sm">Planos e serviços disponíveis para subscrição.</p>
+           <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Catálogo de Serviços</h1>
+           <p className="text-sm text-gray-500 dark:text-gray-400">Planos e serviços disponíveis para subscrição.</p>
         </div>
-        <Button onClick={() => setIsFormOpen(true)}>
-          <Plus size={18} className="mr-2" />
+        <Button onClick={() => setIsFormOpen(true)} className="text-sm font-medium">
+          <Plus size={14} className="mr-2" />
           Novo Serviço
         </Button>
       </div>

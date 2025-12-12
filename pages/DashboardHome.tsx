@@ -20,10 +20,15 @@ export const DashboardHome: React.FC = () => {
   const COLORS = ['#1f3ab9', '#992091', '#10b981', '#f59e0b'];
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 space-y-6">
       {/* Page Controls */}
-      <div className="flex justify-end mb-4">
-        <DateRangePicker />
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+        <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-0">
+          Dashboard Principal
+        </h1>
+        <div className="flex justify-end">
+          <DateRangePicker />
+        </div>
       </div>
 
       {/* KPIs Grid */}

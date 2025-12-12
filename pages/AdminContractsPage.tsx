@@ -80,14 +80,14 @@ export const AdminContractsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="p-6 space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
-           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Gestão de Contratos</h1>
-           <p className="text-gray-500 dark:text-gray-400 text-sm">Administre os contratos e serviços ativos.</p>
+           <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Gestão de Contratos</h1>
+           <p className="text-sm text-gray-500 dark:text-gray-400">Administre os contratos e serviços ativos.</p>
         </div>
-        <Button onClick={() => setIsFormOpen(true)}>
-          <Plus size={18} className="mr-2" />
+        <Button onClick={() => setIsFormOpen(true)} className="text-sm font-medium">
+          <Plus size={14} className="mr-2" />
           Novo Contrato
         </Button>
       </div>

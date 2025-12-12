@@ -52,13 +52,13 @@ export const AiScraperPage: React.FC = () => {
 
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="p-6 space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
-           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-             <Bot className="text-primary"/> AI Scraper & Enriquecimento
+           <h1 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+             <Bot className="text-primary h-5 w-5"/> AI Scraper & Enriquecimento
            </h1>
-           <p className="text-gray-500 dark:text-gray-400 text-sm">Geração de leads B2B com inteligência artificial.</p>
+           <p className="text-sm text-gray-500 dark:text-gray-400">Geração de leads B2B com inteligência artificial.</p>
         </div>
       </div>
 
