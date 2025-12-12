@@ -3,7 +3,7 @@ import { DataTable, Column } from '../components/DataTable';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { Combobox } from '../components/Combobox';
-import { Plus, X, FileSignature } from 'lucide-react';
+import { Plus, X, FileSignature, Search } from 'lucide-react';
 
 interface Contract {
   id: number;
@@ -24,18 +24,21 @@ export const AdminContractsPage: React.FC = () => {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
 
+  const [searchTerm, setSearchTerm] = useState('');
+
   const columns: Column<Contract>[] = [
-    { header: 'Cliente', accessor: 'client', className: 'font-medium' },
-    { header: 'Início', accessor: 'startDate' },
-    { header: 'Valor (€)', accessor: 'value' },
-    { header: 'Cobrança', accessor: 'billing' },
+    { header: 'Cliente', accessor: 'client', className: 'text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider' },
+    { header: 'Início', accessor: 'startDate', className: 'text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider' },
+    { header: 'Valor (€)', accessor: 'value', className: 'text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider' },
+    { header: 'Cobrança', accessor: 'billing', className: 'text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider' },
     { 
         header: 'Status', 
         accessor: (row: any) => (
           <span className="px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
             {row.status}
           </span>
-        ) 
+        ),
+        className: 'text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'
     },
   ];
 
@@ -79,6 +82,11 @@ export const AdminContractsPage: React.FC = () => {
     setIsFormOpen(false);
   };
 
+  const filteredContracts = contracts.filter(contract =>
+    contract.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    contract.billing.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
@@ -86,10 +94,27 @@ export const AdminContractsPage: React.FC = () => {
            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Gestão de Contratos</h1>
            <p className="text-sm text-gray-500 dark:text-gray-400">Administre os contratos e serviços ativos.</p>
         </div>
-        <Button onClick={() => setIsFormOpen(true)} className="text-sm font-medium">
-          <Plus size={14} className="mr-2" />
-          Novo Contrato
-        </Button>
+        <div className="flex gap-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Pesquisar contratos..."
+              className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:outline-none w-full md:w-64 text-sm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  // Busca ao pressionar Enter
+                }
+              }}
+            />
+          </div>
+          <Button onClick={() => setIsFormOpen(true)} className="text-sm font-medium">
+            <Plus size={14} className="mr-2" />
+            Novo Contrato
+          </Button>
+        </div>
       </div>
 
       {isFormOpen && (

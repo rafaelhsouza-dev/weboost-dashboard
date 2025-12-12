@@ -3,10 +3,11 @@ import { DataTable, Column } from '../components/DataTable';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { Combobox } from '../components/Combobox';
-import { Plus, X, UserPlus2 } from 'lucide-react';
+import { Plus, X, UserPlus2, Search } from 'lucide-react';
 
 export const AdminReferralsPage: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [referrals, setReferrals] = useState([
     { id: 1, referrer: 'João Silva (Cliente A)', referred: 'Empresa Z', date: '2024-02-10', status: 'Convertido', reward: '€100' },
     { id: 2, referrer: 'Parceiro X', referred: 'Loja Y', date: '2024-02-15', status: 'Em Análise', reward: 'Pendente' },
@@ -22,9 +23,9 @@ export const AdminReferralsPage: React.FC = () => {
   });
 
   const columns: Column<any>[] = [
-    { header: 'Quem Indicou', accessor: 'referrer' },
-    { header: 'Indicado', accessor: 'referred' },
-    { header: 'Data', accessor: 'date' },
+    { header: 'Quem Indicou', accessor: 'referrer', className: 'text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider' },
+    { header: 'Indicado', accessor: 'referred', className: 'text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider' },
+    { header: 'Data', accessor: 'date', className: 'text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider' },
     { 
       header: 'Status', 
       accessor: (row: any) => (
@@ -33,9 +34,10 @@ export const AdminReferralsPage: React.FC = () => {
         `}>
           {row.status}
         </span>
-      )
+      ),
+      className: 'text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'
     },
-    { header: 'Comissão/Prémio', accessor: 'reward' },
+    { header: 'Comissão/Prémio', accessor: 'reward', className: 'text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider' },
   ];
 
   // Mock list of potential referrers (Clients, Partners, Employees)
@@ -61,6 +63,11 @@ export const AdminReferralsPage: React.FC = () => {
     setIsFormOpen(false);
   };
 
+  const filteredReferrals = referrals.filter(referral =>
+    referral.referrer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    referral.referred.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
@@ -70,10 +77,27 @@ export const AdminReferralsPage: React.FC = () => {
            </h1>
            <p className="text-sm text-gray-500 dark:text-gray-400">Controle de indicações e comissões.</p>
         </div>
-        <Button onClick={() => setIsFormOpen(true)} className="text-sm font-medium">
-          <Plus size={14} className="mr-2" />
-          Nova Indicação
-        </Button>
+        <div className="flex gap-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Pesquisar indicações..."
+              className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:outline-none w-full md:w-64 text-sm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  // Busca ao pressionar Enter
+                }
+              }}
+            />
+          </div>
+          <Button onClick={() => setIsFormOpen(true)} className="text-sm font-medium">
+            <Plus size={14} className="mr-2" />
+            Nova Indicação
+          </Button>
+        </div>
       </div>
 
       {isFormOpen && (
