@@ -182,12 +182,12 @@ export const ClientListPage: React.FC = () => {
                 <button
                   onClick={() => void fetchCustomers(1, searchTerm)}
                   disabled={currentPage === 1}
-                  className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Primeira página"
                 >
                   <div className="flex">
-                    <ChevronLeft className="h-4 w-4" />
-                    <ChevronLeft className="h-4 w-4 -ml-1" />
+                    <ChevronLeft className="h-3 w-3" />
+                    <ChevronLeft className="h-3 w-3 -ml-0.5" />
                   </div>
                 </button>
                 
@@ -195,10 +195,10 @@ export const ClientListPage: React.FC = () => {
                 <button
                   onClick={() => void fetchCustomers(currentPage - 1, searchTerm)}
                   disabled={currentPage === 1}
-                  className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Página anterior"
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-3 w-3" />
                 </button>
                 
                 {/* Page Numbers - Dynamic range */}
@@ -211,10 +211,10 @@ export const ClientListPage: React.FC = () => {
                       <button
                         key={page}
                         onClick={() => void fetchCustomers(page, searchTerm)}
-                        className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                        className={`px-2 py-1 rounded-md text-xs transition-colors ${
                           currentPage === page
                             ? 'bg-primary text-white hover:bg-primary/90'
-                            : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+                            : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
                         }`}
                         title={`Ir para página ${page}`}
                       >
@@ -226,7 +226,7 @@ export const ClientListPage: React.FC = () => {
                   // Show ellipsis for gaps
                   if ((page === 3 && currentPage > 4) || (page === totalPages - 2 && currentPage < totalPages - 3)) {
                     return (
-                      <span key={`ellipsis-${page}`} className="px-2 py-2 text-gray-500 dark:text-gray-400 text-sm">
+                      <span key={`ellipsis-${page}`} className="px-2 py-2 text-gray-500 dark:text-gray-400 text-xs flex items-center">
                         ...
                       </span>
                     );
@@ -239,22 +239,22 @@ export const ClientListPage: React.FC = () => {
                 <button
                   onClick={() => void fetchCustomers(currentPage + 1, searchTerm)}
                   disabled={currentPage === totalPages}
-                  className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Próxima página"
                 >
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-3 w-3" />
                 </button>
                 
                 {/* Last Page */}
                 <button
                   onClick={() => void fetchCustomers(totalPages, searchTerm)}
                   disabled={currentPage === totalPages}
-                  className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Última página"
                 >
                   <div className="flex">
-                    <ChevronRight className="h-4 w-4" />
-                    <ChevronRight className="h-4 w-4 -ml-1" />
+                    <ChevronRight className="h-3 w-3" />
+                    <ChevronRight className="h-3 w-3 -ml-0.5" />
                   </div>
                 </button>
               </div>
