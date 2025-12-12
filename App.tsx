@@ -103,6 +103,7 @@ const AppRoutes: React.FC = () => {
 
       {/* User Routes */}
       <Route path="/user/dashboard" element={<ProtectedLayout><UserDashboardPage /></ProtectedLayout>} />
+      <Route path="/user/logs" element={<ProtectedLayout><UserLogsPage /></ProtectedLayout>} />
       <Route path="/user/settings" element={<ProtectedLayout><UserSettingsPage /></ProtectedLayout>} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
