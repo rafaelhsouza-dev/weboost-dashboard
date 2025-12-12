@@ -26,7 +26,7 @@ export const ClientListPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 3;
 
   // Fetch customers from API
   const fetchCustomers = async (page: number = 1) => {
