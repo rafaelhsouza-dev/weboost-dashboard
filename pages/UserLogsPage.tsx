@@ -19,7 +19,7 @@ interface ApiResponse {
 }
 
 export const UserLogsPage: React.FC = () => {
-  const { currentTenant } = useApp();
+  const { currentTenant, user } = useApp();
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,9 +33,9 @@ export const UserLogsPage: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      // Get user ID from currentTenant (assuming it's stored there)
-      // If not, we'll need to get it from the auth context or another source
-      const userId = currentTenant?.id || '';
+      // Get user ID from the authenticated user object
+      // For INTERNAL users, we need the actual user ID, not the tenant ID
+      const userId = user?.id || '';
       
       if (!userId) {
         throw new Error('User ID not found');
