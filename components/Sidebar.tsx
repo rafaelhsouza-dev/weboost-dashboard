@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../store';
 import { TenancyType } from '../types';
 import { Combobox } from './Combobox';
@@ -7,12 +7,7 @@ import {
   Users, 
   Settings, 
   LogOut, 
-  PieChart, 
   Megaphone, 
-  Database,
-  ChevronLeft,
-  ChevronRight,
-  ChevronDown,
   Briefcase,
   FileText,
   Building2,
@@ -22,9 +17,27 @@ import {
   CalendarDays,
   UserPlus2,
   Bot,
-  ScanSearch
+  ScanSearch,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+// Define the types for menu items
+type MenuItemChild = {
+  id: string;
+  label: string;
+  path: string;
+};
+
+type MenuItem = {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  path?: string;
+  children?: MenuItemChild[];
+};
 
 export const Sidebar: React.FC = () => {
   const { 
@@ -40,39 +53,42 @@ export const Sidebar: React.FC = () => {
   
   const location = useLocation();
   const navigate = useNavigate();
+  const [openSubmenus, setOpenSubmenus] = useState<string[]>([]);
+
+  const toggleSubmenu = (id: string) => {
+    setOpenSubmenus(prev => prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]);
+  };
 
   const handleTenantChange = (tenantId: string) => {
-    console.log('Available tenants for user:', availableTenants);
-    console.log('Trying to change to tenant:', tenantId);
     const tenant = availableTenants.find(t => t.id === tenantId);
     if (tenant) {
       setTenant(tenantId);
+      setOpenSubmenus([]); // Close submenus on tenant change
       switch (tenant.type) {
-        case TenancyType.ADMIN:
-          navigate('/');
-          break;
-        case TenancyType.CLIENT:
-          navigate('/client/dashboard');
-          break;
-        case TenancyType.INTERNAL:
-          navigate('/user/dashboard');
-          break;
-        default:
-          navigate('/');
-          break;
+        case TenancyType.ADMIN: navigate('/'); break;
+        case TenancyType.CLIENT: navigate('/client/dashboard'); break;
+        case TenancyType.INTERNAL: navigate('/user/dashboard'); break;
+        default: navigate('/'); break;
       }
     }
   };
 
-  const getMenuItems = () => {
+  const getMenuItems = (): MenuItem[] => {
     if (!currentTenant) return [];
 
     switch (currentTenant.type) {
       case TenancyType.ADMIN:
         return [
           { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/' },
-          { id: 'tenants', label: 'Clientes', icon: Building2, path: '/customers' },
-          { id: 'customer-list', label: 'Lista de Clientes', icon: Users, path: '/customer-list' },
+          { 
+            id: 'clients', 
+            label: 'Clientes', 
+            icon: Building2,
+            children: [
+              { id: 'tenants', label: 'Gestão de Tenants', path: '/customers' },
+              { id: 'customer-list', label: 'Lista de Clientes', path: '/customer-list' }
+            ]
+          },
           { id: 'contracts', label: 'Contratos', icon: FileSignature, path: '/contracts' },
           { id: 'services', label: 'Serviços', icon: Layers, path: '/services' },
           { id: 'users', label: 'Utilizadores', icon: Users, path: '/users' },
@@ -100,6 +116,15 @@ export const Sidebar: React.FC = () => {
   };
 
   const menuItems = getMenuItems();
+
+  useEffect(() => {
+    const activeParent = menuItems.find(item => 
+      item.children?.some(child => child.path === location.pathname)
+    );
+    if (activeParent && !openSubmenus.includes(activeParent.id)) {
+      setOpenSubmenus(prev => [...prev, activeParent.id]);
+    }
+  }, [location.pathname, menuItems, openSubmenus]);
 
   return (
     <>
@@ -133,33 +158,7 @@ export const Sidebar: React.FC = () => {
 
         <div className="p-4 border-b border-gray-200 dark:border-gray-800">
           <div className="relative group">
-            <div className={`
-              hidden flex items-center gap-2 p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 
-              border border-gray-200 dark:border-gray-700 cursor-pointer hover:border-primary/50 transition-colors
-              ${sidebarCollapsed ? 'md:justify-center' : 'justify-between'}
-            `}>
-               <div className="flex items-center gap-2 overflow-hidden w-full">
-                  <div className="w-8 h-8 rounded bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-primary shrink-0">
-                    {currentTenant?.type === TenancyType.INTERNAL ? <Briefcase size={16}/> : <Building2 size={16}/>}
-                  </div>
-                  
-                  <div className={`flex flex-col truncate ${sidebarCollapsed ? 'md:hidden' : ''}`}>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                      {currentTenant?.name || (tenantsLoaded ? 'Nenhum tenant' : 'Carregando...')}
-                    </span>
-                    <span className="text-[10px] text-gray-500 uppercase tracking-wider">
-                       {currentTenant?.type === 'ADMIN' ? 'Administrador' : currentTenant?.type === 'INTERNAL' ? 'Weboost' : 'Cliente'}
-                    </span>
-                  </div>
-               </div>
-               
-               {availableTenants.length > 1 && (
-                 <ChevronDown size={16} className={`text-gray-400 ${sidebarCollapsed ? 'md:hidden' : ''}`} />
-               )}
-               
-            </div>
-            
-            {/* Custom Combobox for tenant selection */}
+            {/* Tenant Selector */}
             {availableTenants.length > 1 && tenantsLoaded && (
               <div className="mt-2">
                 <Combobox
@@ -179,27 +178,62 @@ export const Sidebar: React.FC = () => {
 
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
           {menuItems.map((item) => {
+            const isSubmenuOpen = openSubmenus.includes(item.id);
+            
+            if (item.children) {
+              const isChildActive = item.children.some(child => location.pathname === child.path);
+              return (
+                <div key={item.id}>
+                  <button
+                    onClick={() => toggleSubmenu(item.id)}
+                    className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
+                      ${isChildActive ? 'text-primary' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}
+                      ${sidebarCollapsed ? 'md:justify-center' : ''}
+                    `}
+                  >
+                    <div className="flex items-center gap-3">
+                      <item.icon size={20} className={isChildActive ? 'text-primary' : 'text-gray-500'} />
+                      <span className={`text-sm font-medium ${sidebarCollapsed ? 'md:hidden' : ''}`}>{item.label}</span>
+                    </div>
+                    {!sidebarCollapsed && <ChevronDown size={16} className={`transition-transform ${isSubmenuOpen ? 'rotate-180' : ''}`} />}
+                  </button>
+                  {isSubmenuOpen && !sidebarCollapsed && (
+                    <div className="pt-1 pl-5 space-y-1">
+                      {item.children.map((child) => {
+                        const isActive = location.pathname === child.path;
+                        return (
+                          <Link
+                            key={child.id}
+                            to={child.path}
+                            onClick={() => { if (window.innerWidth < 768) setSidebarCollapsed(true); }}
+                            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 text-sm
+                              ${isActive ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-[#16a34a]' : 'text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}
+                            `}
+                          >
+                            <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-primary' : 'bg-gray-400'}`}></span>
+                            <span>{child.label}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
             const isActive = location.pathname === item.path;
             return (
               <Link
                 key={item.id}
-                to={item.path}
-                onClick={() => {
-                   if (window.innerWidth < 768) setSidebarCollapsed(true);
-                }}
-                className={`
-                  flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
-                  ${isActive 
-                    ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-[#16a34a]' 
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}
+                to={item.path!}
+                onClick={() => { if (window.innerWidth < 768) setSidebarCollapsed(true); }}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
+                  ${isActive ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-[#16a34a]' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}
                   ${sidebarCollapsed ? 'md:justify-center' : ''}
                 `}
               >
                 <item.icon size={20} className={isActive ? 'text-primary dark:text-[#16a34a]' : 'text-gray-500'} />
-                
-                <span className={`text-sm font-medium ${sidebarCollapsed ? 'md:hidden' : ''}`}>
-                   {item.label}
-                </span>
+                <span className={`text-sm font-medium ${sidebarCollapsed ? 'md:hidden' : ''}`}>{item.label}</span>
               </Link>
             );
           })}
@@ -208,8 +242,7 @@ export const Sidebar: React.FC = () => {
         <div className="p-3 border-t border-gray-200 dark:border-gray-800 space-y-1">
           <button 
             onClick={async () => await logout()}
-            className={`
-              w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 dark:text-red-400 
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 dark:text-red-400 
               hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors
               ${sidebarCollapsed ? 'md:justify-center' : ''}
             `}
