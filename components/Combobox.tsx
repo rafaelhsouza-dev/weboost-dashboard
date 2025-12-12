@@ -127,7 +127,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-[#1a1a1a] py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm border border-gray-200 dark:border-gray-700">
+        <div className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-[#1a1a1a] py-0 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm border border-gray-200 dark:border-gray-700">
           
           {/* Search Input */}
           <div className="sticky top-0 z-10 bg-white dark:bg-[#1a1a1a] px-2 py-2 border-b border-gray-100 dark:border-gray-700">

@@ -161,7 +161,7 @@ export const Sidebar: React.FC = () => {
                   }))}
                   value={currentTenant?.id || ''}
                   onChange={(value: string) => handleTenantChange(value)}
-                  placeholder="Selecione um tenant..."
+                  placeholder="Selecione um Cliente..."
                   className="w-full"
                 />
               </div>
