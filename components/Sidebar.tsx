@@ -81,38 +81,37 @@ export const Sidebar: React.FC = () => {
     switch (currentTenant.type) {
       case TenancyType.ADMIN:
         return [
-          { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/' },
+          { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin/customers' },
           { 
             id: 'clients', 
             label: 'Clientes', 
             icon: Building2,
             children: [
-              { id: 'tenants', label: 'Resumo Clientes', path: '/customers', icon: LayoutDashboard },
-              { id: 'customer-list', label: 'Lista de Clientes', path: '/customer-list', icon: Users }
+              { id: 'tenants', label: 'Resumo Clientes', path: '/admin/customers', icon: LayoutDashboard },
+              { id: 'customer-list', label: 'Lista de Clientes', path: '/admin/customer-list', icon: Users }
             ]
           },
-          { id: 'contracts', label: 'Contratos', icon: FileSignature, path: '/contracts' },
-          { id: 'services', label: 'Serviços', icon: Layers, path: '/services' },
-          { id: 'users', label: 'Utilizadores', icon: Users, path: '/users' },
-          { id: 'partners', label: 'Parceiros', icon: Handshake, path: '/partners' },
-          { id: 'events', label: 'Feiras e Eventos', icon: CalendarDays, path: '/events' },
-          { id: 'referrals', label: 'Indicações', icon: UserPlus2, path: '/referrals' },
-          { id: 'logs', label: 'Registos de Atividade', icon: Settings, path: '/admin/logs' },
+          { id: 'contracts', label: 'Contratos', icon: FileSignature, path: '/admin/contracts' },
+          { id: 'services', label: 'Serviços', icon: Layers, path: '/admin/services' },
+          { id: 'users', label: 'Utilizadores', icon: Users, path: '/admin/users' },
+          { id: 'partners', label: 'Parceiros', icon: Handshake, path: '/admin/partners' },
+          { id: 'events', label: 'Feiras e Eventos', icon: CalendarDays, path: '/admin/events' },
+          { id: 'referrals', label: 'Indicações', icon: UserPlus2, path: '/admin/referrals' },
+          { id: 'logs', label: 'Registos de Atividade', icon: Clock, path: '/admin/logs' },
           { id: 'settings', label: 'Configurações', icon: Settings, path: '/admin/settings' },
         ];
       case TenancyType.CLIENT:
         return [
           { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/client/dashboard' },
-          { id: 'campaigns', label: 'Campanhas', icon: Megaphone, path: '/campaigns' },
-          { id: 'reports', label: 'Relatórios', icon: FileText, path: '/reports' },
+          { id: 'campaigns', label: 'Campanhas', icon: Megaphone, path: '/client/campaigns' },
+          { id: 'reports', label: 'Relatórios', icon: FileText, path: '/client/reports' },
           { id: 'settings', label: 'Configurações', icon: Settings, path: '/client/settings' },
         ];
       case TenancyType.INTERNAL:
       default:
         return [
           { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/user/dashboard' },
-          { id: 'scraper', label: 'AI Scraper', icon: Bot, path: '/scraper' },
-          { id: 'seo', label: 'Analisar SEO/GEO', icon: ScanSearch, path: '/seo-analysis' },
+          { id: 'scraper', label: 'AI Scraper', icon: Bot, path: '/user/scraper' },
           { id: 'logs', label: 'Registos de Atividade', icon: Clock, path: '/user/logs' },
           { id: 'settings', label: 'Configurações', icon: Settings, path: '/user/settings' },
         ];
