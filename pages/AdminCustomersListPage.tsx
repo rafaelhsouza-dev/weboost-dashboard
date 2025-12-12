@@ -21,7 +21,7 @@ interface ApiResponse {
   total_pages: number;
 }
 
-export const ClientListPage: React.FC = () => {
+export const AdminCustomersListPage: React.FC = () => {
   const navigate = useNavigate();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +29,7 @@ export const ClientListPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 3;
+  const itemsPerPage = 25;
 
   // Fetch customers from API
   const fetchCustomers = async (page: number = 1, search: string = '') => {
