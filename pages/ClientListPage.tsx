@@ -77,17 +77,17 @@ export const ClientListPage: React.FC = () => {
 
   return (
     <div className="p-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 md:mb-0">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+        <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-0">
           Lista de Clientes
         </h1>
-        <div className="flex gap-4">
+        <div className="flex gap-3">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
               placeholder="Pesquisar clientes..."
-              className="pl-10 pr-12 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:outline-none w-full md:w-64"
+              className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:outline-none w-full md:w-64 text-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyPress={(e) => {
@@ -96,19 +96,12 @@ export const ClientListPage: React.FC = () => {
                 }
               }}
             />
-            <button
-              onClick={() => void fetchCustomers(1, searchTerm)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-primary hover:text-primary/80"
-              title="Buscar"
-            >
-              <Search className="h-5 w-5" />
-            </button>
           </div>
           <button
             onClick={handleAddCustomer}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors text-sm font-medium"
           >
-            <Plus size={16} />
+            <Plus size={14} />
             Adicionar Cliente
           </button>
         </div>
