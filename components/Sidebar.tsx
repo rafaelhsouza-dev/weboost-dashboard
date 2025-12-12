@@ -72,6 +72,7 @@ export const Sidebar: React.FC = () => {
         return [
           { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/' },
           { id: 'tenants', label: 'Clientes', icon: Building2, path: '/customers' },
+          { id: 'customer-list', label: 'Lista de Clientes', icon: Users, path: '/customer-list' },
           { id: 'contracts', label: 'Contratos', icon: FileSignature, path: '/contracts' },
           { id: 'services', label: 'Serviços', icon: Layers, path: '/services' },
           { id: 'users', label: 'Utilizadores', icon: Users, path: '/users' },

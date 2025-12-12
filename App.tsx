@@ -8,6 +8,7 @@ import { Header } from './components/Header';
 import { DashboardHome } from './pages/DashboardHome';
 import { CrmPage } from './pages/CrmPage';
 import { MarketingPage } from './pages/MarketingPage';
+import { ClientListPage } from './pages/ClientListPage';
 import { AdminClientsPage } from './pages/AdminClientsPage';
 import { AdminUsersPage } from './pages/AdminUsersPage';
 import { AdminServicesPage } from './pages/AdminServicesPage';
@@ -78,6 +79,7 @@ const AppContent: React.FC = () => {
         
         {/* Admin Routes */}
         <Route path="/customers" element={<ProtectedLayout><AdminClientsPage /></ProtectedLayout>} />
+        <Route path="/customer-list" element={<ProtectedLayout><ClientListPage /></ProtectedLayout>} />
         <Route path="/users" element={<ProtectedLayout><AdminUsersPage /></ProtectedLayout>} />
         <Route path="/services" element={<ProtectedLayout><AdminServicesPage /></ProtectedLayout>} />
         <Route path="/contracts" element={<ProtectedLayout><AdminContractsPage /></ProtectedLayout>} />
