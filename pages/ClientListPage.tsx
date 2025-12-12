@@ -16,6 +16,9 @@ interface Customer {
 interface ApiResponse {
   customers: Customer[];
   total: number;
+  page: number;
+  per_page: number;
+  total_pages: number;
 }
 
 export const ClientListPage: React.FC = () => {
@@ -29,17 +32,22 @@ export const ClientListPage: React.FC = () => {
   const itemsPerPage = 3;
 
   // Fetch customers from API
-  const fetchCustomers = async (page: number = 1) => {
+  const fetchCustomers = async (page: number = 1, search: string = '') => {
     try {
       setLoading(true);
       setError(null);
       
-      const response = await apiGet(`/customers/customers?page=${page}&per_page=${itemsPerPage}`);
+      let url = `/customers/customers?page=${page}&per_page=${itemsPerPage}`;
+      if (search) {
+        url += `&search=${encodeURIComponent(search)}`;
+      }
+      
+      const response = await apiGet(url);
       const data = await handleApiResponse(response) as ApiResponse;
       
       setCustomers(data.customers || []);
-      setTotalPages(Math.ceil(data.total / itemsPerPage));
-      setCurrentPage(page);
+      setTotalPages(data.total_pages || 1);
+      setCurrentPage(data.page || 1);
     } catch (error) {
       console.error('Failed to fetch customers:', error);
       setError('Falha ao carregar clientes. Por favor, tente novamente.');
@@ -49,13 +57,15 @@ export const ClientListPage: React.FC = () => {
   };
 
   useEffect(() => {
-    void fetchCustomers(currentPage);
-  }, [currentPage]);
+    void fetchCustomers(1, searchTerm);
+  }, [searchTerm]);
 
-  const filteredCustomers = customers.filter(customer =>
-    customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Carregar dados inicialmente
+  useEffect(() => {
+    void fetchCustomers(1, '');
+  }, []);
+
+  // Removido a filtragem local, pois agora a busca é feita via API
 
   const handleEditCustomer = (customerId: number) => {
     navigate(`/admin/clients/${customerId}/edit`);
@@ -77,10 +87,22 @@ export const ClientListPage: React.FC = () => {
             <input
               type="text"
               placeholder="Pesquisar clientes..."
-              className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:outline-none w-full md:w-64"
+              className="pl-10 pr-12 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:outline-none w-full md:w-64"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  void fetchCustomers(1, searchTerm);
+                }
+              }}
             />
+            <button
+              onClick={() => void fetchCustomers(1, searchTerm)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-primary hover:text-primary/80"
+              title="Buscar"
+            >
+              <Search className="h-5 w-5" />
+            </button>
           </div>
           <button
             onClick={handleAddCustomer}
@@ -116,14 +138,14 @@ export const ClientListPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {filteredCustomers.length === 0 ? (
+              {customers.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
                     Nenhum cliente encontrado
                   </td>
                 </tr>
               ) : (
-                filteredCustomers.map((customer) => (
+                customers.map((customer) => (
                   <tr key={customer.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">#{customer.id}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{customer.name}</td>
@@ -153,11 +175,11 @@ export const ClientListPage: React.FC = () => {
           {totalPages > 1 && (
             <div className="flex items-center justify-between px-6 py-3 border-t border-gray-200 dark:border-gray-700">
               <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                Mostrando {filteredCustomers.length} de {customers.length} clientes
+                Mostrando {customers.length} de {customers.length} clientes
               </div>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  onClick={() => void fetchCustomers(currentPage - 1, searchTerm)}
                   disabled={currentPage === 1}
                   className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -167,7 +189,7 @@ export const ClientListPage: React.FC = () => {
                   Página {currentPage} de {totalPages}
                 </span>
                 <button
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  onClick={() => void fetchCustomers(currentPage + 1, searchTerm)}
                   disabled={currentPage === totalPages}
                   className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
