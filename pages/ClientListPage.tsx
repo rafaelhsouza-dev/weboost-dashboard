@@ -185,8 +185,10 @@ export const ClientListPage: React.FC = () => {
                   className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Primeira página"
                 >
-                  <ChevronLeft className="h-4 w-4" />
-                  <ChevronLeft className="h-4 w-4 -ml-1" />
+                  <div className="flex">
+                    <ChevronLeft className="h-4 w-4" />
+                    <ChevronLeft className="h-4 w-4 -ml-1" />
+                  </div>
                 </button>
                 
                 {/* Previous Page */}
@@ -250,8 +252,10 @@ export const ClientListPage: React.FC = () => {
                   className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Última página"
                 >
-                  <ChevronRight className="h-4 w-4" />
-                  <ChevronRight className="h-4 w-4 -ml-1" />
+                  <div className="flex">
+                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-4 w-4 -ml-1" />
+                  </div>
                 </button>
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-400">
