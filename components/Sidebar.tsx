@@ -85,7 +85,7 @@ export const Sidebar: React.FC = () => {
             label: 'Clientes', 
             icon: Building2,
             children: [
-              { id: 'tenants', label: 'Gestão de Tenants', path: '/customers' },
+              { id: 'tenants', label: 'Resumo Clientes', path: '/customers' },
               { id: 'customer-list', label: 'Lista de Clientes', path: '/customer-list' }
             ]
           },

@@ -26,7 +26,7 @@ Este projeto utiliza tecnologias de ponta, incluindo Inteligência Artificial (G
     *   *Search Grounding* para evitar alucinações da IA.
 
 ### ⚙️ Gestão Administrativa
-*   **Gestão de Tenants**: Cadastro completo de clientes empresariais.
+*   **Gestão de Customers**: Cadastro completo de clientes empresariais.
 *   **Contratos Inteligentes**: Associação de múltiplos serviços e departamentos.
 *   **Catálogo de Serviços**: Gestão de preços e ciclos de faturação.
 *   **Parceiros & Indicações**: Sistema de controlo de comissões e referrals.
