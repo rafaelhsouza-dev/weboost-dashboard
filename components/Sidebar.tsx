@@ -81,7 +81,7 @@ export const Sidebar: React.FC = () => {
     switch (currentTenant.type) {
       case TenancyType.ADMIN:
         return [
-          { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin/customers' },
+          { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard' },
           { 
             id: 'clients', 
             label: 'Clientes', 
