@@ -15,6 +15,10 @@ import { apiPost, handleApiResponse } from './apiClient';
 // API endpoint for fetching leads
 const API_ENDPOINT = '/gemini/fetch-leads';
 
+interface LeadsApiResponse {
+  leads: ApiLead[];
+}
+
 interface ApiLead {
   generatedDate: string;
   companyName: string;
@@ -155,7 +159,7 @@ export async function* fetchLeadsStream(
 
     // Make the authenticated API request using the new apiClient
     const response = await apiPost(API_ENDPOINT, payload);
-    const data = await handleApiResponse(response);
+    const data = await handleApiResponse(response) as LeadsApiResponse;
 
     // Yield each lead from the response
     if (data && data.leads && Array.isArray(data.leads)) {

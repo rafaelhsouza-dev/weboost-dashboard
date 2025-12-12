@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useApp } from '../store';
 import { Button } from './Button';
 import { Input } from './Input';
-import { WeboostLogo } from './WeboostLogo';
+import { WeboostLogo } from './RetentixLogo';
 import { AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export const Login: React.FC = () => {
   const { login } = useApp();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,7 +23,9 @@ export const Login: React.FC = () => {
     
     try {
       const success = await login(email, password);
-      if (!success) {
+      if (success) {
+        navigate('/'); // Navigate to the root URL on successful login
+      } else {
         console.log('Login failed - credentials invalid');
         setError('Credenciais inválidas. Por favor, tente novamente.');
       }

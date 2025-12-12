@@ -117,14 +117,7 @@ export const Sidebar: React.FC = () => {
 
   const menuItems = getMenuItems();
 
-  useEffect(() => {
-    const activeParent = menuItems.find(item => 
-      item.children?.some(child => child.path === location.pathname)
-    );
-    if (activeParent && !openSubmenus.includes(activeParent.id)) {
-      setOpenSubmenus(prev => [...prev, activeParent.id]);
-    }
-  }, [location.pathname, menuItems, openSubmenus]);
+
 
   return (
     <>

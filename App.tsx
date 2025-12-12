@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { AppProvider, useApp } from './store';
 import { Login } from './components/Login';
 import { Sidebar } from './components/Sidebar';
@@ -64,7 +64,16 @@ const PlaceholderPage: React.FC<{ title: string }> = ({ title }) => (
 );
 
 const AppContent: React.FC = () => {
+  const { isAuthenticated } = useApp();
+  const navigate = useNavigate();
+
   useAuthCheck(); // Check authentication status on app load
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
   
   return (
     <HashRouter>
