@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useApp } from '../store';
 import { useNavigate } from 'react-router-dom';
 import { apiGet, handleApiResponse } from '../services/apiClient';
 import { Pencil, Plus, Search, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -14,8 +13,12 @@ interface Customer {
   created_at: string;
 }
 
+interface ApiResponse {
+  customers: Customer[];
+  total: number;
+}
+
 export const ClientListPage: React.FC = () => {
-  const { currentTenant } = useApp();
   const navigate = useNavigate();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +35,7 @@ export const ClientListPage: React.FC = () => {
       setError(null);
       
       const response = await apiGet(`/customers/customers?page=${page}&per_page=${itemsPerPage}`);
-      const data = await handleApiResponse(response);
+      const data = await handleApiResponse(response) as ApiResponse;
       
       setCustomers(data.customers || []);
       setTotalPages(Math.ceil(data.total / itemsPerPage));
@@ -46,7 +49,7 @@ export const ClientListPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchCustomers(currentPage);
+    void fetchCustomers(currentPage);
   }, [currentPage]);
 
   const filteredCustomers = customers.filter(customer =>
@@ -179,4 +182,4 @@ export const ClientListPage: React.FC = () => {
   );
 };
 
-export default ClientListPage;
+
