@@ -3,7 +3,7 @@ import { useApp } from '../store';
 import { TenancyType } from '../types';
 import { Combobox } from './Combobox';
 import { 
-  LayoutDashboard, 
+  LayoutDashboard,
   Users, 
   Settings, 
   LogOut, 
@@ -58,7 +58,7 @@ export const Sidebar: React.FC = () => {
   const [openSubmenus, setOpenSubmenus] = useState<string[]>([]);
 
   const toggleSubmenu = (id: string) => {
-    setOpenSubmenus(prev => prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]);
+    setOpenSubmenus(prev => prev.includes(id) ? [] : [id]);
   };
 
   const handleTenantChange = (tenantId: string) => {
@@ -98,9 +98,7 @@ export const Sidebar: React.FC = () => {
             label: 'Utilizadores',
             icon: Users,
             children: [
-              { id: 'users', label: 'Resumo', path: '/admin/users', icon: LayoutDashboard },
-              { id: 'users', label: 'Utilizadores', path: '/admin/users', icon: Users },
-              { id: 'users', label: 'Departamentos', path: '/admin/users', icon: Users }
+              { id: 'users', label: 'Utilizadores', path: '/admin/users', icon: Users }
             ]
           },
           { id: 'partners', label: 'Parceiros', icon: Handshake, path: '/admin/partners' },
@@ -210,7 +208,10 @@ export const Sidebar: React.FC = () => {
                           <Link
                             key={child.id}
                             to={child.path}
-                            onClick={() => { if (window.innerWidth < 768) setSidebarCollapsed(true); }}
+                            onClick={() => { 
+                              if (window.innerWidth < 768) setSidebarCollapsed(true); 
+                              setOpenSubmenus([]); // Close all submenus when a child item is clicked
+                            }}
                             className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 text-sm
                               ${isActive ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-[#16a34a]' : 'text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}
                             `}
