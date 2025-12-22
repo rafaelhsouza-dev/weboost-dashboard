@@ -44,7 +44,7 @@ const getRoleDisplayName = (apiRoles: number[]): string => {
 };
 
 // Function to decode JWT token and extract user data
-const decodeJWT = (token: string): any => {
+export const decodeJWT = (token: string): any => {
   try {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');

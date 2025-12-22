@@ -1,8 +1,15 @@
-import { Tenant, TenancyType, ApiCustomerResponse } from '../types';
-import { apiGetWithRefresh, handleApiResponse, getAccessToken } from './apiInterceptor';
+import { Tenant, TenancyType, ApiCustomerResponse, ApiUserResponse } from '../types';
+import {
+  apiGetWithRefresh,
+  apiPostWithRefresh,
+  apiDeleteWithRefresh,
+  apiPutWithRefresh,
+  handleApiResponse
+} from './apiInterceptor';
+import { getAccessToken } from './authService';
 
 // API Configuration
-const CUSTOMERS_ENDPOINT = '/customers';
+const CUSTOMERS_ENDPOINT = '/customers/';
 
 interface ApiCustomer extends ApiCustomerResponse {
 }
@@ -108,7 +115,7 @@ export const fetchCustomerById = async (customerId: number): Promise<ApiCustomer
   try {
     console.log(`Fetching customer ${customerId} from API...`);
     
-    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}/${customerId}`, true);
+    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}${customerId}`, true);
     const data: ApiCustomer = await handleApiResponse(response);
     
     console.log('API Customer Response:', data);
@@ -142,7 +149,7 @@ export const updateCustomer = async (customerId: number, customerData: any): Pro
   try {
     console.log(`Updating customer ${customerId} with data:`, customerData);
     
-    const response = await apiPutWithRefresh(`${CUSTOMERS_ENDPOINT}/${customerId}`, customerData, true);
+    const response = await apiPutWithRefresh(`${CUSTOMERS_ENDPOINT}${customerId}`, customerData, true);
     const data: ApiCustomer = await handleApiResponse(response);
     
     console.log('Customer updated successfully:', data);
@@ -159,13 +166,46 @@ export const deleteCustomer = async (customerId: number): Promise<void> => {
   try {
     console.log(`Deleting customer ${customerId}...`);
     
-    const response = await apiDeleteWithRefresh(`${CUSTOMERS_ENDPOINT}/${customerId}`, true);
+    const response = await apiDeleteWithRefresh(`${CUSTOMERS_ENDPOINT}${customerId}`, true);
     await handleApiResponse(response);
     
     console.log('Customer deleted successfully');
     
   } catch (error) {
     console.error(`Customer ${customerId} deletion error:`, error);
+    throw error;
+  }
+};
+
+// Function to list users of a customer
+export const listCustomerUsers = async (customerId: number): Promise<ApiUserResponse[]> => {
+  try {
+    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}${customerId}/users`, true);
+    return await handleApiResponse<ApiUserResponse[]>(response);
+  } catch (error) {
+    console.error(`Failed to get users for customer ${customerId}:`, error);
+    throw error;
+  }
+};
+
+// Function to add a user to a customer
+export const addUserToCustomer = async (customerId: number, userId: number): Promise<{ message: string }> => {
+  try {
+    const response = await apiPostWithRefresh(`${CUSTOMERS_ENDPOINT}${customerId}/users/${userId}`, {}, true);
+    return await handleApiResponse(response);
+  } catch (error) {
+    console.error(`Failed to add user ${userId} to customer ${customerId}:`, error);
+    throw error;
+  }
+};
+
+// Function to remove a user from a customer
+export const removeUserFromCustomer = async (customerId: number, userId: number): Promise<void> => {
+  try {
+    const response = await apiDeleteWithRefresh(`${CUSTOMERS_ENDPOINT}${customerId}/users/${userId}`, true);
+    await handleApiResponse(response);
+  } catch (error) {
+    console.error(`Failed to remove user ${userId} from customer ${customerId}:`, error);
     throw error;
   }
 };

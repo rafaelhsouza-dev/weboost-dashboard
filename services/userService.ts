@@ -1,8 +1,14 @@
-import { apiGet, apiPost, apiPut, apiDelete, handleApiResponse, getAccessToken } from './apiClient';
+import {
+  apiGetWithRefresh,
+  apiPostWithRefresh,
+  apiPutWithRefresh,
+  apiDeleteWithRefresh,
+  handleApiResponse
+} from './apiInterceptor';
+import { getAccessToken, decodeJWT } from './authService';
 
 // API Configuration
-const API_BASE_URL = 'https://api.weboost.pt';
-const USERS_ENDPOINT = `${API_BASE_URL}/users`;
+const USERS_ENDPOINT = '/users/';
 
 interface UserResponse {
   name: string;
@@ -35,24 +41,35 @@ interface UpdateUserRequest {
   status?: boolean;
 }
 
-export const getCurrentUser = async (): Promise<UserResponse> => {
+export const getCurrentUser = async (): Promise<UserResponse | null> => {
   try {
     const token = getAccessToken();
     if (!token) {
       throw new Error('No access token available');
     }
+    const decodedToken = decodeJWT(token);
+    if (!decodedToken || !decodedToken.email) {
+      throw new Error('Invalid token or email not found in token');
+    }
+    const userEmail = decodedToken.email;
+    
+    const allUsers = await getAllUsers();
+    const currentUser = allUsers.find(user => user.email === userEmail);
 
-    const response = await apiGet('/users/me', true);
-    return await handleApiResponse<UserResponse>(response);
+    if (!currentUser) {
+      throw new Error('Current user not found in user list');
+    }
+    
+    return currentUser;
   } catch (error) {
     console.error('Failed to get current user:', error);
-    throw error;
+    return null;
   }
 };
 
 export const getAllUsers = async (skip: number = 0, limit: number = 100): Promise<UserResponse[]> => {
   try {
-    const response = await apiGet(`${USERS_ENDPOINT}/?skip=${skip}&limit=${limit}`, true);
+    const response = await apiGetWithRefresh(`${USERS_ENDPOINT}?skip=${skip}&limit=${limit}`, true);
     return await handleApiResponse<UserResponse[]>(response);
   } catch (error) {
     console.error('Failed to get users:', error);
@@ -62,7 +79,7 @@ export const getAllUsers = async (skip: number = 0, limit: number = 100): Promis
 
 export const getUserById = async (userId: number): Promise<UserResponse> => {
   try {
-    const response = await apiGet(`${USERS_ENDPOINT}/${userId}`, true);
+    const response = await apiGetWithRefresh(`${USERS_ENDPOINT}${userId}`, true);
     return await handleApiResponse<UserResponse>(response);
   } catch (error) {
     console.error(`Failed to get user ${userId}:`, error);
@@ -72,7 +89,7 @@ export const getUserById = async (userId: number): Promise<UserResponse> => {
 
 export const createUser = async (userData: CreateUserRequest): Promise<UserResponse> => {
   try {
-    const response = await apiPost(USERS_ENDPOINT, userData, true);
+    const response = await apiPostWithRefresh(USERS_ENDPOINT, userData, true);
     return await handleApiResponse<UserResponse>(response);
   } catch (error) {
     console.error('Failed to create user:', error);
@@ -82,7 +99,7 @@ export const createUser = async (userData: CreateUserRequest): Promise<UserRespo
 
 export const updateUser = async (userId: number, userData: UpdateUserRequest): Promise<UserResponse> => {
   try {
-    const response = await apiPut(`${USERS_ENDPOINT}/${userId}`, userData, true);
+    const response = await apiPutWithRefresh(`${USERS_ENDPOINT}${userId}`, userData, true);
     return await handleApiResponse<UserResponse>(response);
   } catch (error) {
     console.error(`Failed to update user ${userId}:`, error);
@@ -92,7 +109,7 @@ export const updateUser = async (userId: number, userData: UpdateUserRequest): P
 
 export const deleteUser = async (userId: number): Promise<void> => {
   try {
-    const response = await apiDelete(`${USERS_ENDPOINT}/${userId}`, true);
+    const response = await apiDeleteWithRefresh(`${USERS_ENDPOINT}${userId}`, true);
     await handleApiResponse<void>(response);
   } catch (error) {
     console.error(`Failed to delete user ${userId}:`, error);

@@ -1,5 +1,93 @@
 import { getAccessToken, getRefreshToken, refreshAccessToken } from './authService';
 
+// Base API URL
+const API_BASE_URL = 'https://api.weboost.pt';
+
+/**
+ * Make a generic API request. This is the core function.
+ */
+export const apiRequest = async (
+  endpoint: string,
+  options: RequestInit = {},
+  requiresAuth: boolean = true
+): Promise<Response> => {
+  const url = endpoint.startsWith('http') 
+    ? endpoint 
+    : `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
+
+  const requestOptions: RequestInit = { ...options };
+
+  requestOptions.headers = {
+    ...requestOptions.headers,
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  };
+
+  if (requiresAuth) {
+    const token = getAccessToken();
+    if (token) {
+      requestOptions.headers = {
+        ...requestOptions.headers,
+        'Authorization': `Bearer ${token}`
+      };
+    } else {
+      console.warn('No access token found for authenticated request');
+    }
+  }
+  
+  requestOptions.credentials = 'include';
+
+  try {
+    const response = await fetch(url, requestOptions);
+    return response;
+  } catch (error) {
+    console.error('API request failed:', error);
+    throw error;
+  }
+};
+
+/**
+ * Handle API response and parse JSON
+ */
+export const handleApiResponse = async <T>(response: Response): Promise<T> => {
+  if (!response.ok) {
+    try {
+      const errorData = await response.json();
+      let errorMessage = 'API request failed';
+      
+      if (errorData.detail && Array.isArray(errorData.detail)) {
+        errorMessage = errorData.detail.map((e: any) => e.msg).join(', ');
+      } else if (errorData.detail) {
+        errorMessage = errorData.detail;
+      } else if (errorData.message) {
+        errorMessage = errorData.message;
+      }
+      
+      if (response.status >= 500) {
+        errorMessage = `Server error (${response.status}): ${errorMessage}`;
+      }
+      
+      throw new Error(errorMessage);
+    } catch (parseError) {
+      if (response.status === 500) {
+        throw new Error('Server error: Please try again later');
+      }
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  }
+
+  try {
+    // For 204 No Content, return empty object
+    if (response.status === 204) {
+      return {} as T;
+    }
+    return await response.json();
+  } catch (jsonError) {
+    throw new Error('Invalid response format from server');
+  }
+};
+
+
 /**
  * Interceptor for API requests to handle token refresh
  */
@@ -8,18 +96,13 @@ export const apiRequestWithRefresh = async (
   options: RequestInit = {},
   requiresAuth: boolean = true
 ): Promise<Response> => {
-  // First, try the request with the current token
-  const apiClient = await import('./apiClient');
-  
   try {
-    const response = await apiClient.apiRequest(endpoint, options, requiresAuth);
+    const response = await apiRequest(endpoint, options, requiresAuth);
     
-    // If the request is successful, return the response
     if (response.ok) {
       return response;
     }
     
-    // If we get a 401 error, try to refresh the token and retry
     if (response.status === 401 && requiresAuth) {
       console.log('Token expired, attempting to refresh...');
       
@@ -31,24 +114,20 @@ export const apiRequestWithRefresh = async (
       }
       
       try {
-        // Try to refresh the token
         const { accessToken, refreshToken } = await refreshAccessToken(currentRefreshToken);
         
-        // Store the new tokens
         localStorage.setItem('weboost_access_token', accessToken);
         localStorage.setItem('weboost_refresh_token', refreshToken);
         
         console.log('Token refreshed successfully, retrying request...');
         
-        // Retry the original request with the new token
-        const retryResponse = await apiClient.apiRequest(endpoint, options, requiresAuth);
+        const retryResponse = await apiRequest(endpoint, options, requiresAuth);
         
         return retryResponse;
         
       } catch (refreshError) {
         console.error('Failed to refresh token:', refreshError);
         
-        // Clear tokens if refresh fails
         localStorage.removeItem('weboost_access_token');
         localStorage.removeItem('weboost_refresh_token');
         
@@ -56,7 +135,6 @@ export const apiRequestWithRefresh = async (
       }
     }
     
-    // For other errors, just return the response
     return response;
     
   } catch (error) {
