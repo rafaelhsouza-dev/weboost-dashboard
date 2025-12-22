@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
-import { fetchCustomers } from '../services/customerService';
+import { fetchCustomers as fetchCustomersApi } from '../services/customerService';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Users, Building2, MapPin, Phone, Globe, ShoppingCart } from 'lucide-react';
+import { Users, Building2, Globe } from 'lucide-react';
 
 export const AdminClientsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export const AdminClientsPage: React.FC = () => {
     const loadCustomers = async () => {
       try {
         setLoading(true);
-        const data = await fetchCustomers(0, 100);
+        const data = await fetchCustomersApi(0, 1000); // Fetch up to 1000 for stats
         setCustomers(data);
         
         // Calculate statistics
@@ -44,9 +44,10 @@ export const AdminClientsPage: React.FC = () => {
         
         setStats({ total, active, inactive, byCountry, byCity });
         
-      } catch (error) {
-        console.error('Failed to load customers:', error);
-        setError('Falha ao carregar dados dos clientes');
+      } catch (err) {
+        console.error('Failed to load customers:', err);
+        const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
+        setError(`Falha ao carregar dados dos clientes: ${errorMessage}`);
       } finally {
         setLoading(false);
       }
