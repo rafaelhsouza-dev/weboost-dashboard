@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
-import { Plus, X, UserPlus, Search } from 'lucide-react';
+import { Plus, X, UserPlus, Search, Eye, Pencil, Trash2 } from 'lucide-react';
 import { Card } from '../components/Card';
 import { getAllTenants } from '../services/customerService';
-import { getAllUsers, createUser } from '../services/userService';
+import { getAllUsers, createUser, deleteUser } from '../services/userService';
 import { Tenant } from '../types';
 import { LayoutPage } from '../components/LayoutPage';
 import { useApp } from '../store';
+import { useNavigate } from 'react-router-dom';
 
 interface User {
   id: number;
@@ -18,6 +19,7 @@ interface User {
 }
 
 export const AdminUsersPage: React.FC = () => {
+  const navigate = useNavigate();
   const { notify } = useApp();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
@@ -75,6 +77,19 @@ export const AdminUsersPage: React.FC = () => {
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Erro ao criar utilizador';
       notify(msg, 'error');
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (window.confirm('Tem certeza que deseja excluir este utilizador?')) {
+      try {
+        await deleteUser(id);
+        notify('Utilizador excluído com sucesso!', 'success');
+        loadData();
+      } catch (error) {
+        const msg = error instanceof Error ? error.message : 'Erro ao excluir utilizador';
+        notify(msg, 'error');
+      }
     }
   };
 
@@ -166,23 +181,37 @@ export const AdminUsersPage: React.FC = () => {
             <tr>
               <th className="px-6 py-4 text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nome</th>
               <th className="px-6 py-4 text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
-              <th className="px-6 py-4 text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider text-right">Perfil</th>
+              <th className="px-6 py-4 text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Perfil</th>
+              <th className="px-6 py-4 text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider text-right">Ações</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50 dark:divide-dark-border">
             {loading ? (
-              <tr><td colSpan={3} className="px-6 py-8 text-center animate-pulse text-gray-400">Carregando...</td></tr>
+              <tr><td colSpan={4} className="px-6 py-8 text-center animate-pulse text-gray-400">Carregando...</td></tr>
             ) : filteredUsers.length === 0 ? (
-              <tr><td colSpan={3} className="px-6 py-8 text-center text-gray-500 italic">Nenhum utilizador encontrado.</td></tr>
+              <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500 italic">Nenhum utilizador encontrado.</td></tr>
             ) : (
               filteredUsers.map((user) => (
                 <tr key={user.id} className="hover:bg-primary/[0.02] transition-colors">
                   <td className="px-6 py-4 text-sm font-bold text-gray-900 dark:text-white">{user.name}</td>
                   <td className="px-6 py-4 text-sm text-gray-500">{user.email}</td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-6 py-4">
                     <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-primary/10 text-primary">
                       {user.role}
                     </span>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex gap-2 justify-end">
+                      <Button variant="ghost" size="sm" onClick={() => navigate(`/admin/users/${user.id}`)} title="Ver">
+                        <Eye size={16} />
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => navigate(`/admin/users/${user.id}/edit`)} title="Editar">
+                        <Pencil size={16} />
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => handleDelete(user.id)} className="text-gray-400 hover:text-primary">
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))

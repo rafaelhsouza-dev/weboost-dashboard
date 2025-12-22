@@ -6,6 +6,8 @@ import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { AdminCustomersListPage } from './pages/AdminCustomersListPage';
 import { AdminUsersPage } from './pages/AdminUsersPage';
+import { AdminUserEditPage } from './pages/AdminUserEditPage';
+import { AdminUserViewPage } from './pages/AdminUserViewPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { AdminCustomerCreatePage } from './pages/AdminCustomerCreatePage';
 import { AdminCustomerEditPage } from './pages/AdminCustomerEditPage';
@@ -86,9 +88,11 @@ const AppRoutes: React.FC = () => {
       <Route path="/admin/customer-view/:customerId" element={<ProtectedLayout><AdminCustomerViewPage /></ProtectedLayout>} />
       <Route path="/admin/customer-edit/:customerId" element={<ProtectedLayout><AdminCustomerEditPage /></ProtectedLayout>} />
       <Route path="/admin/clients/:customerId/edit" element={<ProtectedLayout><AdminCustomerEditPage /></ProtectedLayout>} />
-      <Route path="/admin/users" element={<ProtectedLayout><AdminUsersPage /></ProtectedLayout>} />
       <Route path="/admin/customer-settings" element={<ProtectedLayout><AdminCustomerSettingsPage /></ProtectedLayout>} />
       <Route path="/admin/settings" element={<ProtectedLayout><AdminSettingsPage /></ProtectedLayout>} />
+      <Route path="/admin/users" element={<ProtectedLayout><AdminUsersPage /></ProtectedLayout>} />
+      <Route path="/admin/users/:userId" element={<ProtectedLayout><AdminUserViewPage /></ProtectedLayout>} />
+      <Route path="/admin/users/:userId/edit" element={<ProtectedLayout><AdminUserEditPage /></ProtectedLayout>} />
 
       {/* Client Routes */}
       <Route path="/client/dashboard" element={<ProtectedLayout><ClientDashboardPage /></ProtectedLayout>} />
