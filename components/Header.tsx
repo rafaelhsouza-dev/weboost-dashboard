@@ -2,8 +2,6 @@ import React from 'react';
 import { useApp } from '../store';
 import { useLocation } from 'react-router-dom';
 import { Moon, Sun, Printer, FileDown, Globe, Menu } from 'lucide-react';
-// @ts-ignore
-import html2pdf from 'html2pdf.js';
 
 export const Header: React.FC = () => {
   const { theme, toggleTheme, language, toggleLanguage, user, toggleSidebar } = useApp();
@@ -22,36 +20,13 @@ export const Header: React.FC = () => {
   };
 
   const handleDownloadPDF = () => {
-    const element = document.querySelector('main');
-    if (!element) return;
-
+    const originalTitle = document.title;
     const pageTitle = getTitle().replace(/\s+/g, '_');
-    const filename = `Weboost_${pageTitle}_${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`;
-
-    const opt = {
-      margin: [10, 5, 10, 5],
-      filename: filename,
-      image: { type: 'jpeg', quality: 1 },
-      html2canvas: { 
-        scale: 3, 
-        useCORS: true, 
-        logging: false,
-        letterRendering: true,
-        backgroundColor: '#ffffff',
-        windowWidth: 1200 // Garante layout de desktop na captura
-      },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    // Temporarily apply a class to force light mode styles during capture if needed
-    // but html2pdf usually captures the current state. 
-    // Since we want LIGHT mode always for PDF:
-    const isDark = document.documentElement.classList.contains('dark');
-    if (isDark) document.documentElement.classList.remove('dark');
-
-    html2pdf().set(opt).from(element).save().then(() => {
-      if (isDark) document.documentElement.classList.add('dark');
-    });
+    document.title = `Weboost_${pageTitle}_${new Date().toLocaleDateString().replace(/\//g, '-')}`;
+    window.print();
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 100);
   };
 
   return (

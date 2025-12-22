@@ -6,7 +6,7 @@
   /* Ocultar elementos de navegação e botões */
   header, 
   aside,
-  button:not(.print-visible),
+  button,
   .no-print {
     display: none !important;
   }
@@ -14,23 +14,31 @@
   /* Reset de Layout e Margens */
   main {
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 20px !important;
     width: 100% !important;
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
+    display: block !important;
+    overflow: visible !important;
   }
 
   /* Forçar Modo Light e Layout de Desktop */
   html, body {
     background: white !important;
     color: black !important;
-    width: 1024px !important; /* Largura padrão de desktop para impressão */
+    width: 1024px !important; 
+    overflow: visible !important;
   }
 
   /* Forçar Grids a manterem colunas na impressão */
   .grid {
     display: grid !important;
+    gap: 1.5rem !important;
+  }
+
+  /* Garantir que bordas de tabelas e cards apareçam */
+  .border, .border-b, .border-t, .border-l, .border-r {
+    border-color: #e2e8f0 !important; /* Cor cinza clara visível na impressão */
+    border-style: solid !important;
+    border-width: 1px !important;
   }
 
   /* Mapear classes comuns de grid para impressão */
