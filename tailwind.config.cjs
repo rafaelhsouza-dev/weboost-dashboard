@@ -32,8 +32,8 @@ module.exports = {
           border: '#1f1f1f',
         },
         gray: {
-          50: '#f8faf9',
-          100: '#f1f5f3',
+          50: '#f0f4f2',
+          100: '#e1e9e5',
           200: '#e2e8e5',
           300: '#cbd5d1',
           400: '#94a39e',

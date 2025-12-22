@@ -115,7 +115,7 @@ export const Sidebar: React.FC = () => {
       )}
 
       <aside 
-        className={`fixed inset-y-0 left-0 z-50 h-screen bg-gray-50 dark:bg-dark-surface border-r border-gray-100 dark:border-dark-border transition-all duration-300 ease-in-out ${sidebarCollapsed ? '-translate-x-full md:translate-x-0 md:w-20' : 'translate-x-0 w-72'}`}
+        className={`fixed inset-y-0 left-0 z-50 h-screen bg-gray-100 dark:bg-dark-surface border-r border-gray-200 dark:border-dark-border transition-all duration-300 ease-in-out ${sidebarCollapsed ? '-translate-x-full md:translate-x-0 md:w-20' : 'translate-x-0 w-72'}`}
       >
         <div className="h-20 flex items-center justify-between px-6 border-b border-gray-100 dark:border-dark-border">
           {!sidebarCollapsed && (
