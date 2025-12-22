@@ -24,7 +24,7 @@ export const fetchCustomersFromApi = async (): Promise<Tenant[]> => {
     console.log('Token available for customers request:', token ? 'YES' : 'NO');
     
     // Use the new apiClient to make authenticated request
-    const response = await apiGet(CUSTOMERS_ENDPOINT);
+    const response = await apiGet(CUSTOMERS_ENDPOINT, true); // true for requiresAuth
     const data: ApiCustomer[] = await handleApiResponse(response);
     
     console.log('API Customers Response:', data);

@@ -9,8 +9,8 @@ import { useNavigate } from 'react-router-dom';
 export const Login: React.FC = () => {
   const { login } = useApp();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@admin.com');
+  const [password, setPassword] = useState('admin');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,11 +19,12 @@ export const Login: React.FC = () => {
     setLoading(true);
     setError(null);
     
-    console.log('Login attempt with:', email);
+    console.log('Login attempt with:', email, password);
     
     try {
       const success = await login(email, password);
       if (success) {
+        console.log('Login successful, navigating to dashboard');
         navigate('/'); // Navigate to the root URL on successful login
       } else {
         console.log('Login failed - credentials invalid');
