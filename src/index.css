@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  /* Personalização global de Checkboxes e Radios */
+  input[type='checkbox'],
+  input[type='radio'] {
+    @apply accent-primary cursor-pointer;
+  }
+
+  /* Cor de foco global para inputs */
+  input:focus, 
+  select:focus, 
+  textarea:focus {
+    @apply ring-primary/20 border-primary outline-none;
+  }
+}
+
 @media print {
   /* Ocultar elementos de navegação e botões */
   header, 

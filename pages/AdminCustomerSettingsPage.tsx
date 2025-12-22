@@ -132,7 +132,7 @@ export const AdminCustomerSettingsPage: React.FC = () => {
                 <input 
                   type="checkbox" 
                   id="is_active"
-                  className="w-4 h-4 text-primary border-gray-300 dark:border-dark-border rounded focus:ring-primary bg-white dark:bg-dark-surface transition-all"
+                  className="w-4 h-4 accent-primary border-gray-300 dark:border-dark-border rounded focus:ring-primary bg-white dark:bg-dark-surface transition-all"
                   checked={newStatus.is_active_status}
                   onChange={e => setNewStatus({...newStatus, is_active_status: e.target.checked})}
                 />

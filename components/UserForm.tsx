@@ -143,7 +143,7 @@ export const UserForm: React.FC<UserFormProps> = ({ userId, onSuccess, onCancel 
             type="checkbox" 
             id="status"
             name="status"
-            className="w-4 h-4 text-primary border-gray-300 dark:border-dark-border rounded focus:ring-primary bg-white dark:bg-dark-surface transition-all"
+            className="w-4 h-4 accent-primary border-gray-300 dark:border-dark-border rounded focus:ring-primary bg-white dark:bg-dark-surface transition-all"
             checked={formData.status}
             onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.checked }))}
           />
