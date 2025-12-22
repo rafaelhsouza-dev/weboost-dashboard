@@ -88,7 +88,8 @@ export const Sidebar: React.FC = () => {
             icon: Building2,
             children: [
               { id: 'tenants', label: 'Resumo', path: '/admin/customers', icon: LayoutDashboard },
-              { id: 'customer-list', label: 'Clientes', path: '/admin/customer-list', icon: Users }
+              { id: 'customer-list', label: 'Clientes', path: '/admin/customer-list', icon: Users },
+              { id: 'customer-create', label: 'Criar Cliente', path: '/admin/customer-create', icon: UserPlus2 }
             ]
           },
           { id: 'contracts', label: 'Contratos', icon: FileSignature, path: '/admin/contracts' },
