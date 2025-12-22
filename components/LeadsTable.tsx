@@ -15,10 +15,10 @@ const LeadsTable: React.FC<LeadsTableProps> = ({ leads }) => {
     <div className="bg-white dark:bg-dark-surface rounded-xl shadow-sm border border-gray-100 dark:border-dark-border overflow-hidden">
         <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-100 dark:divide-dark-border">
-        <thead className="bg-gray-50/50 dark:bg-dark-DEFAULT/50">
+        <thead className="bg-gray-50/50 dark:bg-black">
           <tr>
             {headers.map(header => (
-              <th key={header} scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+              <th key={header} scope="col" className="px-6 py-4 text-left text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">
                 {header}
               </th>
             ))}

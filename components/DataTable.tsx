@@ -46,31 +46,59 @@ export function DataTable<T extends { id: string | number }>({ data, columns, ti
 
 
 
-      {/* Table Content */}
+            {/* Table Content */}
 
-      <div className="overflow-x-auto">
 
-        <table className="w-full text-left text-sm">
 
-          <thead className="bg-gray-50/50 dark:bg-dark-surface/50 border-b border-gray-100 dark:border-dark-border">
+            <div className="overflow-x-auto">
 
-            <tr>
 
-              {columns.map((col, idx) => (
 
-                <th key={idx} className={`px-6 py-3 font-medium text-gray-500 dark:text-gray-400 ${col.className || ''}`}>
+              <table className="w-full text-left text-sm">
 
-                  {col.header}
 
-                </th>
 
-              ))}
+                <thead className="bg-gray-50/50 dark:bg-black border-b border-gray-100 dark:border-dark-border">
 
-              <th className="px-6 py-3 text-right text-gray-500 dark:text-gray-400">Ações</th>
 
-            </tr>
 
-          </thead>
+                  <tr>
+
+
+
+                    {columns.map((col, idx) => (
+
+
+
+                      <th key={idx} className={`px-6 py-4 font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider text-[11px] ${col.className || ''}`}>
+
+
+
+                        {col.header}
+
+
+
+                      </th>
+
+
+
+                    ))}
+
+
+
+                    <th className="px-6 py-4 text-right text-gray-500 dark:text-gray-300 font-bold uppercase tracking-wider text-[11px]">Ações</th>
+
+
+
+                  </tr>
+
+
+
+                </thead>
+
+
+
+      
 
           <tbody className="divide-y divide-gray-50 dark:divide-dark-border">
 

@@ -121,12 +121,12 @@ export const AdminCustomersListPage: React.FC = () => {
         <>
           <div className="overflow-hidden bg-white dark:bg-dark-surface rounded-xl shadow-sm border border-gray-100 dark:border-dark-border">
             <table className="w-full text-left">
-              <thead className="bg-gray-50/50 dark:bg-dark-DEFAULT/50 border-b border-gray-100 dark:border-dark-border">
+              <thead className="bg-gray-50/50 dark:bg-black border-b border-gray-100 dark:border-dark-border">
                 <tr>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">ID</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Nome</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Ações</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nome</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider text-right">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50 dark:divide-dark-border">
