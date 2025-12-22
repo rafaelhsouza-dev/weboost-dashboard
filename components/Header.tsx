@@ -31,18 +31,48 @@ export const Header: React.FC = () => {
         </h2>
       </div>
 
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleDownloadPDF = () => {
+    const originalTitle = document.title;
+    const pageTitle = getTitle().replace(/\s+/g, '_');
+    document.title = `Weboost_${pageTitle}_${new Date().toLocaleDateString().replace(/\//g, '-')}`;
+    window.print();
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 100);
+  };
+
+  return (
+    <header className="h-20 w-full bg-gray-100 dark:bg-dark-surface border-b border-gray-100 dark:border-dark-border flex items-center justify-between px-4 md:px-8 sticky top-0 z-30 transition-all duration-300 shadow-sm">
+      
+      <div className="flex items-center gap-4">
+        <button 
+          onClick={toggleSidebar} 
+          className="md:hidden p-2 text-gray-500 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+        >
+          <Menu size={24} />
+        </button>
+
+        <h2 className="text-base md:text-lg font-bold text-gray-900 dark:text-white tracking-tight uppercase">
+          {getTitle()}
+        </h2>
+      </div>
+
       <div className="flex items-center gap-3">
         
         <div className="hidden sm:flex items-center gap-1">
            <button 
-             onClick={() => window.print()}
+             onClick={handleDownloadPDF}
              className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" 
              title="Exportar PDF"
            >
              <FileDown size={18} />
            </button>
            <button 
-             onClick={() => window.print()}
+             onClick={handlePrint}
              className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" 
              title="Imprimir"
            >
