@@ -119,10 +119,10 @@ export const Sidebar: React.FC = () => {
       >
         <div className="h-20 flex items-center justify-between px-6 border-b border-gray-100 dark:border-dark-border">
           {!sidebarCollapsed && (
-            <img src="/imgs/weboost-color.webp" alt="Weboost" className="h-9 w-auto object-contain" />
+            <img src="/imgs/weboost-color.webp" alt="Weboost" className="h-9 w-auto object-contain brightness-0 dark:brightness-100" />
           )}
           {sidebarCollapsed && (
-            <img src="/imgs/weboost-icon.webp" alt="W" className="w-10 h-10 mx-auto" />
+            <img src="/imgs/weboost-icon.webp" alt="W" className="w-10 h-10 mx-auto brightness-0 dark:brightness-100" />
           )}
           
           <button 
