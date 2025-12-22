@@ -14,7 +14,7 @@ import { AdminCustomerCreatePage } from './pages/AdminCustomerCreatePage';
 import { AdminCustomerEditPage } from './pages/AdminCustomerEditPage';
 import { AdminCustomerViewPage } from './pages/AdminCustomerViewPage';
 import { AdminCustomerSettingsPage } from './pages/AdminCustomerSettingsPage';
-import AdminSettingsPage from "./pages/AdminSettingsPage";
+import { AdminSettingsPage } from "./pages/AdminSettingsPage";
 import ClientDashboardPage from "./pages/ClientDashboardPage";
 import ClientSettingsPage from "./pages/ClientSettingsPage";
 import UserDashboardPage from "./pages/UserDashboardPage";

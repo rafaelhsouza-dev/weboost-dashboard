@@ -6,7 +6,7 @@ import { useApp } from '../store';
 import { runAllMigrations, getSystemStatus } from '../services/customerService';
 import { Database, Activity, RefreshCw, CheckCircle2, AlertTriangle } from 'lucide-react';
 
-const AdminSettingsPage: React.FC = () => {
+export const AdminSettingsPage: React.FC = () => {
   const { notify } = useApp();
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [runningMigrations, setRunningMigrations] = useState(false);
@@ -157,7 +157,6 @@ const AdminSettingsPage: React.FC = () => {
 
       </div>
     </LayoutPage>
-  );
-};
-
-export default AdminSettingsPage;
+    );
+  };
+  
