@@ -14,24 +14,33 @@
   /* Reset de Layout e Margens */
   main {
     margin: 0 !important;
-    padding: 20px !important;
+    padding: 10mm !important;
     width: 100% !important;
     display: block !important;
     overflow: visible !important;
   }
 
-  /* Forçar Modo Light e Layout de Desktop */
+  /* Forçar Layout de Desktop e Ajustar Escala */
   html, body {
     background: white !important;
     color: black !important;
-    width: 1024px !important;
+    width: 1280px !important; /* Largura de desktop real para evitar quebra de colunas */
     overflow: visible !important;
+    font-size: 11px !important; /* Fonte levemente menor para garantir que o texto caiba nas colunas */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Impedir quebra de texto em elementos críticos */
+  th, td, .font-bold, h1, h2, h3, span {
+    word-break: keep-all !important;
+    white-space: normal !important;
   }
 
   /* Forçar Grids a manterem colunas na impressão */
   .grid {
     display: grid !important;
-    gap: 1.5rem !important;
+    gap: 1rem !important;
   }
 
   /* Mapear classes comuns de grid para impressão */
@@ -50,10 +59,9 @@
 
   /* Manter cores primárias (como badges de status) */
   .bg-primary, .text-primary, .bg-primary\/10 {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
     background-color: rgba(0, 153, 80, 0.1) !important;
     color: #009950 !important;
+    border: none !important;
   }
 
   /* Corrigir Cards e Tabelas */
@@ -61,11 +69,17 @@
     background-color: white !important;
     border: 1px solid #d1d5db !important;
     break-inside: avoid;
-    padding: 1.5rem !important;
-    border-radius: 0.75rem !important;
+    padding: 1rem !important;
+    border-radius: 0.5rem !important;
   }
 
   h1, h2, h3, h4, p, span, td, th {
     color: black !important;
   }
+}
+
+/* Configurações de página */
+@page { 
+  margin: 0; 
+  size: auto;
 }
