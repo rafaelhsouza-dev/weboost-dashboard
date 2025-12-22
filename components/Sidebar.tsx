@@ -85,7 +85,15 @@ export const Sidebar: React.FC = () => {
               { id: 'customer-settings', label: 'Configurações Globais', path: '/admin/customer-settings', icon: Activity }
             ]
           },
-          { id: 'users', label: 'Utilizadores', icon: Users, path: '/admin/users' },
+          { 
+            id: 'users', 
+            label: 'Utilizadores', 
+            icon: Users, 
+            children: [
+              { id: 'user-list', label: 'Lista de Utilizadores', path: '/admin/users', icon: List },
+              { id: 'user-create', label: 'Novo Utilizador', path: '/admin/user-create', icon: PlusCircle },
+            ]
+          },
           { id: 'settings', label: 'Definições', icon: Settings, path: '/admin/settings' },
         ];
       case TenancyType.CLIENT:

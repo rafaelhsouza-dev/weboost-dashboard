@@ -6,6 +6,7 @@ import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { AdminCustomersListPage } from './pages/AdminCustomersListPage';
 import { AdminUsersPage } from './pages/AdminUsersPage';
+import { AdminUserCreatePage } from './pages/AdminUserCreatePage';
 import { AdminUserEditPage } from './pages/AdminUserEditPage';
 import { AdminUserViewPage } from './pages/AdminUserViewPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
@@ -91,6 +92,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/admin/customer-settings" element={<ProtectedLayout><AdminCustomerSettingsPage /></ProtectedLayout>} />
       <Route path="/admin/settings" element={<ProtectedLayout><AdminSettingsPage /></ProtectedLayout>} />
       <Route path="/admin/users" element={<ProtectedLayout><AdminUsersPage /></ProtectedLayout>} />
+      <Route path="/admin/user-create" element={<ProtectedLayout><AdminUserCreatePage /></ProtectedLayout>} />
       <Route path="/admin/users/:userId" element={<ProtectedLayout><AdminUserViewPage /></ProtectedLayout>} />
       <Route path="/admin/users/:userId/edit" element={<ProtectedLayout><AdminUserEditPage /></ProtectedLayout>} />
 

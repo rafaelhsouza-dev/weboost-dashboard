@@ -101,18 +101,9 @@ export const updateUser = async (userId: number, userData: UpdateUserRequest): P
   try {
     const response = await apiPutWithRefresh(`${USERS_ENDPOINT}${userId}`, userData, true);
     return await handleApiResponse<UserResponse>(response);
-  } catch (error) {
-    console.error(`Failed to update user ${userId}:`, error);
-    throw error;
-  }
-};
-
-export const deleteUser = async (userId: number): Promise<void> => {
-  try {
-    const response = await apiDeleteWithRefresh(`${USERS_ENDPOINT}${userId}`, true);
-    await handleApiResponse<void>(response);
-  } catch (error) {
-    console.error(`Failed to delete user ${userId}:`, error);
-    throw error;
-  }
-};
+    } catch (error) {
+      console.error(`Failed to update user ${userId}:`, error);
+      throw error;
+    }
+  };
+  
