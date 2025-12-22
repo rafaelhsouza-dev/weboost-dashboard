@@ -84,6 +84,10 @@ const AppRoutes: React.FC = () => {
       <Route path="/admin/customer-create" element={<ProtectedLayout><AdminCustomerCreatePage /></ProtectedLayout>} />
       <Route path="/admin/clients/new" element={<ProtectedLayout><AdminCustomerCreatePage /></ProtectedLayout>} />
       <Route path="/admin/clients/:customerId/edit" element={<ProtectedLayout><AdminCustomerEditPage /></ProtectedLayout>} />
+      <Route path="/admin/customer-list" element={<ProtectedLayout><AdminCustomersListPage /></ProtectedLayout>} />
+      <Route path="/admin/customer-create" element={<ProtectedLayout><AdminCustomerCreatePage /></ProtectedLayout>} />
+      <Route path="/admin/customer-view/:customerId" element={<ProtectedLayout><AdminCustomerViewPage /></ProtectedLayout>} />
+      <Route path="/admin/customer-edit/:customerId" element={<ProtectedLayout><AdminCustomerEditPage /></ProtectedLayout>} />
       <Route path="/admin/users" element={<ProtectedLayout><AdminUsersPage /></ProtectedLayout>} />
       <Route path="/admin/services" element={<ProtectedLayout><AdminServicesPage /></ProtectedLayout>} />
       <Route path="/admin/contracts" element={<ProtectedLayout><AdminContractsPage /></ProtectedLayout>} />
