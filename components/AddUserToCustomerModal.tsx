@@ -78,7 +78,6 @@ export const AddUserToCustomerModal: React.FC<AddUserToCustomerModalProps> = ({ 
             value={selectedUserId}
             onChange={(value) => setSelectedUserId(Array.isArray(value) ? value[0] : value)}
             placeholder="Pesquisar por nome ou email..."
-            loading={loading}
           />
         </div>
 

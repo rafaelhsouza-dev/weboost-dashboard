@@ -1,4 +1,4 @@
-import { User, Role, Tenant, TenancyType } from '../types';
+import { User, Role, Tenant, TenancyType, ApiUserResponse } from '../types';
 
 // API Configuration
 const API_BASE_URL = 'https://api.weboost.pt';

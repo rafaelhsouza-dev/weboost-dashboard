@@ -4,19 +4,12 @@ import { AppProvider, useApp } from './store';
 import { Login } from './components/Login';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
-import { ClientMarketingPage } from './pages/ClientMarketingPage';
 import { AdminCustomersListPage } from './pages/AdminCustomersListPage';
-import { AdminClientsPage } from './pages/AdminClientsPage';
 import { AdminUsersPage } from './pages/AdminUsersPage';
-import { AdminServicesPage } from './pages/AdminServicesPage';
+import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { AdminCustomerCreatePage } from './pages/AdminCustomerCreatePage';
 import { AdminCustomerEditPage } from './pages/AdminCustomerEditPage';
-import { AdminContractsPage } from './pages/AdminContractsPage';
-import { AdminPartnersPage } from './pages/AdminPartnersPage';
-import { AdminEventsPage } from './pages/AdminEventsPage';
-import { AdminLogsPage } from './pages/AdminLogsPage';
-import { AdminReferralsPage } from './pages/AdminReferralsPage';
-import { UserAiScraperPage } from './pages/UserAiScraperPage';
+import { AdminCustomerViewPage } from './pages/AdminCustomerViewPage';
 import AdminSettingsPage from "./pages/AdminSettingsPage";
 import ClientDashboardPage from "./pages/ClientDashboardPage";
 import ClientSettingsPage from "./pages/ClientSettingsPage";
@@ -24,7 +17,6 @@ import UserDashboardPage from "./pages/UserDashboardPage";
 import UserSettingsPage from "./pages/UserSettingsPage";
 import ClientReportsPage from "./pages/ClientReportsPage";
 import { TenantRouter } from "./pages/TenantRouter";
-import UserLogsPage from "./pages/UserLogsPage";
 import { useAuthCheck } from './services/useAuth';
 import { useTokenRefresh } from './services/useTokenRefresh';
 
@@ -75,38 +67,26 @@ const AppRoutes: React.FC = () => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <Routes>
+      <Routes>
       <Route path="/" element={<ProtectedLayout><TenantRouter /></ProtectedLayout>} />
       
       {/* Admin Routes */}
-      <Route path="/admin/customers" element={<ProtectedLayout><AdminClientsPage /></ProtectedLayout>} />
-      <Route path="/admin/customer-list" element={<ProtectedLayout><AdminCustomersListPage /></ProtectedLayout>} />
-      <Route path="/admin/customer-create" element={<ProtectedLayout><AdminCustomerCreatePage /></ProtectedLayout>} />
-      <Route path="/admin/clients/new" element={<ProtectedLayout><AdminCustomerCreatePage /></ProtectedLayout>} />
-      <Route path="/admin/clients/:customerId/edit" element={<ProtectedLayout><AdminCustomerEditPage /></ProtectedLayout>} />
+      <Route path="/admin/dashboard" element={<ProtectedLayout><AdminDashboardPage /></ProtectedLayout>} />
       <Route path="/admin/customer-list" element={<ProtectedLayout><AdminCustomersListPage /></ProtectedLayout>} />
       <Route path="/admin/customer-create" element={<ProtectedLayout><AdminCustomerCreatePage /></ProtectedLayout>} />
       <Route path="/admin/customer-view/:customerId" element={<ProtectedLayout><AdminCustomerViewPage /></ProtectedLayout>} />
       <Route path="/admin/customer-edit/:customerId" element={<ProtectedLayout><AdminCustomerEditPage /></ProtectedLayout>} />
+      <Route path="/admin/clients/:customerId/edit" element={<ProtectedLayout><AdminCustomerEditPage /></ProtectedLayout>} />
       <Route path="/admin/users" element={<ProtectedLayout><AdminUsersPage /></ProtectedLayout>} />
-      <Route path="/admin/services" element={<ProtectedLayout><AdminServicesPage /></ProtectedLayout>} />
-      <Route path="/admin/contracts" element={<ProtectedLayout><AdminContractsPage /></ProtectedLayout>} />
-      <Route path="/admin/partners" element={<ProtectedLayout><AdminPartnersPage /></ProtectedLayout>} />
-      <Route path="/admin/referrals" element={<ProtectedLayout><AdminReferralsPage /></ProtectedLayout>} />
-      <Route path="/admin/events" element={<ProtectedLayout><AdminEventsPage /></ProtectedLayout>} />
-      <Route path="/admin/logs" element={<ProtectedLayout><AdminLogsPage /></ProtectedLayout>} />
       <Route path="/admin/settings" element={<ProtectedLayout><AdminSettingsPage /></ProtectedLayout>} />
 
       {/* Client Routes */}
       <Route path="/client/dashboard" element={<ProtectedLayout><ClientDashboardPage /></ProtectedLayout>} />
-      <Route path="/client/campaigns" element={<ProtectedLayout><ClientMarketingPage /></ProtectedLayout>} />
       <Route path="/client/reports" element={<ProtectedLayout><ClientReportsPage /></ProtectedLayout>} />
       <Route path="/client/settings" element={<ProtectedLayout><ClientSettingsPage /></ProtectedLayout>} />
 
       {/* User Routes */}
       <Route path="/user/dashboard" element={<ProtectedLayout><UserDashboardPage /></ProtectedLayout>} />
-      <Route path="/user/scraper" element={<ProtectedLayout><UserAiScraperPage /></ProtectedLayout>} />
-      <Route path="/user/logs" element={<ProtectedLayout><UserLogsPage /></ProtectedLayout>} />
       <Route path="/user/settings" element={<ProtectedLayout><UserSettingsPage /></ProtectedLayout>} />
 
       <Route path="*" element={<Navigate to="/" replace />} />

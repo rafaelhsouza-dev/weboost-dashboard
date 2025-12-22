@@ -87,13 +87,10 @@ export const Sidebar: React.FC = () => {
             label: 'Clientes', 
             icon: Building2,
             children: [
-              { id: 'tenants', label: 'Resumo', path: '/admin/customers', icon: LayoutDashboard },
               { id: 'customer-list', label: 'Lista de Clientes', path: '/admin/customer-list', icon: Users },
               { id: 'customer-create', label: 'Criar Cliente', path: '/admin/customer-create', icon: UserPlus2 }
             ]
           },
-          { id: 'contracts', label: 'Contratos', icon: FileSignature, path: '/admin/contracts' },
-          { id: 'services', label: 'Serviços', icon: Layers, path: '/admin/services' },
           {
             id: 'users',
             label: 'Utilizadores',
@@ -102,25 +99,18 @@ export const Sidebar: React.FC = () => {
               { id: 'users', label: 'Utilizadores', path: '/admin/users', icon: Users }
             ]
           },
-          { id: 'partners', label: 'Parceiros', icon: Handshake, path: '/admin/partners' },
-          { id: 'events', label: 'Feiras e Eventos', icon: CalendarDays, path: '/admin/events' },
-          { id: 'referrals', label: 'Indicações', icon: UserPlus2, path: '/admin/referrals' },
-          { id: 'logs', label: 'Registos de Atividade', icon: Clock, path: '/admin/logs' },
           { id: 'settings', label: 'Configurações', icon: Settings, path: '/admin/settings' },
         ];
       case TenancyType.CLIENT:
         return [
           { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/client/dashboard' },
-          { id: 'campaigns', label: 'Campanhas', icon: Megaphone, path: '/client/campaigns' },
-          { id: 'reports', label: 'Relatórios', icon: FileText, path: '/client/reports' },
+          { id: 'leads', label: 'Leads', icon: FileText, path: '/client/reports' }, // Using Reports page as Leads for now
           { id: 'settings', label: 'Configurações', icon: Settings, path: '/client/settings' },
         ];
       case TenancyType.INTERNAL:
       default:
         return [
           { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/user/dashboard' },
-          { id: 'scraper', label: 'AI Scraper', icon: Bot, path: '/user/scraper' },
-          { id: 'logs', label: 'Registos de Atividade', icon: Clock, path: '/user/logs' },
           { id: 'settings', label: 'Configurações', icon: Settings, path: '/user/settings' },
         ];
     }

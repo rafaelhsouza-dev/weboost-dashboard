@@ -5,6 +5,7 @@ import { Input } from '../components/Input';
 import { Plus, X, UserPlus, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card } from '../components/Card';
 import { getAllTenants } from '../services/customerService';
+import { getAllUsers, createUser } from '../services/userService';
 import { Tenant } from '../types';
 
 interface User {
@@ -18,26 +19,46 @@ interface User {
 export const AdminUsersPage: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [tenants, setTenants] = useState<Tenant[]>([]);
-  const [users, setUsers] = useState<User[]>([
-    { id: 1, name: 'Admin Weboost', email: 'rafael@weboost.com', role: 'Administrador', tenant: 'Admin System' },
-    { id: 2, name: 'Ana Silva', email: 'ana@cliente.com', role: 'Gestor', tenant: 'Cliente 1' },
-    { id: 3, name: 'Pedro Santos', email: 'pedro@cliente.com', role: 'Funcionário', tenant: 'Cliente 2' },
-    { id: 4, name: 'Maria João', email: 'maria@cliente.com', role: 'Funcionário', tenant: 'Cliente 3' },
-  ]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  const [newUserData, setNewUserData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role_id: 4,
+    tenant_id: ''
+  });
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [loadedTenants, loadedUsers] = await Promise.all([
+        getAllTenants(),
+        getAllUsers()
+      ]);
+      
+      setTenants(loadedTenants);
+      
+      // Map API users to UI format
+      const mappedUsers = loadedUsers.map(u => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        role: u.role?.name || 'Utilizador',
+        tenant: 'Global' // Users in this API are global, but can be associated with customers
+      }));
+      
+      setUsers(mappedUsers);
+    } catch (error) {
+      console.error('Failed to load data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadTenants = async () => {
-      try {
-        const loadedTenants = await getAllTenants();
-        setTenants(loadedTenants);
-      } catch (error) {
-        console.error('Failed to load tenants for user form:', error);
-        // In production, we should handle this error appropriately
-        // For now, we'll just log it and leave tenants as empty array
-      }
-    };
-    
-    loadTenants();
+    loadData();
   }, []);
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -46,13 +67,26 @@ export const AdminUsersPage: React.FC = () => {
     { header: 'Nome', accessor: 'name', className: 'text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider' },
     { header: 'Email', accessor: 'email', className: 'text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider' },
     { header: 'Perfil', accessor: 'role', className: 'text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider' },
-    { header: 'Cliente (Tenant)', accessor: 'tenant', className: 'text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider' },
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Utilizador adicionado com sucesso!');
-    setIsFormOpen(false);
+    try {
+      await createUser({
+        name: newUserData.name,
+        email: newUserData.email,
+        password: newUserData.password,
+        role_id: newUserData.role_id,
+        status: true
+      });
+      
+      alert('Utilizador adicionado com sucesso!');
+      setIsFormOpen(false);
+      loadData();
+      setNewUserData({ name: '', email: '', password: '', role_id: 4, tenant_id: '' });
+    } catch (error) {
+      alert('Erro ao criar utilizador');
+    }
   };
 
   const filteredUsers = users.filter(user =>
@@ -109,25 +143,42 @@ export const AdminUsersPage: React.FC = () => {
              </button>
           </div>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-             <Input label="Nome Completo" placeholder="Ex: Maria João" required />
-             <Input label="Email Corporativo" type="email" placeholder="maria@empresa.com" required />
+             <Input 
+               label="Nome Completo" 
+               placeholder="Ex: Maria João" 
+               required 
+               value={newUserData.name}
+               onChange={(e) => setNewUserData({...newUserData, name: e.target.value})}
+             />
+             <Input 
+               label="Email Corporativo" 
+               type="email" 
+               placeholder="maria@empresa.com" 
+               required 
+               value={newUserData.email}
+               onChange={(e) => setNewUserData({...newUserData, email: e.target.value})}
+             />
+             <Input 
+               label="Senha" 
+               type="password" 
+               placeholder="******" 
+               required 
+               value={newUserData.password}
+               onChange={(e) => setNewUserData({...newUserData, password: e.target.value})}
+             />
              
              <div>
-               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Cliente (Tenant) Associado</label>
-               <select className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2.5 text-sm dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
-                 {tenants.map(t => (
-                   <option key={t.id} value={t.id}>{t.name}</option>
-                 ))}
-               </select>
-             </div>
-
-             <div>
                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Perfil de Acesso</label>
-               <select className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2.5 text-sm dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
-                 <option>Administrador</option>
-                 <option>Gestor</option>
-                 <option>Funcionário</option>
-                 <option>Leitura Apenas</option>
+               <select 
+                 className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2.5 text-sm dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                 value={newUserData.role_id}
+                 onChange={(e) => setNewUserData({...newUserData, role_id: parseInt(e.target.value)})}
+               >
+                 <option value={1}>CEO</option>
+                 <option value={2}>Admin</option>
+                 <option value={3}>Manager</option>
+                 <option value={4}>User</option>
+                 <option value={5}>Employee</option>
                </select>
              </div>
 

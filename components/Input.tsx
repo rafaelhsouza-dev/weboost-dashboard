@@ -3,9 +3,10 @@ import React, { useId } from 'react';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
+  helpText?: string;
 }
 
-export const Input: React.FC<InputProps> = ({ label, error, className = '', id, ...props }) => {
+export const Input: React.FC<InputProps> = ({ label, error, helpText, className = '', id, ...props }) => {
   const generatedId = useId();
   const inputId = id || generatedId;
 
@@ -33,6 +34,7 @@ export const Input: React.FC<InputProps> = ({ label, error, className = '', id, 
         {...props}
       />
       {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+      {helpText && <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{helpText}</p>}
     </div>
   );
 };

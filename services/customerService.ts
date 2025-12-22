@@ -210,6 +210,69 @@ export const removeUserFromCustomer = async (customerId: number, userId: number)
   }
 };
 
+// Customer Types
+export const listCustomerTypes = async (): Promise<any[]> => {
+  try {
+    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}types`, true);
+    return await handleApiResponse<any[]>(response);
+  } catch (error) {
+    console.error('Failed to list customer types:', error);
+    throw error;
+  }
+};
+
+export const addCustomerType = async (typeData: { name: string; description: string }): Promise<any> => {
+  try {
+    const response = await apiPostWithRefresh(`${CUSTOMERS_ENDPOINT}types`, typeData, true);
+    return await handleApiResponse(response);
+  } catch (error) {
+    console.error('Failed to add customer type:', error);
+    throw error;
+  }
+};
+
+// Customer Statuses
+export const listCustomerStatuses = async (): Promise<any[]> => {
+  try {
+    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}statuses`, true);
+    return await handleApiResponse<any[]>(response);
+  } catch (error) {
+    console.error('Failed to list customer statuses:', error);
+    throw error;
+  }
+};
+
+export const addCustomerStatus = async (statusData: { name: string; is_active_status: boolean }): Promise<any> => {
+  try {
+    const response = await apiPostWithRefresh(`${CUSTOMERS_ENDPOINT}statuses`, statusData, true);
+    return await handleApiResponse(response);
+  } catch (error) {
+    console.error('Failed to add customer status:', error);
+    throw error;
+  }
+};
+
+// Admin Operations
+export const runAllMigrations = async (): Promise<any> => {
+  try {
+    const response = await apiPostWithRefresh('/admin/migrations/run-all-tenants/', {}, true);
+    return await handleApiResponse(response);
+  } catch (error) {
+    console.error('Failed to run all migrations:', error);
+    throw error;
+  }
+};
+
+export const getSystemStatus = async (): Promise<any> => {
+  try {
+    const response = await apiGetWithRefresh('/admin/tenants/status/', true);
+    return await handleApiResponse(response);
+  } catch (error) {
+    console.error('Failed to get system status:', error);
+    throw error;
+  }
+};
+
 // Function to get all tenants (combining internal, admin, and customer tenants)
 export const getAllTenants = async (): Promise<Tenant[]> => {
   // Fetch real customer data from API
