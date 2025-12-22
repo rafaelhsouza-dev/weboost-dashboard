@@ -1,5 +1,5 @@
 import { Tenant, TenancyType, ApiCustomerResponse } from '../types';
-import { apiGet, handleApiResponse, getAccessToken } from './apiClient';
+import { apiGetWithRefresh, handleApiResponse, getAccessToken } from './apiInterceptor';
 
 // API Configuration
 const CUSTOMERS_ENDPOINT = '/customers';

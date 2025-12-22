@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from './Button';
 import { Input } from './Input';
 import { useApp } from '../store';
-import { apiPost, handleApiResponse } from '../services/apiClient';
+import { apiPostWithRefresh, handleApiResponse } from '../services/apiInterceptor';
 
 interface CustomerFormProps {
   onSuccess?: () => void;

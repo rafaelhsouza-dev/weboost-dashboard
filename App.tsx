@@ -25,6 +25,7 @@ import ClientReportsPage from "./pages/ClientReportsPage";
 import { TenantRouter } from "./pages/TenantRouter";
 import UserLogsPage from "./pages/UserLogsPage";
 import { useAuthCheck } from './services/useAuth';
+import { useTokenRefresh } from './services/useTokenRefresh';
 
 const ProtectedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, sidebarCollapsed } = useApp();
@@ -108,6 +109,7 @@ const AppRoutes: React.FC = () => {
 
 const AppContent: React.FC = () => {
   useAuthCheck(); // Check authentication status on app load
+  useTokenRefresh(); // Automatically refresh token before it expires
   
   return (
     <HashRouter>

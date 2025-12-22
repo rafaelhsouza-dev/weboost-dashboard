@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from './Button';
 import { fetchCustomersFromApi } from '../services/customerService';
 import { useApp } from '../store';
+import { apiGetWithRefresh } from '../services/apiInterceptor';
 
 interface CustomerListProps {
   refreshTrigger?: boolean;
