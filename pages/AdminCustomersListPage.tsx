@@ -3,21 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { fetchCustomers as fetchCustomersApi, deleteCustomer } from '../services/customerService';
 import { Pencil, Plus, Search, ChevronLeft, ChevronRight, Trash2, Eye, Users as UsersIcon } from 'lucide-react';
 import { UserPermissionModal } from '../components/UserPermissionModal';
-
-interface Customer {
-  id: number;
-  name: string;
-  email: string;
-  phone: string | null;
-  schema_name: string;
-  status: boolean;
-  // Campos removidos que não estão no fetch principal
-  // city: string | null;
-  // country: string | null;
-  // created_at: string;
-}
-
 import { LayoutPage } from '../components/LayoutPage';
+import { Button } from '../components/Button';
 
 interface Customer {
   id: number;
@@ -85,6 +72,17 @@ export const AdminCustomersListPage: React.FC = () => {
     loadCustomers(1, '');
   }, [loadCustomers]);
 
+  const handleDelete = async (id: number) => {
+    if (window.confirm('Tem certeza que deseja excluir este cliente?')) {
+      try {
+        await deleteCustomer(id);
+        loadCustomers(currentPage, searchTerm);
+      } catch (e) {
+        alert('Erro ao excluir cliente');
+      }
+    }
+  };
+
   return (
     <LayoutPage 
       title="Gestão de Clientes" 
@@ -150,10 +148,10 @@ export const AdminCustomersListPage: React.FC = () => {
                         <Button variant="ghost" size="sm" onClick={() => navigate(`/admin/customer-view/${customer.id}`)} title="Ver">
                           <Eye size={16} />
                         </Button>
-                        <Button variant="ghost" size="sm" onClick={() => navigate(`/admin/clients/${customer.id}/edit`)} title="Editar">
+                        <Button variant="ghost" size="sm" onClick={() => navigate(`/admin/customer-edit/${customer.id}`)} title="Editar">
                           <Pencil size={16} />
                         </Button>
-                        <Button variant="ghost" size="sm" onClick={() => deleteCustomer(customer.id)} className="text-red-500 hover:text-red-600">
+                        <Button variant="ghost" size="sm" onClick={() => handleDelete(customer.id)} className="text-red-500 hover:text-red-600">
                           <Trash2 size={16} />
                         </Button>
                       </div>
@@ -188,15 +186,3 @@ export const AdminCustomersListPage: React.FC = () => {
     </LayoutPage>
   );
 };
-
-      {selectedCustomerForPermissions && (
-        <UserPermissionModal
-          customerId={selectedCustomerForPermissions.id}
-          customerName={selectedCustomerForPermissions.name}
-          onClose={() => setSelectedCustomerForPermissions(null)}
-        />
-      )}
-    </div>
-  );
-};
-
