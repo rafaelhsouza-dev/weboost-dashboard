@@ -15,6 +15,22 @@
   textarea:focus {
     @apply ring-primary/20 border-primary outline-none;
   }
+
+  /* Ajuste de ícones nativos (Calendário, etc.) */
+  ::-webkit-calendar-picker-indicator {
+    @apply cursor-pointer transition-all;
+    filter: brightness(0.5); /* Padrão mais escuro para o modo light */
+  }
+
+  .dark ::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(0.8) sepia(1) hue-rotate(100deg) saturate(5); /* Transforma o ícone em verde claro no modo dark */
+  }
+
+  /* Ajuste para botões de limpar busca e outros controles nativos */
+  ::-webkit-search-cancel-button,
+  ::-webkit-clear-button {
+    @apply cursor-pointer;
+  }
 }
 
 @media print {
