@@ -10,7 +10,8 @@ import {
   listCustomerStatuses 
 } from '../services/customerService';
 import { useNavigate } from 'react-router-dom';
-import { CustomerType, CustomerStatus } from '../types';
+import { CustomerType, CustomerStatus, ApiUserResponse } from '../types';
+import { getAllUsers } from '../services/userService';
 
 interface CustomerCompleteFormProps {
   customerId?: number;
@@ -22,6 +23,7 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
   const navigate = useNavigate();
   const [types, setTypes] = useState<CustomerType[]>([]);
   const [statuses, setStatuses] = useState<CustomerStatus[]>([]);
+  const [availableUsers, setAvailableUsers] = useState<ApiUserResponse[]>([]);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -56,13 +58,38 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // Load types and statuses
+  // Normalization function for schema name
+  const normalizeSchemaName = (name: string) => {
+    return name
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // Remove accents
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "") // Remove everything except alphanumeric
+      .replace(/\s+/g, ""); // Remove spaces
+  };
+
+  // Auto-update schema_name when name changes
+  useEffect(() => {
+    if (!customerId) { // Only auto-fill for new customers
+      setFormData(prev => ({
+        ...prev,
+        schema_name: normalizeSchemaName(prev.name)
+      }));
+    }
+  }, [formData.name, customerId]);
+
+  // Load types, statuses and users
   useEffect(() => {
     const loadConfig = async () => {
       try {
-        const [t, s] = await Promise.all([listCustomerTypes(), listCustomerStatuses()]);
+        const [t, s, u] = await Promise.all([
+          listCustomerTypes(), 
+          listCustomerStatuses(),
+          getAllUsers()
+        ]);
         setTypes(t);
         setStatuses(s);
+        setAvailableUsers(u);
       } catch (e) {
         console.error('Failed to load form config', e);
       }
@@ -141,7 +168,16 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
           <Input label="Nome da Empresa" name="name" value={formData.name} onChange={handleChange} required />
           <Input label="Email de Contato" name="email" type="email" value={formData.email} onChange={handleChange} required />
           <Input label="Telefone" name="phone" value={formData.phone} onChange={handleChange} />
-          <Input label="Schema Name" name="schema_name" value={formData.schema_name} onChange={handleChange} required helpText="Nome único para o banco de dados" />
+          <Input 
+            label="Schema Name" 
+            name="schema_name" 
+            value={formData.schema_name} 
+            onChange={handleChange} 
+            required 
+            disabled 
+            className="bg-gray-100 cursor-not-allowed"
+            helpText="Gerado automaticamente a partir do nome" 
+          />
         </div>
       </section>
 
@@ -166,7 +202,22 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
               {statuses.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
             </select>
           </div>
-          <Input label="ID do Gestor" name="manager_id" type="number" value={formData.manager_id} onChange={handleChange} />
+          <div>
+            <label className="block text-sm font-medium mb-1.5">Gestor Responsável</label>
+            <select 
+              name="manager_id" 
+              value={formData.manager_id} 
+              onChange={handleChange} 
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm"
+            >
+              <option value="">Selecione um gestor...</option>
+              {availableUsers.map(u => (
+                <option key={u.id} value={u.id}>
+                  {u.name} ({u.email})
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </section>
 
