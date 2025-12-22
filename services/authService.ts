@@ -2,7 +2,7 @@ import { User, Role, Tenant, TenancyType } from '../types';
 
 // API Configuration
 const API_BASE_URL = 'https://api.weboost.pt';
-const LOGIN_ENDPOINT = `${API_BASE_URL}/auth/login`;
+const LOGIN_ENDPOINT = `${API_BASE_URL}/auth/token`;
 
 // Map API roles to our application roles
 const mapApiRoleToAppRole = (apiRoles: number[]): Role => {
@@ -41,6 +41,54 @@ const getRoleDisplayName = (apiRoles: number[]): string => {
   if (apiRoles.includes(9)) return 'Desenvolvimento';
   if (apiRoles.includes(10)) return 'Marketing';
   return 'Usuário';
+};
+
+// Function to fetch user data after login
+const fetchUserData = async (accessToken: string): Promise<User> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/me`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Accept': 'application/json'
+      },
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user data');
+    }
+
+    const userData: ApiUserResponse = await response.json();
+    
+    // Map the new API user data to our application user format
+    const role = mapApiRoleToAppRole(userData.roles || []);
+    const roleDisplayName = getRoleDisplayName(userData.roles || []);
+    const tenants = mapApiCustomersToTenants(userData.customers || []);
+    
+    // Add admin tenant ONLY for roles 1, 2, 3 (TI, Admin, Manager)
+    if (userData.roles && (userData.roles.includes(1) || userData.roles.includes(2) || userData.roles.includes(3))) {
+      tenants.unshift({ id: 'admin', name: 'Admin System', type: TenancyType.ADMIN });
+    }
+    
+    // Add internal tenant for all users EXCEPT role 4 (client)
+    if (userData.roles && !userData.roles.includes(4)) {
+      tenants.unshift({ id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL });
+    }
+    
+    return {
+      id: userData.id.toString(),
+      name: userData.name || userData.email || 'Usuário',
+      email: userData.email || '',
+      avatar: userData.avatar_url || 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg',
+      role: role,
+      roleDisplayName: roleDisplayName,
+      allowedTenants: tenants.map(t => t.id)
+    };
+  } catch (error) {
+    console.error('Failed to fetch user data:', error);
+    throw error;
+  }
 };
 
 // Map API customers to our tenants
@@ -88,15 +136,8 @@ const mapApiUserToAppUser = (apiUser: any): User => {
 
 interface LoginResponse {
   access_token: string;
+  refresh_token: string;
   token_type: string;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-    avatar_url: string;
-    roles: number[]; // Roles are now numbers
-    customers: number[]; // Customers are now just IDs
-  };
 }
 
 interface LoginError {
@@ -107,16 +148,12 @@ interface LoginError {
   }>;
 }
 
-export const loginWithApi = async (email: string, password: string): Promise<{ user: User; accessToken: string }> => {
+export const loginWithApi = async (email: string, password: string): Promise<{ user: User; accessToken: string; refreshToken: string }> => {
   try {
     // Prepare form data for x-www-form-urlencoded
     const formData = new URLSearchParams();
-    formData.append('grant_type', 'password');
     formData.append('username', email);
     formData.append('password', password);
-    formData.append('scope', '');
-    formData.append('client_id', '');
-    formData.append('client_secret', '');
 
     const response = await fetch(LOGIN_ENDPOINT, {
       method: 'POST',
@@ -166,14 +203,15 @@ export const loginWithApi = async (email: string, password: string): Promise<{ u
     
     console.log('API Login Response:', data); // Debug log
     
-    // Map API user to our application user
-    const appUser = mapApiUserToAppUser(data.user);
+    // Now fetch user data using the access token
+    const appUser = await fetchUserData(data.access_token);
     
     console.log('Mapped User:', appUser); // Debug log
     
     return {
       user: appUser,
-      accessToken: data.access_token
+      accessToken: data.access_token,
+      refreshToken: data.refresh_token
     };
     
   } catch (error) {
@@ -187,9 +225,47 @@ export const loginWithApi = async (email: string, password: string): Promise<{ u
   }
 };
 
+// Function to refresh access token
+export const refreshAccessToken = async (refreshToken: string, activeCustomer?: number): Promise<{ accessToken: string; refreshToken: string }> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        refresh_token: refreshToken,
+        active_customer: activeCustomer
+      }),
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Refresh token error:', errorData);
+      throw new Error('Failed to refresh access token');
+    }
+
+    const data: LoginResponse = await response.json();
+    return {
+      accessToken: data.access_token,
+      refreshToken: data.refresh_token
+    };
+  } catch (error) {
+    console.error('Refresh token error:', error);
+    throw error;
+  }
+};
+
 // Function to get the current access token
 export const getAccessToken = (): string | null => {
   return localStorage.getItem('weboost_access_token');
+};
+
+// Function to get the current refresh token
+export const getRefreshToken = (): string | null => {
+  return localStorage.getItem('weboost_refresh_token');
 };
 
 // Function to check if user is authenticated (check for valid token)

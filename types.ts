@@ -34,6 +34,8 @@ export interface Tenant {
   city?: string | null;
   country?: string | null;
   zip?: string | null;
+  schema_name?: string;
+  status?: boolean;
 }
 
 export interface MenuItem {
@@ -42,6 +44,43 @@ export interface MenuItem {
   icon: LucideIcon;
   path: string;
   badge?: number;
+}
+
+export interface ApiUserResponse {
+  name: string;
+  email: string;
+  role_id: number;
+  status: boolean;
+  id: number;
+  created_at: string;
+  updated_at: string;
+  role: {
+    name: string;
+    description: string;
+    id: number;
+  };
+  roles: number[];
+  customers: number[];
+  avatar_url?: string;
+}
+
+export interface ApiCustomerResponse {
+  name: string;
+  email: string;
+  schema_name: string;
+  status: boolean;
+  phone: string | null;
+  id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Lead {
+  name: string;
+  email: string;
+  status: string;
+  id: number;
+  created_at: string;
 }
 
 export interface ChartData {

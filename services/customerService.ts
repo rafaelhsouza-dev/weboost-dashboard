@@ -1,29 +1,10 @@
-import { Tenant, TenancyType } from '../types';
+import { Tenant, TenancyType, ApiCustomerResponse } from '../types';
 import { apiGet, handleApiResponse, getAccessToken } from './apiClient';
 
 // API Configuration
-const CUSTOMERS_ENDPOINT = '/customers/customers';
+const CUSTOMERS_ENDPOINT = '/customers';
 
-interface ApiCustomer {
-  id: number;
-  name: string;
-  email: string;
-  phone: string | null;
-  street_name: string | null;
-  street_number: string | null;
-  city: string | null;
-  country: string | null;
-  zip: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-interface CustomersResponse {
-  customers: ApiCustomer[];
-  total: number;
-  page: number;
-  per_page: number;
-  total_pages: number;
+interface ApiCustomer extends ApiCustomerResponse {
 }
 
 interface CustomerError {
@@ -43,30 +24,26 @@ export const fetchCustomersFromApi = async (): Promise<Tenant[]> => {
     console.log('Token available for customers request:', token ? 'YES' : 'NO');
     
     // Use the new apiClient to make authenticated request
-    const response = await apiGet(`${CUSTOMERS_ENDPOINT}?page=1&per_page=50`);
-    const data: CustomersResponse = await handleApiResponse(response);
+    const response = await apiGet(CUSTOMERS_ENDPOINT);
+    const data: ApiCustomer[] = await handleApiResponse(response);
     
     console.log('API Customers Response:', data);
     
     // Verify if customers array exists and is valid
-    if (!data.customers || !Array.isArray(data.customers)) {
+    if (!Array.isArray(data)) {
       console.warn('Invalid customers data format received:', data);
       return []; // Return empty array instead of throwing error
     }
     
     // Map API customers to our tenant format
-    const customerTenants = data.customers.map(customer => ({
+    const customerTenants = data.map(customer => ({
       id: `c${customer.id}`,
       name: customer.name,
       type: TenancyType.CLIENT as TenancyType,
       email: customer.email,
       phone: customer.phone,
-      address: customer.street_name && customer.street_number 
-        ? `${customer.street_name}, ${customer.street_number}`
-        : null,
-      city: customer.city,
-      country: customer.country,
-      zip: customer.zip
+      schema_name: customer.schema_name,
+      status: customer.status
     }));
     
     console.log('Mapped customer tenants:', customerTenants);

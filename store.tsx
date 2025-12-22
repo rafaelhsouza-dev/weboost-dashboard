@@ -232,13 +232,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       }
       
       // Try to use the real API first
-      const { user: apiUser, accessToken } = await loginWithApi(email, pass);
+      const { user: apiUser, accessToken, refreshToken } = await loginWithApi(email, pass);
       
       console.log('Login: API login successful. Setting user:', apiUser);
       setUser(apiUser);
       
-      // Store access token
+      // Store access token and refresh token
       localStorage.setItem('weboost_access_token', accessToken);
+      localStorage.setItem('weboost_refresh_token', refreshToken);
       
       // Determine available tenants for the current user
       // If no tenants loaded yet, use essential tenants for admin users
@@ -316,6 +317,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       localStorage.removeItem('weboost_user');
       localStorage.removeItem('weboost_currentTenantId');
       localStorage.removeItem('weboost_access_token');
+      localStorage.removeItem('weboost_refresh_token');
     } catch (error) {
       console.error('Logout error:', error);
       // Even if API logout fails, clear local state
@@ -324,6 +326,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       localStorage.removeItem('weboost_user');
       localStorage.removeItem('weboost_currentTenantId');
       localStorage.removeItem('weboost_access_token');
+      localStorage.removeItem('weboost_refresh_token');
     }
   };
 
