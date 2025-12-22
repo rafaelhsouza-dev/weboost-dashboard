@@ -23,7 +23,7 @@
   }
 
   .dark ::-webkit-calendar-picker-indicator {
-    filter: invert(1) brightness(0.8) sepia(1) hue-rotate(100deg) saturate(5); /* Transforma o ícone em verde claro no modo dark */
+    filter: invert(1) sepia(1) saturate(5) hue-rotate(90deg) brightness(1.2); /* Tom de verde mais vivo e sem azul */
   }
 
   /* Ajuste para botões de limpar busca e outros controles nativos */
