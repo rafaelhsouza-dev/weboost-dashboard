@@ -1,10 +1,10 @@
 import React from 'react';
 import { useApp } from '../store';
 import { useLocation } from 'react-router-dom';
-import { Moon, Sun, Printer, FileText, Layout, Menu } from 'lucide-react';
+import { Moon, Sun, Printer, Menu } from 'lucide-react';
 
 export const Header: React.FC = () => {
-  const { theme, toggleTheme, language, toggleLanguage, user, toggleSidebar } = useApp();
+  const { theme, toggleTheme, user, toggleSidebar } = useApp();
   const location = useLocation();
 
   const getTitle = () => {
@@ -15,25 +15,8 @@ export const Header: React.FC = () => {
     return 'Dashboard Weboost';
   };
 
-  const handlePrint = (orientation: 'portrait' | 'landscape') => {
-    const html = document.documentElement;
-    const body = document.body;
-    
-    // Aplica classes de orientação
-    html.classList.add(`print-${orientation}-mode`);
-    body.classList.add(`print-${orientation}`);
-    
-    // Pequeno delay para o navegador processar o CSS da orientação
-    setTimeout(() => {
-      window.print();
-      // Remove classes após fechar a caixa de impressão
-      html.classList.remove(`print-${orientation}-mode`);
-      body.classList.remove(`print-${orientation}`);
-    }, 100);
-  };
-
   return (
-    <header className="h-20 w-full bg-gray-100 dark:bg-dark-surface border-b border-gray-100 dark:border-dark-border flex items-center justify-between px-4 md:px-8 sticky top-0 z-30 transition-all duration-300 shadow-sm">
+    <header className="h-20 w-full bg-gray-100 dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border flex items-center justify-between px-4 md:px-8 sticky top-0 z-30 transition-all duration-300 shadow-sm">
       
       <div className="flex items-center gap-4">
         <button 
@@ -52,16 +35,9 @@ export const Header: React.FC = () => {
         
         <div className="hidden sm:flex items-center gap-1">
            <button 
-             onClick={() => handlePrint('portrait')}
+             onClick={() => window.print()}
              className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" 
-             title="Imprimir Vertical (A4)"
-           >
-             <FileText size={18} />
-           </button>
-           <button 
-             onClick={() => handlePrint('landscape')}
-             className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" 
-             title="Imprimir Horizontal (A4)"
+             title="Imprimir Página"
            >
              <Printer size={18} />
            </button>

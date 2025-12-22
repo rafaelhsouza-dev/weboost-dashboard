@@ -24,15 +24,8 @@
   html, body {
     background: white !important;
     color: black !important;
-    overflow: visible !important;
-  }
-
-  /* Classes de Orientação */
-  .print-portrait {
     width: 1024px !important;
-  }
-  .print-landscape {
-    width: 1400px !important;
+    overflow: visible !important;
   }
 
   /* Forçar Grids a manterem colunas na impressão */
@@ -51,7 +44,7 @@
   .dark, .dark * {
     background-color: transparent !important;
     color: black !important;
-    border-color: #f1f5f9 !important;
+    border-color: #d1d5db !important;
     box-shadow: none !important;
   }
 
@@ -76,8 +69,3 @@
     color: black !important;
   }
 }
-
-/* Configurações de página disparadas por classe no HTML */
-@page { margin: 10mm; }
-.print-portrait-mode @page { size: portrait; }
-.print-landscape-mode @page { size: landscape; }
