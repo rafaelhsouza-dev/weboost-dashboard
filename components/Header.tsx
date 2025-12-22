@@ -29,17 +29,18 @@ export const Header: React.FC = () => {
     const filename = `Weboost_${pageTitle}_${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`;
 
     const opt = {
-      margin: [10, 10, 10, 10],
+      margin: [10, 5, 10, 5],
       filename: filename,
-      image: { type: 'jpeg', quality: 0.98 },
+      image: { type: 'jpeg', quality: 1 },
       html2canvas: { 
-        scale: 2, 
+        scale: 3, 
         useCORS: true, 
         logging: false,
         letterRendering: true,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        windowWidth: 1200 // Garante layout de desktop na captura
       },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
     // Temporarily apply a class to force light mode styles during capture if needed
