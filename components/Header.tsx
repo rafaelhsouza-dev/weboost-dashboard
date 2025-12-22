@@ -15,22 +15,6 @@ export const Header: React.FC = () => {
     return 'Dashboard Weboost';
   };
 
-  return (
-    <header className="h-20 w-full bg-gray-100 dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border flex items-center justify-between px-4 md:px-8 sticky top-0 z-30 transition-all duration-300 shadow-sm">
-      
-      <div className="flex items-center gap-4">
-        <button 
-          onClick={toggleSidebar} 
-          className="md:hidden p-2 text-gray-500 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
-        >
-          <Menu size={24} />
-        </button>
-
-        <h2 className="text-base md:text-lg font-bold text-gray-900 dark:text-white tracking-tight uppercase">
-          {getTitle()}
-        </h2>
-      </div>
-
   const handlePrint = () => {
     window.print();
   };
