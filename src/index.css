@@ -41,19 +41,6 @@
     gap: 1.5rem !important;
   }
 
-  /* Garantir que bordas de tabelas e cards apareçam */
-  .border, .border-b, .border-t, .border-l, .border-r, .card {
-    border-color: #d1d5db !important; /* Cinza mais forte para garantir visibilidade */
-    border-style: solid !important;
-    border-width: 1px !important;
-  }
-}
-
-/* Configurações de página disparadas por classe no HTML */
-@page { margin: 10mm; }
-.print-portrait-mode @page { size: portrait; }
-.print-landscape-mode @page { size: landscape; }
-
   /* Mapear classes comuns de grid para impressão */
   .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
   .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
@@ -77,9 +64,9 @@
   }
 
   /* Corrigir Cards e Tabelas */
-  .card, .bg-white, .dark .bg-dark-surface, .dark .bg-dark-DEFAULT {
+  .card, .bg-white, .dark .bg-dark-surface, .dark .bg-dark-DEFAULT, .border, .border-b, .border-t, .border-l, .border-r {
     background-color: white !important;
-    border: 1px solid #f1f5f9 !important;
+    border: 1px solid #d1d5db !important;
     break-inside: avoid;
     padding: 1.5rem !important;
     border-radius: 0.75rem !important;
@@ -89,3 +76,8 @@
     color: black !important;
   }
 }
+
+/* Configurações de página disparadas por classe no HTML */
+@page { margin: 10mm; }
+.print-portrait-mode @page { size: portrait; }
+.print-landscape-mode @page { size: landscape; }
