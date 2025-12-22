@@ -25,20 +25,25 @@
   html, body {
     background: white !important;
     color: black !important;
-    width: 1200px !important; /* Força largura de desktop para evitar colapso de colunas */
-    zoom: 0.8; /* Ajusta a escala para caber no papel A4 */
+    width: 1024px !important; /* Largura padrão de desktop para impressão */
   }
+
+  /* Forçar Grids a manterem colunas na impressão */
+  .grid {
+    display: grid !important;
+  }
+
+  /* Mapear classes comuns de grid para impressão */
+  .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+  .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+  .lg\:col-span-2 { grid-column: span 2 / span 2 !important; }
 
   /* Anular estilos dark mode na impressão */
-  .dark {
-    background-color: white !important;
-    color: black !important;
-  }
-
-  .dark * {
+  .dark, .dark * {
     background-color: transparent !important;
     color: black !important;
-    border-color: #e2e8f0 !important; /* gray-200 aproximado para bordas */
+    border-color: #f1f5f9 !important;
     box-shadow: none !important;
   }
 
@@ -46,25 +51,20 @@
   .bg-primary, .text-primary, .bg-primary\/10 {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    background-color: rgba(0, 153, 80, 0.1) !important;
+    color: #009950 !important;
   }
 
   /* Corrigir Cards e Tabelas */
-  .dark .bg-dark-surface, 
-  .dark .bg-dark-DEFAULT,
-  .dark .bg-black {
+  .card, .bg-white, .dark .bg-dark-surface, .dark .bg-dark-DEFAULT {
     background-color: white !important;
-    border-color: #f1f5f9 !important;
-  }
-
-  .dark .text-white,
-  .dark .text-gray-100,
-  .dark .text-gray-300 {
-    color: #1a202c !important; /* text-gray-900 */
-  }
-
-  /* Forçar quebra de página amigável */
-  .card, .bg-white {
-    break-inside: avoid;
     border: 1px solid #f1f5f9 !important;
+    break-inside: avoid;
+    padding: 1.5rem !important;
+    border-radius: 0.75rem !important;
+  }
+
+  h1, h2, h3, h4, p, span, td, th {
+    color: black !important;
   }
 }
