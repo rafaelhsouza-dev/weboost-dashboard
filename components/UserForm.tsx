@@ -133,8 +133,13 @@ export const UserForm: React.FC<UserFormProps> = ({ userId, onSuccess, onCancel 
             <option value={1}>CEO</option>
             <option value={2}>Admin</option>
             <option value={3}>Manager</option>
-            <option value={4}>User</option>
+            <option value={4}>Client</option>
             <option value={5}>Employee</option>
+            <option value={6}>Performance</option>
+            <option value={7}>Photo & Video</option>
+            <option value={8}>Design</option>
+            <option value={9}>Developer</option>
+            <option value={10}>Marketing</option>
           </select>
         </div>
 
