@@ -20,13 +20,13 @@
     overflow: visible !important;
   }
 
-  /* Forçar Layout de Desktop e Ajustar Escala */
+  /* Forçar Layout de Desktop e Ajustar Escala para caber no A4 */
   html, body {
     background: white !important;
     color: black !important;
-    width: 1280px !important; /* Largura de desktop real para evitar quebra de colunas */
+    width: 1200px !important; /* Largura lógica de desktop */
+    zoom: 0.75; /* Reduz a escala para caber na largura do papel A4 sem cortar */
     overflow: visible !important;
-    font-size: 11px !important; /* Fonte levemente menor para garantir que o texto caiba nas colunas */
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -34,13 +34,18 @@
   /* Impedir quebra de texto em elementos críticos */
   th, td, .font-bold, h1, h2, h3, span {
     word-break: keep-all !important;
+    white-space: nowrap !important;
+  }
+  
+  /* Mas permitir quebra normal em parágrafos e descrições */
+  p, .text-sm {
     white-space: normal !important;
   }
 
   /* Forçar Grids a manterem colunas na impressão */
   .grid {
     display: grid !important;
-    gap: 1rem !important;
+    gap: 1.5rem !important;
   }
 
   /* Mapear classes comuns de grid para impressão */
@@ -69,8 +74,8 @@
     background-color: white !important;
     border: 1px solid #d1d5db !important;
     break-inside: avoid;
-    padding: 1rem !important;
-    border-radius: 0.5rem !important;
+    padding: 1.5rem !important;
+    border-radius: 0.75rem !important;
   }
 
   h1, h2, h3, h4, p, span, td, th {
@@ -80,6 +85,6 @@
 
 /* Configurações de página */
 @page { 
-  margin: 0; 
+  margin: 10mm; 
   size: auto;
 }
