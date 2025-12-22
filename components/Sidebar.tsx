@@ -13,6 +13,9 @@ import {
   ChevronRight,
   ChevronDown,
   LayoutGrid,
+  List,
+  PlusCircle,
+  Activity,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -77,9 +80,9 @@ export const Sidebar: React.FC = () => {
             label: 'Gestão de Clientes', 
             icon: Building2,
             children: [
-              { id: 'customer-list', label: 'Lista de Clientes', path: '/admin/customer-list' },
-              { id: 'customer-create', label: 'Criar Novo Cliente', path: '/admin/customer-create' },
-              { id: 'customer-settings', label: 'Configurações Globais', path: '/admin/customer-settings' }
+              { id: 'customer-list', label: 'Lista de Clientes', path: '/admin/customer-list', icon: List },
+              { id: 'customer-create', label: 'Criar Novo Cliente', path: '/admin/customer-create', icon: PlusCircle },
+              { id: 'customer-settings', label: 'Configurações Globais', path: '/admin/customer-settings', icon: Activity }
             ]
           },
           { id: 'users', label: 'Utilizadores', icon: Users, path: '/admin/users' },
@@ -112,7 +115,7 @@ export const Sidebar: React.FC = () => {
       )}
 
       <aside 
-        className={`fixed inset-y-0 left-0 z-50 h-screen bg-white dark:bg-dark-surface border-r border-gray-100 dark:border-dark-border transition-all duration-300 ease-in-out ${sidebarCollapsed ? '-translate-x-full md:translate-x-0 md:w-20' : 'translate-x-0 w-72'}`}
+        className={`fixed inset-y-0 left-0 z-50 h-screen bg-gray-50 dark:bg-dark-surface border-r border-gray-100 dark:border-dark-border transition-all duration-300 ease-in-out ${sidebarCollapsed ? '-translate-x-full md:translate-x-0 md:w-20' : 'translate-x-0 w-72'}`}
       >
         <div className="h-20 flex items-center justify-between px-6 border-b border-gray-100 dark:border-dark-border">
           {!sidebarCollapsed && (
@@ -171,17 +174,18 @@ export const Sidebar: React.FC = () => {
                   </button>
                   
                   {isSubmenuOpen && !sidebarCollapsed && (
-                    <div className="pl-10 space-y-1 animate-in slide-in-from-left-2 duration-200">
+                    <div className="pl-4 space-y-1 animate-in slide-in-from-left-2 duration-200">
                       {item.children.map((child) => {
                         const isChildActive = location.pathname === child.path;
                         return (
                           <Link
                             key={child.id}
                             to={child.path}
-                            className={`block py-2 px-3 text-xs font-medium rounded-lg transition-all
-                              ${isChildActive ? 'text-primary' : 'text-gray-500 hover:text-primary'}
+                            className={`flex items-center gap-3 py-2 px-3 text-xs font-bold rounded-xl transition-all
+                              ${isChildActive ? 'bg-primary/5 text-primary' : 'text-gray-500 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-800/50'}
                             `}
                           >
+                            {child.icon && <child.icon size={14} className={isChildActive ? 'text-primary' : 'text-gray-400'} />}
                             {child.label}
                           </Link>
                         );
