@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@media print {
+  header, 
+  aside,
+  button:not(.print-visible),
+  .no-print {
+    display: none !important;
+  }
+
+  main {
+    margin-left: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  body {
+    background-color: white !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .min-h-screen {
+    min-height: auto !important;
+  }
+
+  /* Garante que o conteúdo não seja cortado */
+  div {
+    overflow: visible !important;
+  }
+}

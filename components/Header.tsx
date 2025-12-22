@@ -34,10 +34,18 @@ export const Header: React.FC = () => {
       <div className="flex items-center gap-3">
         
         <div className="hidden sm:flex items-center gap-1">
-           <button className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" title="Exportar PDF">
+           <button 
+             onClick={() => window.print()}
+             className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" 
+             title="Exportar PDF"
+           >
              <FileDown size={18} />
            </button>
-           <button className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" title="Imprimir">
+           <button 
+             onClick={() => window.print()}
+             className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" 
+             title="Imprimir"
+           >
              <Printer size={18} />
            </button>
         </div>
