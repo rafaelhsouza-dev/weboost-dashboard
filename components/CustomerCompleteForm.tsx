@@ -12,6 +12,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { CustomerType, CustomerStatus, ApiUserResponse } from '../types';
 import { getAllUsers } from '../services/userService';
+import { Combobox } from './Combobox';
 
 interface CustomerCompleteFormProps {
   customerId?: number;
@@ -202,22 +203,16 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
               {statuses.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
             </select>
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-1.5">Gestor Responsável</label>
-            <select 
-              name="manager_id" 
-              value={formData.manager_id} 
-              onChange={handleChange} 
-              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm"
-            >
-              <option value="">Selecione um gestor...</option>
-              {availableUsers.map(u => (
-                <option key={u.id} value={u.id}>
-                  {u.name} ({u.email})
-                </option>
-              ))}
-            </select>
-          </div>
+          <Combobox 
+            label="Gestor Responsável"
+            options={availableUsers.map(u => ({
+              value: u.id.toString(),
+              label: `${u.name} (${u.email})`
+            }))}
+            value={formData.manager_id.toString()}
+            onChange={(val) => setFormData(prev => ({ ...prev, manager_id: parseInt(val as string) }))}
+            placeholder="Selecione um gestor..."
+          />
         </div>
       </section>
 
