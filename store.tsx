@@ -2,6 +2,12 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { User, Tenant, Language, Role, TenancyType } from './types';
 import { loginWithApi, checkAuth } from './services/authService';
 import { getAllTenants } from './services/customerService';
+import { NotificationType } from './components/Notification';
+
+interface AppNotification {
+  message: string;
+  type: NotificationType;
+}
 
 interface AppState {
   user: User | null;
@@ -12,6 +18,7 @@ interface AppState {
   theme: 'light' | 'dark';
   language: Language;
   sidebarCollapsed: boolean;
+  notification: AppNotification | null;
   
   // Actions
   login: (email: string, pass: string) => Promise<boolean>;
@@ -21,6 +28,8 @@ interface AppState {
   toggleLanguage: () => void;
   toggleSidebar: () => void;
   setSidebarCollapsed: (value: boolean) => void;
+  notify: (message: string, type?: NotificationType) => void;
+  clearNotification: () => void;
 }
 
 const AppContext = createContext<AppState | undefined>(undefined);
@@ -45,6 +54,13 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [tenantsLoaded, setTenantsLoaded] = useState(false);
   const [language, setLanguage] = useState<Language>('pt');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [notification, setNotification] = useState<AppNotification | null>(null);
+
+  const notify = (message: string, type: NotificationType = 'info') => {
+    setNotification({ message, type });
+  };
+
+  const clearNotification = () => setNotification(null);
 
   // Effect: Handle Theme Changes & Persistence
   useEffect(() => {
@@ -366,13 +382,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       theme,
       language,
       sidebarCollapsed,
+      notification,
       login,
       logout,
       setTenant,
       toggleTheme,
       toggleLanguage,
       toggleSidebar,
-      setSidebarCollapsed
+      setSidebarCollapsed,
+      notify,
+      clearNotification
     }}>
       {children}
     </AppContext.Provider>

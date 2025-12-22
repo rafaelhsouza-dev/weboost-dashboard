@@ -5,8 +5,10 @@ import { fetchCustomerById, listCustomerUsers, removeUserFromCustomer } from '..
 import { Building2, User, MapPin, Phone, Mail, Calendar, Link as LinkIcon, Trash2, UserPlus, AlertCircle } from 'lucide-react';
 import { ApiUserResponse } from '../types';
 import { AddUserToCustomerModal } from '../components/AddUserToCustomerModal';
+import { useApp } from '../store';
 
 export const AdminCustomerViewPage: React.FC = () => {
+  const { notify } = useApp();
   const { customerId } = useParams<{ customerId: string }>();
   const navigate = useNavigate();
   const [customer, setCustomer] = useState<any>(null);
@@ -47,12 +49,14 @@ export const AdminCustomerViewPage: React.FC = () => {
     if (window.confirm(`Tem certeza que deseja remover o acesso deste usuário ao cliente ${customer?.name}?`)) {
       try {
         await removeUserFromCustomer(parseInt(customerId), userId);
+        notify('Acesso removido com sucesso!', 'success');
         // Refresh users list
         const usersData = await listCustomerUsers(parseInt(customerId));
         setUsers(usersData);
       } catch (err) {
         console.error('Failed to remove user from customer:', err);
-        alert('Falha ao remover usuário. Tente novamente.');
+        const msg = err instanceof Error ? err.message : 'Falha ao remover utilizador';
+        notify(msg, 'error');
       }
     }
   };

@@ -22,6 +22,7 @@ interface CustomerCompleteFormProps {
 
 export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ customerId, onSuccess, onCancel }) => {
   const navigate = useNavigate();
+  const { notify } = useApp();
   const [types, setTypes] = useState<CustomerType[]>([]);
   const [statuses, setStatuses] = useState<CustomerStatus[]>([]);
   const [availableUsers, setAvailableUsers] = useState<ApiUserResponse[]>([]);
@@ -51,13 +52,10 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
     contact_name: '',
     contact_email: '',
     contact_phone: '',
-    other_contacts_ids: [],
-    info_general_id: 1
+    other_contacts_ids: []
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
 
   // Normalization function for schema name
   const normalizeSchemaName = (name: string) => {
@@ -134,16 +132,26 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
-    setSuccess(null);
 
     try {
+      // Clean up the payload: remove empty strings for optional fields
+      const cleanData = Object.entries(formData).reduce((acc, [key, value]) => {
+        // Only include fields that have a value or are mandatory
+        const isMandatory = ['name', 'email', 'schema_name'].includes(key);
+        if (isMandatory || (value !== '' && value !== null && value !== undefined)) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as any);
+
+      console.log('Sending cleaned data:', cleanData);
+
       if (customerId) {
-        await updateCustomer(customerId, formData);
-        setSuccess('Cliente atualizado com sucesso!');
+        await updateCustomer(customerId, cleanData);
+        notify('Cliente atualizado com sucesso!', 'success');
       } else {
-        await createCustomer(formData);
-        setSuccess('Cliente criado com sucesso!');
+        await createCustomer(cleanData);
+        notify('Cliente criado com sucesso!', 'success');
       }
       
       if (onSuccess) {
@@ -151,7 +159,8 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
       }
     } catch (err) {
       console.error('Error saving customer:', err);
-      setError(err instanceof Error ? err.message : 'Erro ao salvar cliente');
+      const msg = err instanceof Error ? err.message : 'Erro ao salvar cliente';
+      notify(msg, 'error');
     } finally {
       setLoading(false);
     }
@@ -159,9 +168,6 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      {error && <div className="p-4 bg-gray-900 text-white rounded-xl border border-gray-800">{error}</div>}
-      {success && <div className="p-4 bg-primary/10 text-primary font-bold rounded-xl border border-primary/20">{success}</div>}
-
       {/* Seção 1: Identificação Básica */}
       <section className="space-y-4">
         <h3 className="text-lg font-bold border-b border-gray-100 dark:border-dark-border pb-2 text-gray-900 dark:text-white">Identificação Básica</h3>

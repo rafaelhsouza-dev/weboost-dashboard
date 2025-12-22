@@ -7,6 +7,7 @@ import { getAllTenants } from '../services/customerService';
 import { getAllUsers, createUser } from '../services/userService';
 import { Tenant } from '../types';
 import { LayoutPage } from '../components/LayoutPage';
+import { useApp } from '../store';
 
 interface User {
   id: number;
@@ -17,6 +18,7 @@ interface User {
 }
 
 export const AdminUsersPage: React.FC = () => {
+  const { notify } = useApp();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,12 +68,13 @@ export const AdminUsersPage: React.FC = () => {
         status: true
       });
       
-      alert('Utilizador adicionado com sucesso!');
+      notify('Utilizador adicionado com sucesso!', 'success');
       setIsFormOpen(false);
       loadData();
       setNewUserData({ name: '', email: '', password: '', role_id: 4 });
     } catch (error) {
-      alert('Erro ao criar utilizador');
+      const msg = error instanceof Error ? error.message : 'Erro ao criar utilizador';
+      notify(msg, 'error');
     }
   };
 

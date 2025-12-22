@@ -5,6 +5,7 @@ import { Pencil, Plus, Search, ChevronLeft, ChevronRight, Trash2, Eye, Users as 
 import { UserPermissionModal } from '../components/UserPermissionModal';
 import { LayoutPage } from '../components/LayoutPage';
 import { Button } from '../components/Button';
+import { useApp } from '../store';
 
 interface Customer {
   id: number;
@@ -16,6 +17,7 @@ interface Customer {
 }
 
 export const AdminCustomersListPage: React.FC = () => {
+  const { notify } = useApp();
   const navigate = useNavigate();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -76,9 +78,11 @@ export const AdminCustomersListPage: React.FC = () => {
     if (window.confirm('Tem certeza que deseja excluir este cliente?')) {
       try {
         await deleteCustomer(id);
+        notify('Cliente excluído com sucesso!', 'success');
         loadCustomers(currentPage, searchTerm);
       } catch (e) {
-        alert('Erro ao excluir cliente');
+        const msg = e instanceof Error ? e.message : 'Erro ao excluir cliente';
+        notify(msg, 'error');
       }
     }
   };

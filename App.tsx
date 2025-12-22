@@ -20,9 +20,10 @@ import ClientReportsPage from "./pages/ClientReportsPage";
 import { TenantRouter } from "./pages/TenantRouter";
 import { useAuthCheck } from './services/useAuth';
 import { useTokenRefresh } from './services/useTokenRefresh';
+import { Notification } from './components/Notification';
 
 const ProtectedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, sidebarCollapsed } = useApp();
+  const { isAuthenticated, sidebarCollapsed, notification, clearNotification } = useApp();
 
   if (!isAuthenticated) {
     return <Login />;
@@ -30,6 +31,13 @@ const ProtectedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-dark text-gray-900 dark:text-gray-100 font-sans transition-colors duration-200">
+      {notification && (
+        <Notification 
+          message={notification.message} 
+          type={notification.type} 
+          onClose={clearNotification} 
+        />
+      )}
       <Sidebar />
       <div 
         className={`transition-all duration-300 ease-in-out ml-0 ${sidebarCollapsed ? 'md:ml-20' : 'md:ml-72'}`}
