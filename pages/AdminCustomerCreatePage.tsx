@@ -32,7 +32,7 @@ export const AdminCustomerCreatePage: React.FC = () => {
       }
     >
       {showForm ? (
-        <Card className="p-8 max-w-5xl mx-auto border-primary/10">
+        <Card className="p-8 border-primary/10">
           <CustomerCompleteForm 
             onSuccess={handleSuccess}
             onCancel={() => setShowForm(false)}

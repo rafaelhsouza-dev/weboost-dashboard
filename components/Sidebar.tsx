@@ -114,12 +114,12 @@ export const Sidebar: React.FC = () => {
       <aside 
         className={`fixed inset-y-0 left-0 z-50 h-screen bg-white dark:bg-dark-surface border-r border-gray-100 dark:border-dark-border transition-all duration-300 ease-in-out ${sidebarCollapsed ? '-translate-x-full md:translate-x-0 md:w-20' : 'translate-x-0 w-72'}`}
       >
-        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-100 dark:border-dark-border">
+        <div className="h-20 flex items-center justify-between px-6 border-b border-gray-100 dark:border-dark-border">
           {!sidebarCollapsed && (
-            <img src="/imgs/weboost-color.webp" alt="Weboost" className="h-6 w-auto object-contain" />
+            <img src="/imgs/weboost-color.webp" alt="Weboost" className="h-9 w-auto object-contain" />
           )}
           {sidebarCollapsed && (
-            <img src="/imgs/weboost-icon.webp" alt="W" className="w-8 h-8 mx-auto" />
+            <img src="/imgs/weboost-icon.webp" alt="W" className="w-10 h-10 mx-auto" />
           )}
           
           <button 

@@ -1,26 +1,25 @@
 import React from 'react';
+import { LayoutPage } from '../components/LayoutPage';
+import { Card } from '../components/Card';
 
 const AdminSettingsPage: React.FC = () => {
   return (
-    <div className="p-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-        <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-0">
-          Configurações do Administrador
-        </h1>
-      </div>
-      
-      <div className="flex flex-col items-center justify-center h-[50vh] text-center bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-        <div className="w-16 h-16 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 text-2xl">
+    <LayoutPage 
+      title="Configurações Gerais" 
+      subtitle="Gerencie as definições da plataforma."
+    >
+      <div className="flex flex-col items-center justify-center h-[60vh] text-center bg-white dark:bg-dark-surface rounded-xl border border-gray-100 dark:border-dark-border shadow-sm">
+        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-3xl">
           ⚙️
         </div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 uppercase tracking-tight">
           Página em desenvolvimento
         </h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 max-w-md">
+        <p className="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto">
           Esta página está em desenvolvimento. Em breve você poderá gerenciar as configurações gerais da plataforma.
         </p>
       </div>
-    </div>
+    </LayoutPage>
   );
 };
 

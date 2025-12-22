@@ -4,25 +4,28 @@ import { Button } from '../components/Button';
 import { CustomerCompleteForm } from '../components/CustomerCompleteForm';
 import { useApp } from '../store';
 
+import { LayoutPage } from '../components/LayoutPage';
+import { Card } from '../components/Card';
+
 export const AdminCustomerEditPage: React.FC = () => {
   const { customerId } = useParams<{ customerId: string }>();
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Editar Cliente
-        </h1>
+    <LayoutPage 
+      title="Editar Cliente" 
+      subtitle="Atualize os dados e configurações do inquilino."
+      actions={
         <Button 
           onClick={() => navigate('/admin/customer-list')}
-          variant="secondary"
+          variant="outline"
+          className="border-gray-100 dark:border-dark-border"
         >
           Voltar para Lista
         </Button>
-      </div>
-
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+      }
+    >
+      <Card className="p-8 border-primary/10">
         <CustomerCompleteForm
           customerId={customerId ? parseInt(customerId) : undefined}
           onSuccess={() => {
@@ -32,8 +35,8 @@ export const AdminCustomerEditPage: React.FC = () => {
           }}
           onCancel={() => navigate('/admin/customer-list')}
         />
-      </div>
-    </div>
+      </Card>
+    </LayoutPage>
   );
 };
 

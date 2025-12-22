@@ -159,12 +159,12 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      {error && <div className="p-4 bg-red-50 text-red-700 rounded-lg">{error}</div>}
-      {success && <div className="p-4 bg-green-50 text-green-700 rounded-lg">{success}</div>}
+      {error && <div className="p-4 bg-gray-900 text-white rounded-xl border border-gray-800">{error}</div>}
+      {success && <div className="p-4 bg-primary/10 text-primary font-bold rounded-xl border border-primary/20">{success}</div>}
 
       {/* Seção 1: Identificação Básica */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold border-b pb-2">Identificação Básica</h3>
+        <h3 className="text-lg font-bold border-b border-gray-100 dark:border-dark-border pb-2 text-gray-900 dark:text-white">Identificação Básica</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input label="Nome da Empresa" name="name" value={formData.name} onChange={handleChange} required />
           <Input label="Email de Contato" name="email" type="email" value={formData.email} onChange={handleChange} required />
@@ -176,7 +176,7 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
             onChange={handleChange} 
             required 
             disabled 
-            className="bg-gray-100 cursor-not-allowed"
+            className="bg-gray-50/50 dark:bg-dark-DEFAULT/50 cursor-not-allowed border-dashed"
             helpText="Gerado automaticamente a partir do nome" 
           />
         </div>
@@ -184,7 +184,7 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
 
       {/* Seção 2: Dados Fiscais e Contratuais */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold border-b pb-2">Dados Fiscais e Contratuais</h3>
+        <h3 className="text-lg font-bold border-b border-gray-100 dark:border-dark-border pb-2 text-gray-900 dark:text-white">Dados Fiscais e Contratuais</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Input label="NIF" name="nif" value={formData.nif} onChange={handleChange} />
           <Input label="Nome Fiscal" name="fiscal_name" value={formData.fiscal_name} onChange={handleChange} />
@@ -192,14 +192,14 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1.5">Tipo de Cliente</label>
-            <select name="type_id" value={formData.type_id} onChange={handleChange} className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm">
+            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">Tipo de Cliente</label>
+            <select name="type_id" value={formData.type_id} onChange={handleChange} className="w-full rounded-lg border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-surface px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none">
               {types.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1.5">Status do Cliente</label>
-            <select name="status_customer_id" value={formData.status_customer_id} onChange={handleChange} className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm">
+            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">Status do Cliente</label>
+            <select name="status_customer_id" value={formData.status_customer_id} onChange={handleChange} className="w-full rounded-lg border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-surface px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none">
               {statuses.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
             </select>
           </div>
@@ -218,7 +218,7 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
 
       {/* Seção 3: Presença Digital */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold border-b pb-2">Presença Digital</h3>
+        <h3 className="text-lg font-bold border-b border-gray-100 dark:border-dark-border pb-2 text-gray-900 dark:text-white">Presença Digital</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input label="Website URL" name="url_website" value={formData.url_website} onChange={handleChange} />
           <Input label="E-commerce URL" name="url_ecommerce" value={formData.url_ecommerce} onChange={handleChange} />
@@ -227,7 +227,7 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
 
       {/* Seção 4: Localização */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold border-b pb-2">Localização</h3>
+        <h3 className="text-lg font-bold border-b border-gray-100 dark:border-dark-border pb-2 text-gray-900 dark:text-white">Localização</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Input label="Rua" name="street_name" value={formData.street_name} onChange={handleChange} />
           <Input label="Número" name="street_number" value={formData.street_number} onChange={handleChange} />
@@ -239,15 +239,15 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
 
       {/* Seção 5: Responsáveis */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold border-b pb-2">Responsáveis</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-          <div className="md:col-span-3 font-medium text-sm">Proprietário (Owner)</div>
+        <h3 className="text-lg font-bold border-b border-gray-100 dark:border-dark-border pb-2 text-gray-900 dark:text-white">Responsáveis</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-gray-50/50 dark:bg-dark-DEFAULT/50 rounded-xl border border-gray-100 dark:border-dark-border">
+          <div className="md:col-span-3 font-bold text-sm text-primary uppercase tracking-wider">Proprietário (Owner)</div>
           <Input label="Nome" name="owner_name" value={formData.owner_name} onChange={handleChange} />
           <Input label="Email" name="owner_email" value={formData.owner_email} onChange={handleChange} />
           <Input label="Telefone" name="owner_phone" value={formData.owner_phone} onChange={handleChange} />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-          <div className="md:col-span-3 font-medium text-sm">Contato Principal</div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-gray-50/50 dark:bg-dark-DEFAULT/50 rounded-xl border border-gray-100 dark:border-dark-border">
+          <div className="md:col-span-3 font-bold text-sm text-primary uppercase tracking-wider">Contato Principal</div>
           <Input label="Nome" name="contact_name" value={formData.contact_name} onChange={handleChange} />
           <Input label="Email" name="contact_email" value={formData.contact_email} onChange={handleChange} />
           <Input label="Telefone" name="contact_phone" value={formData.contact_phone} onChange={handleChange} />

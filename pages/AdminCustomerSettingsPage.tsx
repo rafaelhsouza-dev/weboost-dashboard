@@ -75,7 +75,7 @@ export const AdminCustomerSettingsPage: React.FC = () => {
               <Settings size={20} className="text-primary" />
               Tipos de Clientes
             </h2>
-            <form onSubmit={handleAddType} className="space-y-4 mb-8 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-xl border border-gray-100 dark:border-gray-800">
+            <form onSubmit={handleAddType} className="space-y-4 mb-8 bg-gray-50/50 dark:bg-dark-DEFAULT/50 p-6 rounded-xl border border-gray-100 dark:border-dark-border">
               <Input 
                 label="Nome do Tipo" 
                 value={newType.name} 
@@ -96,7 +96,7 @@ export const AdminCustomerSettingsPage: React.FC = () => {
 
             <div className="space-y-3">
               {types.map(type => (
-                <div key={type.id} className="p-4 rounded-lg border border-gray-100 dark:border-gray-800 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <div key={type.id} className="p-4 rounded-xl border border-gray-100 dark:border-dark-border flex justify-between items-center hover:bg-primary/[0.02] transition-colors">
                   <div>
                     <p className="font-bold text-gray-900 dark:text-white text-sm">{type.name}</p>
                     <p className="text-xs text-gray-500">{type.description}</p>
@@ -110,11 +110,11 @@ export const AdminCustomerSettingsPage: React.FC = () => {
         {/* Customer Statuses Section */}
         <div className="space-y-6">
           <Card className="p-6 border-primary/10">
-            <h2 className="text-lg font-bold flex items-center gap-2 mb-6">
+            <h2 className="text-lg font-bold flex items-center gap-2 mb-6 text-gray-900 dark:text-white">
               <Activity size={20} className="text-primary" />
               Status de Clientes
             </h2>
-            <form onSubmit={handleAddStatus} className="space-y-4 mb-8 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-xl border border-gray-100 dark:border-gray-800">
+            <form onSubmit={handleAddStatus} className="space-y-4 mb-8 bg-gray-50/50 dark:bg-dark-DEFAULT/50 p-6 rounded-xl border border-gray-100 dark:border-dark-border">
               <Input 
                 label="Nome do Status" 
                 value={newStatus.name} 
@@ -132,11 +132,11 @@ export const AdminCustomerSettingsPage: React.FC = () => {
                 <input 
                   type="checkbox" 
                   id="is_active"
-                  className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                  className="w-4 h-4 text-primary border-gray-300 dark:border-dark-border rounded focus:ring-primary bg-white dark:bg-dark-surface transition-all"
                   checked={newStatus.is_active_status}
                   onChange={e => setNewStatus({...newStatus, is_active_status: e.target.checked})}
                 />
-                <label htmlFor="is_active" className="text-sm font-medium text-gray-700 dark:text-gray-300">Marcar como status Ativo</label>
+                <label htmlFor="is_active" className="text-sm font-bold text-gray-700 dark:text-gray-300 cursor-pointer">Marcar como status Ativo</label>
               </div>
               <Button type="submit" className="w-full">
                 <Plus size={16} className="mr-2" /> Adicionar Status
@@ -145,12 +145,12 @@ export const AdminCustomerSettingsPage: React.FC = () => {
 
             <div className="space-y-3">
               {statuses.map(status => (
-                <div key={status.id} className="p-4 rounded-lg border border-gray-100 dark:border-gray-800 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <div key={status.id} className="p-4 rounded-xl border border-gray-100 dark:border-dark-border flex justify-between items-center hover:bg-primary/[0.02] transition-colors">
                   <div>
                     <p className="font-bold text-gray-900 dark:text-white text-sm">{status.name}</p>
                     <p className="text-xs text-gray-500">{status.description}</p>
                   </div>
-                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${status.is_active_status ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-gray-500'}`}>
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${status.is_active_status ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-gray-500 dark:bg-dark-DEFAULT dark:text-gray-400'}`}>
                     {status.is_active_status ? 'Ativo' : 'Inativo'}
                   </span>
                 </div>
