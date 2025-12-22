@@ -30,52 +30,72 @@ export interface Tenant {
   logoUrl?: string;
   email?: string;
   phone?: string | null;
-  address?: string | null;
-  city?: string | null;
-  country?: string | null;
-  zip?: string | null;
   schema_name?: string;
   status?: boolean;
-}
-
-export interface MenuItem {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  path: string;
-  badge?: number;
-}
-
-export interface ApiUserResponse {
-  name: string;
-  email: string;
-  role_id: number;
-  status: boolean;
-  id: number;
-  created_at: string;
-  updated_at: string;
-  role: {
-    name: string;
-    description: string;
-    id: number;
-  };
-  roles: number[];
-  customers: number[];
-  avatar_url?: string;
+  nif?: string;
+  type_id?: number;
+  status_customer_id?: number;
+  manager_id?: number;
+  date_init?: string;
+  fiscal_name?: string;
+  url_website?: string;
+  url_ecommerce?: string;
+  street_name?: string;
+  street_number?: string;
+  city?: string;
+  country?: string;
+  zip?: string;
+  owner_name?: string;
+  owner_email?: string;
+  owner_phone?: string;
+  contact_name?: string;
+  contact_email?: string;
+  contact_phone?: string;
 }
 
 export interface ApiCustomerResponse {
+  id: number;
   name: string;
   email: string;
   schema_name: string;
   status: boolean;
   phone: string | null;
-  nif?: string;
-  type_id?: number;
-  status_customer_id?: number;
-  id: number;
+  type_id: number | null;
+  status_customer_id: number | null;
+  manager_id: number | null;
+  date_init: string | null;
+  fiscal_name: string | null;
+  nif: string | null;
+  url_website: string | null;
+  url_ecommerce: string | null;
+  street_name: string | null;
+  street_number: string | null;
+  city: string | null;
+  country: string | null;
+  zip: string | null;
+  owner_name: string | null;
+  owner_email: string | null;
+  owner_phone: string | null;
+  contact_name: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  other_contacts_ids: any[] | null;
+  info_general_id: number | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface CustomerType {
+  id: number;
+  name: string;
+  description: string;
+}
+
+export interface CustomerStatus {
+  id: number;
+  name: string;
+  description: string;
+  is_active_status: boolean;
 }
 
 export interface Lead {

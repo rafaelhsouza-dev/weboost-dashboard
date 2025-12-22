@@ -1,4 +1,4 @@
-import { Tenant, TenancyType, ApiCustomerResponse, ApiUserResponse } from '../types';
+import { Tenant, TenancyType, ApiCustomerResponse, ApiUserResponse, CustomerType, CustomerStatus } from '../types';
 import {
   apiGetWithRefresh,
   apiPostWithRefresh,
@@ -128,11 +128,18 @@ export const fetchCustomerById = async (customerId: number): Promise<ApiCustomer
 };
 
 // Function to create a new customer
-export const createCustomer = async (customerData: any): Promise<ApiCustomer> => {
+export const createCustomer = async (customerData: any, userIds: number[] = []): Promise<ApiCustomer> => {
   try {
     console.log('Creating customer with data:', customerData);
     
-    const response = await apiPostWithRefresh(CUSTOMERS_ENDPOINT, customerData, true);
+    let endpoint = CUSTOMERS_ENDPOINT;
+    if (userIds.length > 0) {
+      const params = new URLSearchParams();
+      userIds.forEach(id => params.append('user_ids', id.toString()));
+      endpoint += `?${params.toString()}`;
+    }
+    
+    const response = await apiPostWithRefresh(endpoint, customerData, true);
     const data: ApiCustomer = await handleApiResponse(response);
     
     console.log('Customer created successfully:', data);
@@ -211,20 +218,20 @@ export const removeUserFromCustomer = async (customerId: number, userId: number)
 };
 
 // Customer Types
-export const listCustomerTypes = async (): Promise<any[]> => {
+export const listCustomerTypes = async (): Promise<CustomerType[]> => {
   try {
     const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}types`, true);
-    return await handleApiResponse<any[]>(response);
+    return await handleApiResponse<CustomerType[]>(response);
   } catch (error) {
     console.error('Failed to list customer types:', error);
     throw error;
   }
 };
 
-export const addCustomerType = async (typeData: { name: string; description: string }): Promise<any> => {
+export const addCustomerType = async (typeData: { name: string; description: string }): Promise<CustomerType> => {
   try {
     const response = await apiPostWithRefresh(`${CUSTOMERS_ENDPOINT}types`, typeData, true);
-    return await handleApiResponse(response);
+    return await handleApiResponse<CustomerType>(response);
   } catch (error) {
     console.error('Failed to add customer type:', error);
     throw error;
@@ -232,20 +239,20 @@ export const addCustomerType = async (typeData: { name: string; description: str
 };
 
 // Customer Statuses
-export const listCustomerStatuses = async (): Promise<any[]> => {
+export const listCustomerStatuses = async (): Promise<CustomerStatus[]> => {
   try {
     const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}statuses`, true);
-    return await handleApiResponse<any[]>(response);
+    return await handleApiResponse<CustomerStatus[]>(response);
   } catch (error) {
     console.error('Failed to list customer statuses:', error);
     throw error;
   }
 };
 
-export const addCustomerStatus = async (statusData: { name: string; is_active_status: boolean }): Promise<any> => {
+export const addCustomerStatus = async (statusData: { name: string; description: string, is_active_status: boolean }): Promise<CustomerStatus> => {
   try {
     const response = await apiPostWithRefresh(`${CUSTOMERS_ENDPOINT}statuses`, statusData, true);
-    return await handleApiResponse(response);
+    return await handleApiResponse<CustomerStatus>(response);
   } catch (error) {
     console.error('Failed to add customer status:', error);
     throw error;
