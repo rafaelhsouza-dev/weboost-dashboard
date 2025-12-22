@@ -94,7 +94,7 @@ export const AdminCustomersListPage: React.FC = () => {
             <input
               type="text"
               placeholder="Pesquisar..."
-              className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none w-full md:w-64 text-sm transition-all"
+              className="pl-10 pr-4 py-2 border border-gray-200 dark:border-dark-border rounded-lg bg-white dark:bg-dark-surface focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none w-full md:w-64 text-sm transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -110,32 +110,32 @@ export const AdminCustomersListPage: React.FC = () => {
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
       ) : error ? (
-        <div className="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/20 rounded-lg p-4 text-red-700 dark:text-red-400">
+        <div className="bg-gray-900 dark:bg-dark-DEFAULT border border-gray-800 dark:border-dark-border rounded-xl p-4 text-white">
           {error}
         </div>
       ) : (
         <>
-          <div className="overflow-hidden bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="overflow-hidden bg-white dark:bg-dark-surface rounded-xl shadow-sm border border-gray-100 dark:border-dark-border">
             <table className="w-full text-left">
-              <thead className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
+              <thead className="bg-gray-50/50 dark:bg-dark-DEFAULT/50 border-b border-gray-100 dark:border-dark-border">
                 <tr>
-                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">ID</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Nome</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Ações</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">ID</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Nome</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+              <tbody className="divide-y divide-gray-50 dark:divide-dark-border">
                 {customers.map((customer) => (
-                  <tr key={customer.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                  <tr key={customer.id} className="hover:bg-primary/[0.02] transition-colors">
                     <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">#{customer.id}</td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">{customer.name}</div>
+                      <div className="text-sm font-bold text-gray-900 dark:text-white">{customer.name}</div>
                       <div className="text-xs text-gray-500">{customer.email}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${
-                        customer.status ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                      <span className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full ${
+                        customer.status ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-gray-500 dark:bg-dark-border dark:text-gray-400'
                       }`}>
                         {customer.status ? 'Ativo' : 'Inativo'}
                       </span>
@@ -151,7 +151,7 @@ export const AdminCustomersListPage: React.FC = () => {
                         <Button variant="ghost" size="sm" onClick={() => navigate(`/admin/customer-edit/${customer.id}`)} title="Editar">
                           <Pencil size={16} />
                         </Button>
-                        <Button variant="ghost" size="sm" onClick={() => handleDelete(customer.id)} className="text-red-500 hover:text-red-600">
+                        <Button variant="ghost" size="sm" onClick={() => handleDelete(customer.id)} className="text-gray-400 hover:text-primary">
                           <Trash2 size={16} />
                         </Button>
                       </div>
@@ -165,10 +165,10 @@ export const AdminCustomersListPage: React.FC = () => {
           <div className="flex items-center justify-between mt-6">
             <p className="text-sm text-gray-500">Página {currentPage}</p>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => loadCustomers(currentPage - 1)} disabled={currentPage === 1}>
+              <Button variant="outline" size="sm" onClick={() => loadCustomers(currentPage - 1)} disabled={currentPage === 1} className="border-gray-100 dark:border-dark-border">
                 <ChevronLeft size={16} className="mr-1" /> Anterior
               </Button>
-              <Button variant="outline" size="sm" onClick={() => loadCustomers(currentPage + 1)} disabled={isLastPage}>
+              <Button variant="outline" size="sm" onClick={() => loadCustomers(currentPage + 1)} disabled={isLastPage} className="border-gray-100 dark:border-dark-border">
                 Próximo <ChevronRight size={16} className="ml-1" />
               </Button>
             </div>

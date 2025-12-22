@@ -23,8 +23,8 @@ export const Input: React.FC<InputProps> = ({ label, error, helpText, className 
       <input
         id={inputId}
         className={`
-          block w-full rounded-lg border border-gray-300 dark:border-gray-600 
-          bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+          block w-full rounded-lg border border-gray-200 dark:border-dark-border 
+          bg-white dark:bg-dark-surface text-gray-900 dark:text-white
           px-3 py-2.5 shadow-sm placeholder:text-gray-400
           focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none
           transition-all sm:text-sm

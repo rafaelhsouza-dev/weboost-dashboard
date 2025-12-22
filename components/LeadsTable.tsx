@@ -12,27 +12,27 @@ const LeadsTable: React.FC<LeadsTableProps> = ({ leads }) => {
   ];
 
   return (
-    <div className="bg-white dark:bg-[#1a1a1a] rounded-lg shadow-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+    <div className="bg-white dark:bg-dark-surface rounded-xl shadow-sm border border-gray-100 dark:border-dark-border overflow-hidden">
         <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
-        <thead className="bg-gray-50 dark:bg-black/40">
+      <table className="min-w-full divide-y divide-gray-100 dark:divide-dark-border">
+        <thead className="bg-gray-50/50 dark:bg-dark-DEFAULT/50">
           <tr>
             {headers.map(header => (
-              <th key={header} scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+              <th key={header} scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
                 {header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white dark:bg-[#1a1a1a] divide-y divide-gray-100 dark:divide-gray-800">
+        <tbody className="bg-white dark:bg-dark-surface divide-y divide-gray-50 dark:divide-dark-border">
           {leads.map((lead) => (
-            <tr key={lead.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+            <tr key={lead.id} className="hover:bg-primary/[0.02] transition-colors">
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">#{lead.id}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{lead.name}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{lead.email}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm">
-                <span className={`px-2 py-1 rounded-full text-xs ${
-                  lead.status === 'novo' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                  lead.status === 'novo' ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-gray-500 dark:bg-dark-border dark:text-gray-400'
                 }`}>
                   {lead.status}
                 </span>

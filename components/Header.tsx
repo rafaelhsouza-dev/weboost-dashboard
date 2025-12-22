@@ -16,7 +16,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="h-16 w-full bg-white dark:bg-[#111111] border-b border-gray-100 dark:border-gray-800 flex items-center justify-between px-4 md:px-8 sticky top-0 z-30 transition-all duration-300 shadow-sm">
+    <header className="h-16 w-full bg-white dark:bg-dark-surface border-b border-gray-100 dark:border-dark-border flex items-center justify-between px-4 md:px-8 sticky top-0 z-30 transition-all duration-300 shadow-sm">
       
       <div className="flex items-center gap-4">
         <button 
@@ -42,7 +42,7 @@ export const Header: React.FC = () => {
            </button>
         </div>
 
-        <div className="hidden sm:block h-4 w-px bg-gray-200 dark:bg-gray-800 mx-2"></div>
+        <div className="hidden sm:block h-4 w-px bg-gray-100 dark:bg-dark-border mx-2"></div>
 
         <button 
           onClick={toggleTheme} 

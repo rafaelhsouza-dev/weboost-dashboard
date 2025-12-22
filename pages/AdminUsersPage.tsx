@@ -91,7 +91,7 @@ export const AdminUsersPage: React.FC = () => {
             <input
               type="text"
               placeholder="Pesquisar..."
-              className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none w-full md:w-64 text-sm transition-all"
+              className="pl-10 pr-4 py-2 border border-gray-200 dark:border-dark-border rounded-lg bg-white dark:bg-dark-surface focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none w-full md:w-64 text-sm transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -104,8 +104,8 @@ export const AdminUsersPage: React.FC = () => {
       }
     >
       {isFormOpen && (
-        <Card className="mb-8 border-primary/20 bg-primary/5 p-6 animate-in slide-in-from-top duration-300">
-          <h3 className="text-lg font-bold flex items-center gap-2 mb-6">
+        <Card className="mb-8 border-primary/20 bg-primary/[0.03] p-6 animate-in slide-in-from-top duration-300">
+          <h3 className="text-lg font-bold flex items-center gap-2 mb-6 text-gray-900 dark:text-white">
             <UserPlus size={20} className="text-primary"/>
             Novo Registo de Utilizador
           </h3>
@@ -135,9 +135,9 @@ export const AdminUsersPage: React.FC = () => {
              />
              
              <div>
-               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Perfil de Acesso</label>
+               <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">Perfil de Acesso</label>
                <select 
-                 className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2.5 text-sm dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                 className="block w-full rounded-lg border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-DEFAULT px-3 py-2.5 text-sm dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                  value={newUserData.role_id}
                  onChange={(e) => setNewUserData({...newUserData, role_id: parseInt(e.target.value)})}
                >
@@ -150,34 +150,34 @@ export const AdminUsersPage: React.FC = () => {
              </div>
 
              <div className="md:col-span-2 flex justify-end gap-3 mt-4">
-               <Button type="button" variant="outline" onClick={() => setIsFormOpen(false)}>Cancelar</Button>
+               <Button type="button" variant="outline" onClick={() => setIsFormOpen(false)} className="border-gray-100 dark:border-dark-border">Cancelar</Button>
                <Button type="submit">Criar Utilizador</Button>
              </div>
           </form>
         </Card>
       )}
       
-      <div className="overflow-hidden bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+      <div className="overflow-hidden bg-white dark:bg-dark-surface rounded-xl shadow-sm border border-gray-100 dark:border-dark-border">
         <table className="w-full text-left">
-          <thead className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
+          <thead className="bg-gray-50/50 dark:bg-dark-DEFAULT/50 border-b border-gray-100 dark:border-dark-border">
             <tr>
-              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Nome</th>
-              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Email</th>
-              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Perfil</th>
+              <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Nome</th>
+              <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Email</th>
+              <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Perfil</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+          <tbody className="divide-y divide-gray-50 dark:divide-dark-border">
             {loading ? (
-              <tr><td colSpan={3} className="px-6 py-8 text-center animate-pulse">Carregando...</td></tr>
+              <tr><td colSpan={3} className="px-6 py-8 text-center animate-pulse text-gray-400">Carregando...</td></tr>
             ) : filteredUsers.length === 0 ? (
-              <tr><td colSpan={3} className="px-6 py-8 text-center text-gray-500">Nenhum utilizador encontrado.</td></tr>
+              <tr><td colSpan={3} className="px-6 py-8 text-center text-gray-500 italic">Nenhum utilizador encontrado.</td></tr>
             ) : (
               filteredUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{user.name}</td>
+                <tr key={user.id} className="hover:bg-primary/[0.02] transition-colors">
+                  <td className="px-6 py-4 text-sm font-bold text-gray-900 dark:text-white">{user.name}</td>
                   <td className="px-6 py-4 text-sm text-gray-500">{user.email}</td>
                   <td className="px-6 py-4 text-right">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-primary/10 text-primary">
                       {user.role}
                     </span>
                   </td>

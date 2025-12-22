@@ -112,9 +112,9 @@ export const Sidebar: React.FC = () => {
       )}
 
       <aside 
-        className={`fixed inset-y-0 left-0 z-50 h-screen bg-white dark:bg-[#111111] border-r border-gray-100 dark:border-gray-800 transition-all duration-300 ease-in-out ${sidebarCollapsed ? '-translate-x-full md:translate-x-0 md:w-20' : 'translate-x-0 w-72'}`}
+        className={`fixed inset-y-0 left-0 z-50 h-screen bg-white dark:bg-dark-surface border-r border-gray-100 dark:border-dark-border transition-all duration-300 ease-in-out ${sidebarCollapsed ? '-translate-x-full md:translate-x-0 md:w-20' : 'translate-x-0 w-72'}`}
       >
-        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-100 dark:border-gray-800">
+        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-100 dark:border-dark-border">
           {!sidebarCollapsed && (
             <img src="/imgs/weboost-color.webp" alt="Weboost" className="h-6 w-auto object-contain" />
           )}
@@ -130,7 +130,7 @@ export const Sidebar: React.FC = () => {
           </button>
         </div>
 
-        <div className="p-4 border-b border-gray-50 dark:border-gray-800">
+        <div className="p-4 border-b border-gray-50 dark:border-dark-border">
           {availableTenants.length > 1 && tenantsLoaded && !sidebarCollapsed && (
             <div className="animate-in fade-in duration-500">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 px-2">Alternar Modo</p>
@@ -207,10 +207,10 @@ export const Sidebar: React.FC = () => {
           })}
         </nav>
 
-        <div className="p-4 border-t border-gray-50 dark:border-gray-800">
+        <div className="p-4 border-t border-gray-50 dark:border-dark-border">
           <button 
             onClick={async () => await logout()}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all group"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-dark-border transition-all group"
           >
             <LogOut size={20} className="group-hover:rotate-12 transition-transform" />
             {!sidebarCollapsed && <span className="text-sm font-bold tracking-tight">Encerrar Sessão</span>}

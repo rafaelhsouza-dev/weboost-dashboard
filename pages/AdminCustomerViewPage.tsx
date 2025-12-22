@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { fetchCustomerById, listCustomerUsers, removeUserFromCustomer } from '../services/customerService';
-import { Building2, User, MapPin, Phone, Mail, Calendar, Link as LinkIcon, Trash2, UserPlus } from 'lucide-react';
+import { Building2, User, MapPin, Phone, Mail, Calendar, Link as LinkIcon, Trash2, UserPlus, AlertCircle } from 'lucide-react';
 import { ApiUserResponse } from '../types';
 import { AddUserToCustomerModal } from '../components/AddUserToCustomerModal';
 
@@ -75,8 +75,11 @@ export const AdminCustomerViewPage: React.FC = () => {
   if (error) {
     return (
       <div className="p-6">
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-700 dark:text-red-300">
-          {error}
+        <div className="bg-gray-900 dark:bg-dark-DEFAULT border border-gray-800 dark:border-dark-border rounded-xl p-4 text-white">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="text-primary h-5 w-5" />
+            {error}
+          </div>
         </div>
         <Button 
           onClick={() => navigate('/admin/customer-list')}
@@ -131,7 +134,7 @@ export const AdminCustomerViewPage: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Customer Info Card */}
-          <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="lg:col-span-2 bg-white dark:bg-dark-surface p-6 rounded-xl shadow-sm border border-gray-100 dark:border-dark-border">
             <div className="flex items-center gap-4 mb-6">
               <div className="bg-primary/10 p-3 rounded-full">
                 <Building2 className="h-8 w-8 text-primary" />
@@ -148,8 +151,8 @@ export const AdminCustomerViewPage: React.FC = () => {
               <InfoItem icon={LinkIcon} label="Website" value={customer.url_website} isLink />
               <InfoItem icon={Calendar} label="Cliente desde" value={new Date(customer.created_at).toLocaleDateString()} />
                <div className="flex items-center gap-3">
-                  <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    customer.status ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' : 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'
+                  <span className={`px-3 py-1 inline-flex text-[10px] font-bold uppercase tracking-wider rounded-full ${
+                    customer.status ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-gray-500 dark:bg-dark-border dark:text-gray-400'
                   }`}>
                     {customer.status ? 'Ativo' : 'Inativo'}
                   </span>
@@ -158,7 +161,7 @@ export const AdminCustomerViewPage: React.FC = () => {
           </div>
 
           {/* Users Card */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="bg-white dark:bg-dark-surface p-6 rounded-xl shadow-sm border border-gray-100 dark:border-dark-border">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Utilizadores com Acesso</h3>
               <Button size="sm" variant="outline" onClick={() => setIsModalOpen(true)}>
@@ -168,26 +171,26 @@ export const AdminCustomerViewPage: React.FC = () => {
             </div>
             <div className="space-y-3">
               {users.length > 0 ? users.map(user => (
-                <div key={user.id} className="flex items-center justify-between p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                <div key={user.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-dark-DEFAULT/50 transition-colors">
                   <div className="flex items-center gap-3">
-                     <div className="bg-gray-100 dark:bg-gray-700 rounded-full p-2">
-                        <User className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                     <div className="bg-gray-50 dark:bg-dark-DEFAULT rounded-full p-2 border border-gray-100 dark:border-dark-border">
+                        <User className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                      </div>
                      <div>
-                        <p className="font-semibold text-sm text-gray-900 dark:text-white">{user.name}</p>
+                        <p className="font-bold text-sm text-gray-900 dark:text-white">{user.name}</p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
                      </div>
                   </div>
                   <button 
                     onClick={() => handleRemoveUser(user.id)}
-                    className="text-gray-400 hover:text-red-500 p-1 rounded-full transition-colors"
+                    className="text-gray-400 hover:text-gray-900 dark:hover:text-white p-2 hover:bg-gray-100 dark:hover:bg-dark-border rounded-lg transition-all"
                     title="Remover acesso"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
               )) : (
-                <p className="text-sm text-gray-400 text-center py-4">Nenhum utilizador associado.</p>
+                <p className="text-sm text-gray-400 text-center py-4 italic">Nenhum utilizador associado.</p>
               )}
             </div>
           </div>

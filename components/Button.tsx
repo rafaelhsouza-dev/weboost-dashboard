@@ -19,8 +19,8 @@ export const Button: React.FC<ButtonProps> = ({
   const variants = {
     primary: "bg-primary text-white hover:bg-[#007a40] focus:ring-primary border border-transparent shadow-sm",
     secondary: "bg-secondary text-white hover:bg-[#00d970] focus:ring-secondary border border-transparent shadow-sm",
-    outline: "bg-transparent border border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:border-gray-600",
-    ghost: "bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800",
+    outline: "bg-transparent border border-gray-200 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:border-dark-border",
+    ghost: "bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800",
     danger: "bg-red-500/10 text-red-600 hover:bg-red-500 hover:text-white border border-red-200 dark:border-red-900/30" // Danger is usually kept for safety, but I can make it neutral if strictly only green
   };
 
