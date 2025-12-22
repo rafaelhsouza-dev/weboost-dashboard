@@ -24,7 +24,7 @@ export const fetchCustomersFromApi = async (): Promise<Tenant[]> => {
     console.log('Token available for customers request:', token ? 'YES' : 'NO');
     
     // Use the new apiClient to make authenticated request
-    const response = await apiGet(CUSTOMERS_ENDPOINT, true); // true for requiresAuth
+    const response = await apiGetWithRefresh(CUSTOMERS_ENDPOINT, true); // true for requiresAuth
     const data: ApiCustomer[] = await handleApiResponse(response);
     
     console.log('API Customers Response:', data);
@@ -73,6 +73,102 @@ export const fetchCustomersFromApi = async (): Promise<Tenant[]> => {
 };
 
 
+
+// Function to fetch customers with pagination
+export const fetchCustomers = async (skip: number = 0, limit: number = 100): Promise<ApiCustomer[]> => {
+  try {
+    console.log('Fetching customers from API...');
+    
+    // Check if token is available
+    const token = getAccessToken();
+    console.log('Token available for customers request:', token ? 'YES' : 'NO');
+    
+    // Use the new apiClient to make authenticated request
+    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}?skip=${skip}&limit=${limit}`, true);
+    const data: ApiCustomer[] = await handleApiResponse(response);
+    
+    console.log('API Customers Response:', data);
+    
+    // Verify if customers array exists and is valid
+    if (!Array.isArray(data)) {
+      console.warn('Invalid customers data format received:', data);
+      return []; // Return empty array instead of throwing error
+    }
+    
+    return data;
+    
+  } catch (error) {
+    console.error('Customer fetch error:', error);
+    throw error;
+  }
+};
+
+// Function to fetch a single customer by ID
+export const fetchCustomerById = async (customerId: number): Promise<ApiCustomer> => {
+  try {
+    console.log(`Fetching customer ${customerId} from API...`);
+    
+    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}/${customerId}`, true);
+    const data: ApiCustomer = await handleApiResponse(response);
+    
+    console.log('API Customer Response:', data);
+    return data;
+    
+  } catch (error) {
+    console.error(`Customer ${customerId} fetch error:`, error);
+    throw error;
+  }
+};
+
+// Function to create a new customer
+export const createCustomer = async (customerData: any): Promise<ApiCustomer> => {
+  try {
+    console.log('Creating customer with data:', customerData);
+    
+    const response = await apiPostWithRefresh(CUSTOMERS_ENDPOINT, customerData, true);
+    const data: ApiCustomer = await handleApiResponse(response);
+    
+    console.log('Customer created successfully:', data);
+    return data;
+    
+  } catch (error) {
+    console.error('Customer creation error:', error);
+    throw error;
+  }
+};
+
+// Function to update a customer
+export const updateCustomer = async (customerId: number, customerData: any): Promise<ApiCustomer> => {
+  try {
+    console.log(`Updating customer ${customerId} with data:`, customerData);
+    
+    const response = await apiPutWithRefresh(`${CUSTOMERS_ENDPOINT}/${customerId}`, customerData, true);
+    const data: ApiCustomer = await handleApiResponse(response);
+    
+    console.log('Customer updated successfully:', data);
+    return data;
+    
+  } catch (error) {
+    console.error(`Customer ${customerId} update error:`, error);
+    throw error;
+  }
+};
+
+// Function to delete a customer
+export const deleteCustomer = async (customerId: number): Promise<void> => {
+  try {
+    console.log(`Deleting customer ${customerId}...`);
+    
+    const response = await apiDeleteWithRefresh(`${CUSTOMERS_ENDPOINT}/${customerId}`, true);
+    await handleApiResponse(response);
+    
+    console.log('Customer deleted successfully');
+    
+  } catch (error) {
+    console.error(`Customer ${customerId} deletion error:`, error);
+    throw error;
+  }
+};
 
 // Function to get all tenants (combining internal, admin, and customer tenants)
 export const getAllTenants = async (): Promise<Tenant[]> => {

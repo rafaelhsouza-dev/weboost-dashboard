@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CustomerForm } from '../components/CustomerForm';
+import { CustomerCompleteForm } from '../components/CustomerCompleteForm';
 import { useApp } from '../store';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
@@ -40,10 +40,15 @@ export const AdminCustomerCreatePage: React.FC = () => {
       </div>
 
       {showForm ? (
-        <CustomerForm 
-          onSuccess={handleSuccess}
-          onCancel={() => setShowForm(false)}
-        />
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            Cadastro de Novo Cliente
+          </h2>
+          <CustomerCompleteForm 
+            onSuccess={handleSuccess}
+            onCancel={() => setShowForm(false)}
+          />
+        </div>
       ) : (
         <CustomerList refreshTrigger={refreshList} />
       )}

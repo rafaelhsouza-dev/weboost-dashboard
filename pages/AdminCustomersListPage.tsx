@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiGet, handleApiResponse } from '../services/apiClient';
-import { Pencil, Plus, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { fetchCustomers, deleteCustomer, handleApiResponse } from '../services/customerService';
+import { Pencil, Plus, Search, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
 
 interface Customer {
   id: number;
@@ -11,14 +11,8 @@ interface Customer {
   city: string | null;
   country: string | null;
   created_at: string;
-}
-
-interface ApiResponse {
-  customers: Customer[];
-  total: number;
-  page: number;
-  per_page: number;
-  total_pages: number;
+  schema_name: string;
+  status: boolean;
 }
 
 export const AdminCustomersListPage: React.FC = () => {
@@ -37,17 +31,26 @@ export const AdminCustomersListPage: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      let url = `/customers/customers?page=${page}&per_page=${itemsPerPage}`;
+      // Calculate skip based on page and items per page
+      const skip = (page - 1) * itemsPerPage;
+      
+      const data = await fetchCustomers(skip, itemsPerPage);
+      
+      // Filter by search term if provided
+      let filteredData = data;
       if (search) {
-        url += `&search=${encodeURIComponent(search)}`;
+        const searchLower = search.toLowerCase();
+        filteredData = data.filter(customer =>
+          customer.name.toLowerCase().includes(searchLower) ||
+          customer.email.toLowerCase().includes(searchLower) ||
+          (customer.phone && customer.phone.includes(search)) ||
+          (customer.nif && customer.nif.includes(search))
+        );
       }
       
-      const response = await apiGet(url);
-      const data = await handleApiResponse(response) as ApiResponse;
-      
-      setCustomers(data.customers || []);
-      setTotalPages(data.total_pages || 1);
-      setCurrentPage(data.page || 1);
+      setCustomers(filteredData);
+      setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+      setCurrentPage(page);
     } catch (error) {
       console.error('Failed to fetch customers:', error);
       setError('Falha ao carregar clientes. Por favor, tente novamente.');
@@ -73,6 +76,19 @@ export const AdminCustomersListPage: React.FC = () => {
 
   const handleAddCustomer = () => {
     navigate('/admin/clients/new');
+  };
+
+  const handleDeleteCustomer = async (customerId: number) => {
+    if (window.confirm('Tem certeza que deseja excluir este cliente? Esta ação não pode ser desfeita.')) {
+      try {
+        await deleteCustomer(customerId);
+        // Refresh the list
+        await fetchCustomers(currentPage, searchTerm);
+      } catch (error) {
+        console.error('Failed to delete customer:', error);
+        setError('Falha ao excluir cliente. Por favor, tente novamente.');
+      }
+    }
   };
 
   return (
@@ -123,8 +139,9 @@ export const AdminCustomersListPage: React.FC = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nome</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Schema</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Telefone</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Criado em</th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Ações</th>
               </tr>
             </thead>
@@ -141,18 +158,32 @@ export const AdminCustomersListPage: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">#{customer.id}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{customer.name}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{customer.email}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{customer.phone || 'N/A'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {new Date(customer.created_at).toLocaleDateString('pt-PT')}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{customer.schema_name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        customer.status ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' : 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'
+                      }`}>
+                        {customer.status ? 'Ativo' : 'Inativo'}
+                      </span>
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{customer.phone || 'N/A'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button
-                        onClick={() => handleEditCustomer(customer.id)}
-                        className="text-primary hover:text-primary/80 transition-colors"
-                        title="Editar cliente"
-                      >
-                        <Pencil className="h-5 w-5" />
-                      </button>
+                      <div className="flex gap-2 justify-end">
+                        <button
+                          onClick={() => handleEditCustomer(customer.id)}
+                          className="text-primary hover:text-primary/80 transition-colors"
+                          title="Editar cliente"
+                        >
+                          <Pencil className="h-5 w-5" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteCustomer(customer.id)}
+                          className="text-red-500 hover:text-red-700 transition-colors"
+                          title="Excluir cliente"
+                        >
+                          <Trash2 className="h-5 w-5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
