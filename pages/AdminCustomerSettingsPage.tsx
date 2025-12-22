@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { Card } from '../components/Card';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Settings, Activity } from 'lucide-react';
 import { 
   listCustomerTypes, 
   addCustomerType, 
@@ -10,6 +10,7 @@ import {
   addCustomerStatus 
 } from '../services/customerService';
 import { CustomerType, CustomerStatus } from '../types';
+import { LayoutPage } from '../components/LayoutPage';
 
 export const AdminCustomerSettingsPage: React.FC = () => {
   const [types, setTypes] = useState<CustomerType[]>([]);
@@ -62,18 +63,19 @@ export const AdminCustomerSettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="p-6 space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Configurações de Clientes</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">Gerencie os tipos e status disponíveis para os clientes.</p>
-      </div>
-
+    <LayoutPage 
+      title="Configurações do Sistema" 
+      subtitle="Gerencie os parâmetros globais de tipos e status de clientes."
+    >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Customer Types Section */}
-        <div className="space-y-4">
-          <Card className="p-6">
-            <h2 className="text-lg font-semibold mb-4">Tipos de Clientes</h2>
-            <form onSubmit={handleAddType} className="space-y-3 mb-6">
+        <div className="space-y-6">
+          <Card className="p-6 border-primary/10">
+            <h2 className="text-lg font-bold flex items-center gap-2 mb-6">
+              <Settings size={20} className="text-primary" />
+              Tipos de Clientes
+            </h2>
+            <form onSubmit={handleAddType} className="space-y-4 mb-8 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-xl border border-gray-100 dark:border-gray-800">
               <Input 
                 label="Nome do Tipo" 
                 value={newType.name} 
@@ -92,11 +94,11 @@ export const AdminCustomerSettingsPage: React.FC = () => {
               </Button>
             </form>
 
-            <div className="divide-y divide-gray-100 dark:divide-gray-800">
+            <div className="space-y-3">
               {types.map(type => (
-                <div key={type.id} className="py-3 flex justify-between items-center">
+                <div key={type.id} className="p-4 rounded-lg border border-gray-100 dark:border-gray-800 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">{type.name}</p>
+                    <p className="font-bold text-gray-900 dark:text-white text-sm">{type.name}</p>
                     <p className="text-xs text-gray-500">{type.description}</p>
                   </div>
                 </div>
@@ -106,10 +108,13 @@ export const AdminCustomerSettingsPage: React.FC = () => {
         </div>
 
         {/* Customer Statuses Section */}
-        <div className="space-y-4">
-          <Card className="p-6">
-            <h2 className="text-lg font-semibold mb-4">Status de Clientes</h2>
-            <form onSubmit={handleAddStatus} className="space-y-3 mb-6">
+        <div className="space-y-6">
+          <Card className="p-6 border-primary/10">
+            <h2 className="text-lg font-bold flex items-center gap-2 mb-6">
+              <Activity size={20} className="text-primary" />
+              Status de Clientes
+            </h2>
+            <form onSubmit={handleAddStatus} className="space-y-4 mb-8 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-xl border border-gray-100 dark:border-gray-800">
               <Input 
                 label="Nome do Status" 
                 value={newStatus.name} 
@@ -123,28 +128,29 @@ export const AdminCustomerSettingsPage: React.FC = () => {
                 onChange={e => setNewStatus({...newStatus, description: e.target.value})}
                 placeholder="O que este status significa"
               />
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex items-center gap-3 py-2">
                 <input 
                   type="checkbox" 
                   id="is_active"
+                  className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
                   checked={newStatus.is_active_status}
                   onChange={e => setNewStatus({...newStatus, is_active_status: e.target.checked})}
                 />
-                <label htmlFor="is_active" className="text-sm text-gray-700 dark:text-gray-300">Considerar como status Ativo</label>
+                <label htmlFor="is_active" className="text-sm font-medium text-gray-700 dark:text-gray-300">Marcar como status Ativo</label>
               </div>
               <Button type="submit" className="w-full">
                 <Plus size={16} className="mr-2" /> Adicionar Status
               </Button>
             </form>
 
-            <div className="divide-y divide-gray-100 dark:divide-gray-800">
+            <div className="space-y-3">
               {statuses.map(status => (
-                <div key={status.id} className="py-3 flex justify-between items-center">
+                <div key={status.id} className="p-4 rounded-lg border border-gray-100 dark:border-gray-800 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">{status.name}</p>
+                    <p className="font-bold text-gray-900 dark:text-white text-sm">{status.name}</p>
                     <p className="text-xs text-gray-500">{status.description}</p>
                   </div>
-                  <span className={`px-2 py-0.5 rounded-full text-xs ${status.is_active_status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${status.is_active_status ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-gray-500'}`}>
                     {status.is_active_status ? 'Ativo' : 'Inativo'}
                   </span>
                 </div>
@@ -153,7 +159,7 @@ export const AdminCustomerSettingsPage: React.FC = () => {
           </Card>
         </div>
       </div>
-    </div>
+    </LayoutPage>
   );
 };
 

@@ -9,68 +9,60 @@ export const Header: React.FC = () => {
 
   const getTitle = () => {
     const path = location.pathname;
-    if (path === '/') return 'Dashboard Geral';
-    if (path === '/crm') return 'Gestão de Relacionamento (CRM)';
-    if (path === '/cdp') return 'Plataforma de Dados (CDP)';
-    if (path === '/marketing') return 'Campanhas & Marketing';
-    if (path === '/reports') return 'Relatórios & Exportação';
-    if (path === '/users') return 'Gestão de Utilizadores';
-    if (path === '/tenants') return 'Gestão de Clientes';
-    if (path === '/services') return 'Catálogo de Serviços';
-    return 'Dashboard';
+    if (path.startsWith('/admin')) return 'Painel de Administração';
+    if (path.startsWith('/client')) return 'Área do Cliente';
+    if (path.startsWith('/user')) return 'Operação Interna';
+    return 'Dashboard Weboost';
   };
 
   return (
-    <header className="h-16 w-full bg-[#eee] dark:bg-[#151515] border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-4 md:px-6 sticky top-0 z-30 transition-colors duration-300">
+    <header className="h-16 w-full bg-white dark:bg-[#111111] border-b border-gray-100 dark:border-gray-800 flex items-center justify-between px-4 md:px-8 sticky top-0 z-30 transition-all duration-300 shadow-sm">
       
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         <button 
           onClick={toggleSidebar} 
-          className="md:hidden p-2 -ml-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+          className="md:hidden p-2 text-gray-500 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
         >
           <Menu size={24} />
         </button>
 
-        <h2 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-white tracking-tight truncate max-w-[200px] md:max-w-none">
+        <h2 className="text-base md:text-lg font-bold text-gray-900 dark:text-white tracking-tight uppercase">
           {getTitle()}
         </h2>
       </div>
 
-      <div className="flex items-center gap-2 md:gap-4">
+      <div className="flex items-center gap-3">
         
-        <div className="hidden sm:flex items-center gap-2">
-           <button className="p-2 text-gray-500 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors" title="Exportar PDF">
-             <FileDown size={20} />
+        <div className="hidden sm:flex items-center gap-1">
+           <button className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" title="Exportar PDF">
+             <FileDown size={18} />
            </button>
-           <button className="p-2 text-gray-500 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors" title="Imprimir">
-             <Printer size={20} />
+           <button className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" title="Imprimir">
+             <Printer size={18} />
            </button>
         </div>
 
-        <div className="hidden sm:block h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
-
-        <button onClick={toggleLanguage} className="flex items-center gap-1.5 p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-          <Globe size={18} className="text-gray-600 dark:text-gray-400" />
-          <span className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">{language === 'pt' ? 'PT' : 'EN'}</span>
-        </button>
+        <div className="hidden sm:block h-4 w-px bg-gray-200 dark:bg-gray-800 mx-2"></div>
 
         <button 
           onClick={toggleTheme} 
-          className="p-2 text-gray-500 dark:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+          className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
         >
-          {theme === 'light' ? <Moon size={20} className="text-gray-600" /> : <Sun size={20} />}
+          {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
         </button>
 
-        <div className="pl-1 md:pl-2 flex items-center gap-3">
+        <div className="flex items-center gap-3 pl-3">
           <div className="text-right hidden lg:block">
-            <p className="text-sm font-medium text-gray-900 dark:text-white leading-none">{user?.name}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{user?.roleDisplayName || user?.role}</p>
+            <p className="text-xs font-bold text-gray-900 dark:text-white leading-none mb-1 uppercase tracking-wider">{user?.name}</p>
+            <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{user?.roleDisplayName || user?.role}</p>
           </div>
-          <img 
-            src={user?.avatar || "https://picsum.photos/100"} 
-            alt="User" 
-            className="w-8 h-8 md:w-9 md:h-9 rounded-full ring-2 ring-white dark:ring-gray-800 object-cover" 
-          />
+          <div className="w-9 h-9 rounded-full ring-2 ring-primary/20 p-0.5 overflow-hidden">
+            <img 
+              src={user?.avatar || "https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg"} 
+              alt="User" 
+              className="w-full h-full rounded-full object-cover" 
+            />
+          </div>
         </div>
       </div>
     </header>

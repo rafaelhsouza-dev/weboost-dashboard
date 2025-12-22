@@ -7,30 +7,20 @@ import {
   Users, 
   Settings, 
   LogOut, 
-  Megaphone, 
-  Briefcase,
-  FileText,
   Building2,
-  Layers,
-  FileSignature,
-  Handshake,
-  CalendarDays,
   UserPlus2,
-  Bot,
-  ScanSearch,
   ChevronLeft,
   ChevronRight,
   ChevronDown,
-  Clock,
+  LayoutGrid,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-// Define the types for menu items
 type MenuItemChild = {
   id: string;
   label: string;
   path: string;
-  icon?: React.ElementType; // Add icon property for submenu items
+  icon?: React.ElementType;
 };
 
 type MenuItem = {
@@ -65,9 +55,9 @@ export const Sidebar: React.FC = () => {
     const tenant = availableTenants.find(t => t.id === tenantId);
     if (tenant) {
       setTenant(tenantId);
-      setOpenSubmenus([]); // Close submenus on tenant change
+      setOpenSubmenus([]);
       switch (tenant.type) {
-        case TenancyType.ADMIN: navigate('/'); break;
+        case TenancyType.ADMIN: navigate('/admin/dashboard'); break;
         case TenancyType.CLIENT: navigate('/client/dashboard'); break;
         case TenancyType.INTERNAL: navigate('/user/dashboard'); break;
         default: navigate('/'); break;
@@ -81,37 +71,30 @@ export const Sidebar: React.FC = () => {
     switch (currentTenant.type) {
       case TenancyType.ADMIN:
         return [
-          { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard' },
+          { id: 'dashboard', label: 'Dashboard Admin', icon: LayoutGrid, path: '/admin/dashboard' },
           { 
             id: 'clients', 
-            label: 'Clientes', 
+            label: 'Gestão de Clientes', 
             icon: Building2,
             children: [
-              { id: 'customer-list', label: 'Lista de Clientes', path: '/admin/customer-list', icon: Users },
-              { id: 'customer-create', label: 'Criar Cliente', path: '/admin/customer-create', icon: UserPlus2 },
-              { id: 'customer-settings', label: 'Configuração de Clientes', path: '/admin/customer-settings', icon: Settings }
+              { id: 'customer-list', label: 'Lista de Clientes', path: '/admin/customer-list' },
+              { id: 'customer-create', label: 'Criar Novo Cliente', path: '/admin/customer-create' },
+              { id: 'customer-settings', label: 'Configurações Globais', path: '/admin/customer-settings' }
             ]
           },
-          {
-            id: 'users',
-            label: 'Utilizadores',
-            icon: Users,
-            children: [
-              { id: 'users', label: 'Utilizadores', path: '/admin/users', icon: Users }
-            ]
-          },
-          { id: 'settings', label: 'Configurações', icon: Settings, path: '/admin/settings' },
+          { id: 'users', label: 'Utilizadores', icon: Users, path: '/admin/users' },
+          { id: 'settings', label: 'Definições', icon: Settings, path: '/admin/settings' },
         ];
       case TenancyType.CLIENT:
         return [
-          { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/client/dashboard' },
-          { id: 'leads', label: 'Leads', icon: FileText, path: '/client/reports' }, // Using Reports page as Leads for now
-          { id: 'settings', label: 'Configurações', icon: Settings, path: '/client/settings' },
+          { id: 'dashboard', label: 'Visão Geral', icon: LayoutDashboard, path: '/client/dashboard' },
+          { id: 'leads', label: 'Meus Leads', icon: Users, path: '/client/reports' },
+          { id: 'settings', label: 'Minha Conta', icon: Settings, path: '/client/settings' },
         ];
       case TenancyType.INTERNAL:
       default:
         return [
-          { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/user/dashboard' },
+          { id: 'dashboard', label: 'Dashboard Interno', icon: LayoutDashboard, path: '/user/dashboard' },
           { id: 'settings', label: 'Configurações', icon: Settings, path: '/user/settings' },
         ];
     }
@@ -119,101 +102,87 @@ export const Sidebar: React.FC = () => {
 
   const menuItems = getMenuItems();
 
-
-
   return (
     <>
       {!sidebarCollapsed && (
         <div 
-          className="fixed inset-0 bg-black/50 z-50 md:hidden backdrop-blur-sm"
+          className="fixed inset-0 bg-black/40 z-50 md:hidden backdrop-blur-xs"
           onClick={toggleSidebar}
         />
       )}
 
       <aside 
-        className={`fixed inset-y-0 left-0 z-50 h-screen bg-[#eee] dark:bg-[#151515] border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ease-in-out ${sidebarCollapsed ? '-translate-x-full md:translate-x-0 md:w-20' : 'translate-x-0 w-72'}`}
+        className={`fixed inset-y-0 left-0 z-50 h-screen bg-white dark:bg-[#111111] border-r border-gray-100 dark:border-gray-800 transition-all duration-300 ease-in-out ${sidebarCollapsed ? '-translate-x-full md:translate-x-0 md:w-20' : 'translate-x-0 w-72'}`}
       >
-        <div className="h-16 flex items-center justify-center border-b border-gray-200 dark:border-gray-800 relative bg-[#a1a1a1] dark:bg-[#151515]">
-          <div className="flex items-center gap-3">
-            {sidebarCollapsed ? (
-               <img src="/imgs/weboost-icon.webp" alt="Weboost" className="w-8 h-8 object-contain md:block hidden" />
-            ) : (
-               <img src="/imgs/weboost-color.webp" alt="Weboost" className="h-8 w-auto object-contain" />
-            )}
-            <img src="/imgs/weboost-color.webp" alt="Weboost" className="h-8 w-auto object-contain md:hidden block" />
-          </div>
+        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-100 dark:border-gray-800">
+          {!sidebarCollapsed && (
+            <img src="/imgs/weboost-color.webp" alt="Weboost" className="h-6 w-auto object-contain" />
+          )}
+          {sidebarCollapsed && (
+            <img src="/imgs/weboost-icon.webp" alt="W" className="w-8 h-8 mx-auto" />
+          )}
           
           <button 
             onClick={toggleSidebar}
-            className="hidden md:flex absolute -right-3 top-6 w-6 h-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full items-center justify-center shadow-sm hover:text-primary transition-colors"
+            className="hidden md:flex items-center justify-center w-6 h-6 text-gray-400 hover:text-primary transition-colors"
           >
-            {sidebarCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+            {sidebarCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
           </button>
         </div>
 
-        <div className="p-4 border-b border-gray-200 dark:border-gray-800">
-          <div className="relative group">
-            {/* Tenant Selector */}
-            {availableTenants.length > 1 && tenantsLoaded && (
-              <div className="mt-2">
-                <Combobox
-                  options={availableTenants.map(t => ({
-                    value: t.id,
-                    label: `${t.name} ${t.id !== 'internal' && t.id !== 'admin' ? `(${t.id})` : ''}`
-                  }))}
-                  value={currentTenant?.id || ''}
-                  onChange={(value: string) => handleTenantChange(value)}
-                  placeholder="Selecione um Cliente..."
-                  className="w-full"
-                />
-              </div>
-            )}
-          </div>
+        <div className="p-4 border-b border-gray-50 dark:border-gray-800">
+          {availableTenants.length > 1 && tenantsLoaded && !sidebarCollapsed && (
+            <div className="animate-in fade-in duration-500">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 px-2">Alternar Modo</p>
+              <Combobox
+                options={availableTenants.map(t => ({
+                  value: t.id,
+                  label: t.name
+                }))}
+                value={currentTenant?.id || ''}
+                onChange={(value: string) => handleTenantChange(value)}
+                placeholder="Selecione..."
+                className="w-full"
+              />
+            </div>
+          )}
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+        <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
           {menuItems.map((item) => {
             const isSubmenuOpen = openSubmenus.includes(item.id);
+            const isParentActive = item.children?.some(child => location.pathname === child.path);
+            const isActive = location.pathname === item.path || isParentActive;
             
             if (item.children) {
-              const isChildActive = item.children.some(child => location.pathname === child.path);
               return (
-                <div key={item.id}>
+                <div key={item.id} className="space-y-1">
                   <button
                     onClick={() => toggleSubmenu(item.id)}
-                    className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
-                      ${isChildActive ? 'text-primary' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}
-                      ${sidebarCollapsed ? 'md:justify-center' : ''}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-200 group
+                      ${isActive ? 'bg-primary/5 text-primary' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900'}
                     `}
                   >
                     <div className="flex items-center gap-3">
-                      <item.icon size={20} className={isChildActive ? 'text-primary' : 'text-gray-500'} />
-                      <span className={`text-sm font-medium ${sidebarCollapsed ? 'md:hidden' : ''}`}>{item.label}</span>
+                      <item.icon size={20} className={isActive ? 'text-primary' : 'text-gray-400 group-hover:text-gray-600'} />
+                      {!sidebarCollapsed && <span className="text-sm font-bold tracking-tight">{item.label}</span>}
                     </div>
-                    {!sidebarCollapsed && <ChevronDown size={16} className={`transition-transform ${isSubmenuOpen ? 'rotate-180' : ''}`} />}
+                    {!sidebarCollapsed && <ChevronDown size={16} className={`transition-transform duration-300 ${isSubmenuOpen ? 'rotate-180' : ''}`} />}
                   </button>
+                  
                   {isSubmenuOpen && !sidebarCollapsed && (
-                    <div className="pt-1 pl-5 space-y-1">
+                    <div className="pl-10 space-y-1 animate-in slide-in-from-left-2 duration-200">
                       {item.children.map((child) => {
-                        const isActive = location.pathname === child.path;
+                        const isChildActive = location.pathname === child.path;
                         return (
                           <Link
                             key={child.id}
                             to={child.path}
-                            onClick={() => { 
-                              if (window.innerWidth < 768) setSidebarCollapsed(true); 
-                              setOpenSubmenus([]); // Close all submenus when a child item is clicked
-                            }}
-                            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 text-sm
-                              ${isActive ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-[#16a34a]' : 'text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}
+                            className={`block py-2 px-3 text-xs font-medium rounded-lg transition-all
+                              ${isChildActive ? 'text-primary' : 'text-gray-500 hover:text-primary'}
                             `}
                           >
-                            {child.icon ? (
-                              <child.icon size={16} className={isActive ? 'text-primary dark:text-[#16a34a]' : 'text-gray-400'} />
-                            ) : (
-                              <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-primary' : 'bg-gray-400'}`}></span>
-                            )}
-                            <span>{child.label}</span>
+                            {child.label}
                           </Link>
                         );
                       })}
@@ -223,34 +192,28 @@ export const Sidebar: React.FC = () => {
               );
             }
 
-            const isActive = location.pathname === item.path;
             return (
               <Link
                 key={item.id}
                 to={item.path!}
-                onClick={() => { if (window.innerWidth < 768) setSidebarCollapsed(true); }}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
-                  ${isActive ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-[#16a34a]' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}
-                  ${sidebarCollapsed ? 'md:justify-center' : ''}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group
+                  ${isActive ? 'bg-primary/5 text-primary' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900'}
                 `}
               >
-                <item.icon size={20} className={isActive ? 'text-primary dark:text-[#16a34a]' : 'text-gray-500'} />
-                <span className={`text-sm font-medium ${sidebarCollapsed ? 'md:hidden' : ''}`}>{item.label}</span>
+                <item.icon size={20} className={isActive ? 'text-primary' : 'text-gray-400 group-hover:text-gray-600'} />
+                {!sidebarCollapsed && <span className="text-sm font-bold tracking-tight">{item.label}</span>}
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-3 border-t border-gray-200 dark:border-gray-800 space-y-1">
+        <div className="p-4 border-t border-gray-50 dark:border-gray-800">
           <button 
             onClick={async () => await logout()}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 dark:text-red-400 
-              hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors
-              ${sidebarCollapsed ? 'md:justify-center' : ''}
-            `}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all group"
           >
-            <LogOut size={20} />
-            <span className={`text-sm font-medium ${sidebarCollapsed ? 'md:hidden' : ''}`}>Sair</span>
+            <LogOut size={20} className="group-hover:rotate-12 transition-transform" />
+            {!sidebarCollapsed && <span className="text-sm font-bold tracking-tight">Encerrar Sessão</span>}
           </button>
         </div>
       </aside>
