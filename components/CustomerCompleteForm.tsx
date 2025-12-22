@@ -176,7 +176,7 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
             onChange={handleChange} 
             required 
             disabled 
-            className="bg-gray-50/50 dark:bg-dark-DEFAULT/50 cursor-not-allowed border-dashed"
+            className="bg-gray-50/50 dark:bg-gray-800/20 cursor-not-allowed border-dashed"
             helpText="Gerado automaticamente a partir do nome" 
           />
         </div>
@@ -240,13 +240,13 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
       {/* Seção 5: Responsáveis */}
       <section className="space-y-4">
         <h3 className="text-lg font-bold border-b border-gray-100 dark:border-dark-border pb-2 text-gray-900 dark:text-white">Responsáveis</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-gray-50/50 dark:bg-dark-DEFAULT/50 rounded-xl border border-gray-100 dark:border-dark-border">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-gray-50/50 dark:bg-gray-800/20 rounded-xl border border-gray-100 dark:border-dark-border">
           <div className="md:col-span-3 font-bold text-sm text-primary uppercase tracking-wider">Proprietário (Owner)</div>
           <Input label="Nome" name="owner_name" value={formData.owner_name} onChange={handleChange} />
           <Input label="Email" name="owner_email" value={formData.owner_email} onChange={handleChange} />
           <Input label="Telefone" name="owner_phone" value={formData.owner_phone} onChange={handleChange} />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-gray-50/50 dark:bg-dark-DEFAULT/50 rounded-xl border border-gray-100 dark:border-dark-border">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-gray-50/50 dark:bg-gray-800/20 rounded-xl border border-gray-100 dark:border-dark-border">
           <div className="md:col-span-3 font-bold text-sm text-primary uppercase tracking-wider">Contato Principal</div>
           <Input label="Nome" name="contact_name" value={formData.contact_name} onChange={handleChange} />
           <Input label="Email" name="contact_email" value={formData.contact_email} onChange={handleChange} />

@@ -75,7 +75,7 @@ export const AdminCustomerSettingsPage: React.FC = () => {
               <Settings size={20} className="text-primary" />
               Tipos de Clientes
             </h2>
-            <form onSubmit={handleAddType} className="space-y-4 mb-8 bg-gray-50/50 dark:bg-dark-DEFAULT/50 p-6 rounded-xl border border-gray-100 dark:border-dark-border">
+            <form onSubmit={handleAddType} className="space-y-4 mb-8 bg-gray-50/50 dark:bg-gray-800/20 p-6 rounded-xl border border-gray-100 dark:border-dark-border">
               <Input 
                 label="Nome do Tipo" 
                 value={newType.name} 
@@ -114,7 +114,7 @@ export const AdminCustomerSettingsPage: React.FC = () => {
               <Activity size={20} className="text-primary" />
               Status de Clientes
             </h2>
-            <form onSubmit={handleAddStatus} className="space-y-4 mb-8 bg-gray-50/50 dark:bg-dark-DEFAULT/50 p-6 rounded-xl border border-gray-100 dark:border-dark-border">
+            <form onSubmit={handleAddStatus} className="space-y-4 mb-8 bg-gray-50/50 dark:bg-gray-800/20 p-6 rounded-xl border border-gray-100 dark:border-dark-border">
               <Input 
                 label="Nome do Status" 
                 value={newStatus.name} 
