@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCustomers as fetchCustomersApi, deleteCustomer } from '../services/customerService';
-import { Pencil, Plus, Search, ChevronLeft, ChevronRight, Trash2, Eye } from 'lucide-react';
+import { Pencil, Plus, Search, ChevronLeft, ChevronRight, Trash2, Eye, Users as UsersIcon } from 'lucide-react';
+import { UserPermissionModal } from '../components/UserPermissionModal';
 
 interface Customer {
   id: number;
@@ -25,6 +26,8 @@ export const AdminCustomersListPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLastPage, setIsLastPage] = useState(false);
   const itemsPerPage = 25;
+  
+  const [selectedCustomerForPermissions, setSelectedCustomerForPermissions] = useState<{id: number, name: string} | null>(null);
 
   const loadCustomers = useCallback(async (page: number, search: string = '') => {
     try {
@@ -186,6 +189,13 @@ export const AdminCustomersListPage: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{customer.phone || 'N/A'}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex gap-3 justify-end">
+                          <button
+                            onClick={() => setSelectedCustomerForPermissions({ id: customer.id, name: customer.name })}
+                            className="text-gray-400 hover:text-blue-500 transition-colors"
+                            title="Gerir Acessos de Utilizadores"
+                          >
+                            <UsersIcon className="h-5 w-5" />
+                          </button>
                            <button
                             onClick={() => handleViewCustomer(customer.id)}
                             className="text-gray-400 hover:text-primary transition-colors"
@@ -240,6 +250,14 @@ export const AdminCustomersListPage: React.FC = () => {
             </div>
           </div>
         </>
+      )}
+
+      {selectedCustomerForPermissions && (
+        <UserPermissionModal
+          customerId={selectedCustomerForPermissions.id}
+          customerName={selectedCustomerForPermissions.name}
+          onClose={() => setSelectedCustomerForPermissions(null)}
+        />
       )}
     </div>
   );
