@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @media print {
+  /* Ocultar elementos de navegação e botões */
   header, 
   aside,
   button:not(.print-visible),
@@ -10,25 +11,60 @@
     display: none !important;
   }
 
+  /* Reset de Layout e Margens */
   main {
-    margin-left: 0 !important;
+    margin: 0 !important;
     padding: 0 !important;
     width: 100% !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
   }
 
-  body {
+  /* Forçar Modo Light e Layout de Desktop */
+  html, body {
+    background: white !important;
+    color: black !important;
+    width: 1200px !important; /* Força largura de desktop para evitar colapso de colunas */
+    zoom: 0.8; /* Ajusta a escala para caber no papel A4 */
+  }
+
+  /* Anular estilos dark mode na impressão */
+  .dark {
     background-color: white !important;
     color: black !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
   }
 
-  .min-h-screen {
-    min-height: auto !important;
+  .dark * {
+    background-color: transparent !important;
+    color: black !important;
+    border-color: #e2e8f0 !important; /* gray-200 aproximado para bordas */
+    box-shadow: none !important;
   }
 
-  /* Garante que o conteúdo não seja cortado */
-  div {
-    overflow: visible !important;
+  /* Manter cores primárias (como badges de status) */
+  .bg-primary, .text-primary, .bg-primary\/10 {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Corrigir Cards e Tabelas */
+  .dark .bg-dark-surface, 
+  .dark .bg-dark-DEFAULT,
+  .dark .bg-black {
+    background-color: white !important;
+    border-color: #f1f5f9 !important;
+  }
+
+  .dark .text-white,
+  .dark .text-gray-100,
+  .dark .text-gray-300 {
+    color: #1a202c !important; /* text-gray-900 */
+  }
+
+  /* Forçar quebra de página amigável */
+  .card, .bg-white {
+    break-inside: avoid;
+    border: 1px solid #f1f5f9 !important;
   }
 }
