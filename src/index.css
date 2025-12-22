@@ -24,8 +24,15 @@
   html, body {
     background: white !important;
     color: black !important;
-    width: 1024px !important; 
     overflow: visible !important;
+  }
+
+  /* Classes de Orientação */
+  .print-portrait {
+    width: 1024px !important;
+  }
+  .print-landscape {
+    width: 1400px !important;
   }
 
   /* Forçar Grids a manterem colunas na impressão */
@@ -35,11 +42,17 @@
   }
 
   /* Garantir que bordas de tabelas e cards apareçam */
-  .border, .border-b, .border-t, .border-l, .border-r {
-    border-color: #e2e8f0 !important; /* Cor cinza clara visível na impressão */
+  .border, .border-b, .border-t, .border-l, .border-r, .card {
+    border-color: #d1d5db !important; /* Cinza mais forte para garantir visibilidade */
     border-style: solid !important;
     border-width: 1px !important;
   }
+}
+
+/* Configurações de página disparadas por classe no HTML */
+@page { margin: 10mm; }
+.print-portrait-mode @page { size: portrait; }
+.print-landscape-mode @page { size: landscape; }
 
   /* Mapear classes comuns de grid para impressão */
   .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }

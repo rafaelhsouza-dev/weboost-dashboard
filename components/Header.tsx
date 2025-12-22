@@ -1,7 +1,7 @@
 import React from 'react';
 import { useApp } from '../store';
 import { useLocation } from 'react-router-dom';
-import { Moon, Sun, Printer, FileDown, Globe, Menu } from 'lucide-react';
+import { Moon, Sun, Printer, FileText, Layout, Menu } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const { theme, toggleTheme, language, toggleLanguage, user, toggleSidebar } = useApp();
@@ -15,17 +15,20 @@ export const Header: React.FC = () => {
     return 'Dashboard Weboost';
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
-
-  const handleDownloadPDF = () => {
-    const originalTitle = document.title;
-    const pageTitle = getTitle().replace(/\s+/g, '_');
-    document.title = `Weboost_${pageTitle}_${new Date().toLocaleDateString().replace(/\//g, '-')}`;
-    window.print();
+  const handlePrint = (orientation: 'portrait' | 'landscape') => {
+    const html = document.documentElement;
+    const body = document.body;
+    
+    // Aplica classes de orientação
+    html.classList.add(`print-${orientation}-mode`);
+    body.classList.add(`print-${orientation}`);
+    
+    // Pequeno delay para o navegador processar o CSS da orientação
     setTimeout(() => {
-      document.title = originalTitle;
+      window.print();
+      // Remove classes após fechar a caixa de impressão
+      html.classList.remove(`print-${orientation}-mode`);
+      body.classList.remove(`print-${orientation}`);
     }, 100);
   };
 
@@ -49,16 +52,16 @@ export const Header: React.FC = () => {
         
         <div className="hidden sm:flex items-center gap-1">
            <button 
-             onClick={handleDownloadPDF}
+             onClick={() => handlePrint('portrait')}
              className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" 
-             title="Exportar PDF"
+             title="Imprimir Vertical (A4)"
            >
-             <FileDown size={18} />
+             <FileText size={18} />
            </button>
            <button 
-             onClick={handlePrint}
+             onClick={() => handlePrint('landscape')}
              className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" 
-             title="Imprimir"
+             title="Imprimir Horizontal (A4)"
            >
              <Printer size={18} />
            </button>
