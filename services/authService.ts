@@ -167,8 +167,10 @@ const fetchUserData = async (accessToken: string, email: string): Promise<User> 
     // Although the user said "don't rely on JWT", we might need customers list if it's not in /users/{id}
     
     // Check if customers are missing in API response but present in JWT
-    if ((!apiUser.customers || apiUser.customers.length === 0) && jwtPayload?.customers) {
-        apiUser.customers = jwtPayload.customers;
+    // Use type assertion (as any) because 'customers' is not in the strict ApiUserResponse definition (per endpoints.md)
+    // but we inject it here from the JWT to preserve tenant access.
+    if ((!(apiUser as any).customers || (apiUser as any).customers.length === 0) && jwtPayload?.customers) {
+        (apiUser as any).customers = jwtPayload.customers;
     }
 
     return mapApiUserToAppUser(apiUser);
