@@ -5,7 +5,7 @@ const API_BASE_URL = 'https://api.weboost.pt';
 const LOGIN_ENDPOINT = `${API_BASE_URL}/auth/token`;
 
 // Map API roles to our application roles
-const mapApiRoleToAppRole = (apiRoles: number[]): Role => {
+const mapApiRoleToAppRole = (roleId: number): Role => {
   // Roles mapping:
   // 1 = ti (Acesso completo com nível desenvolvimento) -> ADMIN
   // 2 = admin (Acesso completo ao sistema) -> ADMIN
@@ -15,31 +15,31 @@ const mapApiRoleToAppRole = (apiRoles: number[]): Role => {
   // 6-10 = employee_* (Funcionários especializados) -> EMPLOYEE
   
   // Check for admin roles (highest priority)
-  if (apiRoles.includes(1) || apiRoles.includes(2)) return Role.ADMIN;
+  if (roleId === 1 || roleId === 2) return Role.ADMIN;
   
   // Check for manager role
-  if (apiRoles.includes(3)) return Role.MANAGER;
+  if (roleId === 3) return Role.MANAGER;
   
   // Check for client role
-  if (apiRoles.includes(4)) return Role.CLIENT;
+  if (roleId === 4) return Role.CLIENT;
   
   // Default to employee for all other roles (5-10)
   return Role.EMPLOYEE;
 };
 
 // Map API roles to display names
-const getRoleDisplayName = (apiRoles: number[]): string => {
+const getRoleDisplayName = (roleId: number): string => {
   // Priority: show the highest priority role name
-  if (apiRoles.includes(1)) return 'TI';
-  if (apiRoles.includes(2)) return 'Administrador';
-  if (apiRoles.includes(3)) return 'Gestor';
-  if (apiRoles.includes(4)) return 'Cliente';
-  if (apiRoles.includes(5)) return 'Funcionário';
-  if (apiRoles.includes(6)) return 'Performance';
-  if (apiRoles.includes(7)) return 'Foto/Vídeo';
-  if (apiRoles.includes(8)) return 'Design';
-  if (apiRoles.includes(9)) return 'Desenvolvimento';
-  if (apiRoles.includes(10)) return 'Marketing';
+  if (roleId === 1) return 'TI';
+  if (roleId === 2) return 'Administrador';
+  if (roleId === 3) return 'Gestor';
+  if (roleId === 4) return 'Cliente';
+  if (roleId === 5) return 'Funcionário';
+  if (roleId === 6) return 'Performance';
+  if (roleId === 7) return 'Foto/Vídeo';
+  if (roleId === 8) return 'Design';
+  if (roleId === 9) return 'Desenvolvimento';
+  if (roleId === 10) return 'Marketing';
   return 'Usuário';
 };
 
@@ -59,6 +59,61 @@ export const decodeJWT = (token: string): any => {
   }
 };
 
+// Map API customers to our tenants
+const mapApiCustomersToTenants = (apiCustomers: number[]): Tenant[] => {
+  if (!apiCustomers || apiCustomers.length === 0) {
+    return []; // Internal tenant is added separately
+  }
+
+  // Customers are now just IDs, we need to map them to tenant objects
+  // The actual customer names will be fetched from the customer service
+  return apiCustomers.map((customerId) => ({
+    id: `c${customerId}`,
+    name: `Cliente ${customerId}`, // Temporary name, will be updated from customer service
+    type: TenancyType.CLIENT
+  }));
+};
+
+// Map API user to our application user
+const mapApiUserToAppUser = (apiUser: ApiUserResponse | any): User => {
+  // Check if we have role_id directly or in roles array (legacy/JWT support)
+  let roleId = 5; // Default employee
+  
+  if (apiUser.role_id) {
+    roleId = apiUser.role_id;
+  } else if (apiUser.roles && Array.isArray(apiUser.roles) && apiUser.roles.length > 0) {
+    roleId = apiUser.roles[0];
+  }
+  
+  const role = mapApiRoleToAppRole(roleId);
+  const roleDisplayName = getRoleDisplayName(roleId);
+  
+  // Handle customers safely
+  const customersList = apiUser.customers && Array.isArray(apiUser.customers) ? apiUser.customers : [];
+  const tenants = mapApiCustomersToTenants(customersList);
+  
+  // Add admin tenant ONLY for roles 1, 2, 3 (TI, Admin, Manager)
+  if (roleId === 1 || roleId === 2 || roleId === 3) {
+    tenants.unshift({ id: 'admin', name: 'Admin System', type: TenancyType.ADMIN });
+  }
+  
+  // Add internal tenant for all users EXCEPT role 4 (client)
+  // Role 4 (client) should only see their own client, not the internal tenant
+  if (roleId !== 4) {
+    tenants.unshift({ id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL });
+  }
+
+  return {
+    id: apiUser.id.toString(),
+    name: apiUser.name || apiUser.email || 'Usuário',
+    email: apiUser.email || '',
+    avatar: apiUser.avatar_url || 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg', // avatar_url might come from JWT
+    role: role,
+    roleDisplayName: roleDisplayName,
+    allowedTenants: tenants.map(t => t.id)
+  };
+};
+
 // Function to fetch user data after login
 const fetchUserData = async (accessToken: string, email: string): Promise<User> => {
   try {
@@ -69,41 +124,21 @@ const fetchUserData = async (accessToken: string, email: string): Promise<User> 
     
     if (jwtPayload) {
       // Extract user data from JWT
+      // JWT usually has roles array, so we take the first one or default
+      const roleId = jwtPayload.role_id ? jwtPayload.role_id : (jwtPayload.roles && jwtPayload.roles.length > 0 ? jwtPayload.roles[0] : 2);
+      
       const userDataFromJWT = {
         id: jwtPayload.sub || '1',
-        name: jwtPayload.name || 'Administrador', // Try to get name from JWT, fallback to default
-        email: jwtPayload.email || email, // Try to get email from JWT, fallback to login email
+        name: jwtPayload.name || 'Administrador',
+        email: jwtPayload.email || email,
         avatar_url: 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg',
-        roles: jwtPayload.role_id ? [jwtPayload.role_id] : [2], // Default to admin
+        role_id: roleId,
         customers: jwtPayload.customers || []
       };
       
       console.log('User data from JWT:', userDataFromJWT); // Debug log
       
-      // Map the user data to our application user format
-      const role = mapApiRoleToAppRole(userDataFromJWT.roles || []);
-      const roleDisplayName = getRoleDisplayName(userDataFromJWT.roles || []);
-      const tenants = mapApiCustomersToTenants(userDataFromJWT.customers || []);
-      
-      // Add admin tenant ONLY for roles 1, 2, 3 (TI, Admin, Manager)
-      if (userDataFromJWT.roles && (userDataFromJWT.roles.includes(1) || userDataFromJWT.roles.includes(2) || userDataFromJWT.roles.includes(3))) {
-        tenants.unshift({ id: 'admin', name: 'Admin System', type: TenancyType.ADMIN });
-      }
-      
-      // Add internal tenant for all users EXCEPT role 4 (client)
-      if (userDataFromJWT.roles && !userDataFromJWT.roles.includes(4)) {
-        tenants.unshift({ id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL });
-      }
-      
-      return {
-        id: userDataFromJWT.id.toString(),
-        name: userDataFromJWT.name || userDataFromJWT.email || 'Usuário',
-        email: userDataFromJWT.email || '',
-        avatar: userDataFromJWT.avatar_url || 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg',
-        role: role,
-        roleDisplayName: roleDisplayName,
-        allowedTenants: tenants.map(t => t.id)
-      };
+      return mapApiUserToAppUser(userDataFromJWT);
     }
     
     // Fallback: try to fetch from /users/ endpoint if JWT decoding fails
@@ -139,11 +174,12 @@ const fetchUserData = async (accessToken: string, email: string): Promise<User> 
     console.log('Using first user from list:', userData); // Debug log
     
     // Check if we have the required data
-    if (!userData.roles || !userData.customers) {
+    // Use type assertion to avoid TS errors if checking properties that might not exist on the type
+    if (!(userData as any).role_id && !(userData as any).roles) {
       console.warn('User data missing required fields. Using fallback data.');
       const fallbackUserData = {
         ...userData,
-        roles: userData.role_id ? [userData.role_id] : [4], // Default to client role
+        role_id: 4, // Default to client role
         customers: [] // No customers by default
       };
       console.log('Using fallback user data:', fallbackUserData);
@@ -171,49 +207,6 @@ const fetchUserData = async (accessToken: string, email: string): Promise<User> 
     console.log('Default user created:', defaultUser);
     return defaultUser;
   }
-};
-
-// Map API customers to our tenants
-const mapApiCustomersToTenants = (apiCustomers: number[]): Tenant[] => {
-  if (!apiCustomers || apiCustomers.length === 0) {
-    return []; // Internal tenant is added separately
-  }
-
-  // Customers are now just IDs, we need to map them to tenant objects
-  // The actual customer names will be fetched from the customer service
-  return apiCustomers.map((customerId) => ({
-    id: `c${customerId}`,
-    name: `Cliente ${customerId}`, // Temporary name, will be updated from customer service
-    type: TenancyType.CLIENT
-  }));
-};
-
-// Map API user to our application user
-const mapApiUserToAppUser = (apiUser: any): User => {
-  const role = mapApiRoleToAppRole(apiUser.roles || []);
-  const roleDisplayName = getRoleDisplayName(apiUser.roles || []);
-  const tenants = mapApiCustomersToTenants(apiUser.customers || []);
-  
-  // Add admin tenant ONLY for roles 1, 2, 3 (TI, Admin, Manager)
-  if (apiUser.roles && (apiUser.roles.includes(1) || apiUser.roles.includes(2) || apiUser.roles.includes(3))) {
-    tenants.unshift({ id: 'admin', name: 'Admin System', type: TenancyType.ADMIN });
-  }
-  
-  // Add internal tenant for all users EXCEPT role 4 (client)
-  // Role 4 (client) should only see their own client, not the internal tenant
-  if (apiUser.roles && !apiUser.roles.includes(4)) {
-    tenants.unshift({ id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL });
-  }
-
-  return {
-    id: apiUser.id.toString(),
-    name: apiUser.name || apiUser.email || 'Usuário',
-    email: apiUser.email || '',
-    avatar: apiUser.avatar_url || 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg',
-    role: role,
-    roleDisplayName: roleDisplayName, // Add display name for UI
-    allowedTenants: tenants.map(t => t.id)
-  };
 };
 
 interface LoginResponse {

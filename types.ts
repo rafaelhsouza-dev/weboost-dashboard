@@ -85,6 +85,21 @@ export interface ApiCustomerResponse {
   updated_at: string;
 }
 
+export interface ApiUserResponse {
+  id: number;
+  name: string;
+  email: string;
+  role_id: number;
+  status: boolean;
+  created_at: string;
+  updated_at: string;
+  role: {
+    name: string;
+    description: string;
+    id: number;
+  };
+}
+
 export interface CustomerType {
   id: number;
   name: string;

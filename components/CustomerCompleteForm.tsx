@@ -110,7 +110,7 @@ export const CustomerCompleteForm: React.FC<CustomerCompleteFormProps> = ({ cust
           } as any);
         } catch (error) {
           console.error('Failed to load customer:', error);
-          setError('Falha ao carregar cliente');
+          notify('Falha ao carregar cliente', 'error');
         } finally {
           setLoading(false);
         }

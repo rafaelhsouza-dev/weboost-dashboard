@@ -6,24 +6,10 @@ import {
   handleApiResponse
 } from './apiInterceptor';
 import { getAccessToken, decodeJWT } from './authService';
+import { ApiUserResponse } from '../types';
 
 // API Configuration
 const USERS_ENDPOINT = '/users/';
-
-interface UserResponse {
-  name: string;
-  email: string;
-  role_id: number;
-  status: boolean;
-  id: number;
-  created_at: string;
-  updated_at: string;
-  role: {
-    name: string;
-    description: string;
-    id: number;
-  };
-}
 
 interface CreateUserRequest {
   name: string;
@@ -41,7 +27,7 @@ interface UpdateUserRequest {
   status?: boolean;
 }
 
-export const getCurrentUser = async (): Promise<UserResponse | null> => {
+export const getCurrentUser = async (): Promise<ApiUserResponse | null> => {
   try {
     const token = getAccessToken();
     if (!token) {
@@ -67,40 +53,40 @@ export const getCurrentUser = async (): Promise<UserResponse | null> => {
   }
 };
 
-export const getAllUsers = async (skip: number = 0, limit: number = 100): Promise<UserResponse[]> => {
+export const getAllUsers = async (skip: number = 0, limit: number = 100): Promise<ApiUserResponse[]> => {
   try {
     const response = await apiGetWithRefresh(`${USERS_ENDPOINT}?skip=${skip}&limit=${limit}`, true);
-    return await handleApiResponse<UserResponse[]>(response);
+    return await handleApiResponse<ApiUserResponse[]>(response);
   } catch (error) {
     console.error('Failed to get users:', error);
     throw error;
   }
 };
 
-export const getUserById = async (userId: number): Promise<UserResponse> => {
+export const getUserById = async (userId: number): Promise<ApiUserResponse> => {
   try {
     const response = await apiGetWithRefresh(`${USERS_ENDPOINT}${userId}`, true);
-    return await handleApiResponse<UserResponse>(response);
+    return await handleApiResponse<ApiUserResponse>(response);
   } catch (error) {
     console.error(`Failed to get user ${userId}:`, error);
     throw error;
   }
 };
 
-export const createUser = async (userData: CreateUserRequest): Promise<UserResponse> => {
+export const createUser = async (userData: CreateUserRequest): Promise<ApiUserResponse> => {
   try {
     const response = await apiPostWithRefresh(USERS_ENDPOINT, userData, true);
-    return await handleApiResponse<UserResponse>(response);
+    return await handleApiResponse<ApiUserResponse>(response);
   } catch (error) {
     console.error('Failed to create user:', error);
     throw error;
   }
 };
 
-export const updateUser = async (userId: number, userData: UpdateUserRequest): Promise<UserResponse> => {
+export const updateUser = async (userId: number, userData: UpdateUserRequest): Promise<ApiUserResponse> => {
   try {
     const response = await apiPutWithRefresh(`${USERS_ENDPOINT}${userId}`, userData, true);
-    return await handleApiResponse<UserResponse>(response);
+    return await handleApiResponse<ApiUserResponse>(response);
     } catch (error) {
       console.error(`Failed to update user ${userId}:`, error);
       throw error;
