@@ -117,33 +117,20 @@ const mapApiUserToAppUser = (apiUser: ApiUserResponse | any): User => {
 // Function to fetch user data after login
 const fetchUserData = async (accessToken: string, email: string): Promise<User> => {
   try {
-    // First, try to decode JWT to get user data
-    console.log('Decoding JWT token to extract user data...'); // Debug log
+    console.log('Fetching user data...');
+    
+    // 1. Decode JWT to get User ID
     const jwtPayload = decodeJWT(accessToken);
-    console.log('JWT Payload:', jwtPayload); // Debug log
-    
-    if (jwtPayload) {
-      // Extract user data from JWT
-      // JWT usually has roles array, so we take the first one or default
-      const roleId = jwtPayload.role_id ? jwtPayload.role_id : (jwtPayload.roles && jwtPayload.roles.length > 0 ? jwtPayload.roles[0] : 2);
-      
-      const userDataFromJWT = {
-        id: jwtPayload.sub || '1',
-        name: jwtPayload.name || 'Administrador',
-        email: jwtPayload.email || email,
-        avatar_url: 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg',
-        role_id: roleId,
-        customers: jwtPayload.customers || []
-      };
-      
-      console.log('User data from JWT:', userDataFromJWT); // Debug log
-      
-      return mapApiUserToAppUser(userDataFromJWT);
+    const userId = jwtPayload?.sub || jwtPayload?.id;
+
+    if (!userId) {
+      throw new Error('Could not extract User ID from token');
     }
-    
-    // Fallback: try to fetch from /users/ endpoint if JWT decoding fails
-    console.log('JWT decoding failed, trying to fetch from /users/...'); // Debug log
-    const response = await fetch(`${API_BASE_URL}/users/`, {
+
+    console.log(`Fetching full details for user ID: ${userId}`);
+
+    // 2. Fetch user details from /users/{id}
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${accessToken}`,
@@ -152,59 +139,55 @@ const fetchUserData = async (accessToken: string, email: string): Promise<User> 
       credentials: 'include'
     });
 
-    console.log('User data response status:', response.status); // Debug log
-    
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('User data fetch failed:', response.status, errorText);
-      throw new Error(`Failed to fetch user data: ${response.status} - ${errorText}`);
+      console.warn(`Failed to fetch user details for ID ${userId}. Status: ${response.status}`);
+      // Fallback: if specific user fetch fails, try to use what we have from JWT
+      // preventing complete login failure
+      if (jwtPayload) {
+         console.log('Falling back to JWT data');
+         const roleId = jwtPayload.role_id ? jwtPayload.role_id : (jwtPayload.roles && jwtPayload.roles.length > 0 ? jwtPayload.roles[0] : 2);
+         const userDataFromJWT = {
+          id: userId,
+          name: jwtPayload.name || 'Administrador', // Name likely missing in JWT per user report
+          email: jwtPayload.email || email,
+          avatar_url: 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg',
+          role_id: roleId,
+          customers: jwtPayload.customers || []
+        };
+        return mapApiUserToAppUser(userDataFromJWT);
+      }
+      throw new Error('Failed to fetch user details');
     }
 
-    const usersData: ApiUserResponse[] = await response.json();
-    console.log('Users data received from API:', usersData); // Debug log
+    const apiUser: ApiUserResponse = await response.json();
+    console.log('User details received from API:', apiUser);
+
+    // 3. Map API response to App User
+    // Ensure we preserve necessary data that might be missing in the single user response but present in JWT (like customers)
+    // Although the user said "don't rely on JWT", we might need customers list if it's not in /users/{id}
     
-    // Find the current user from the list (assuming first user is the current one)
-    // In a real implementation, we would need to identify the current user properly
-    if (usersData.length === 0) {
-      console.warn('No users found in the response');
-      throw new Error('No user data available');
+    // Check if customers are missing in API response but present in JWT
+    if ((!apiUser.customers || apiUser.customers.length === 0) && jwtPayload?.customers) {
+        apiUser.customers = jwtPayload.customers;
     }
-    
-    const userData = usersData[0]; // Use first user as fallback
-    console.log('Using first user from list:', userData); // Debug log
-    
-    // Check if we have the required data
-    // Use type assertion to avoid TS errors if checking properties that might not exist on the type
-    if (!(userData as any).role_id && !(userData as any).roles) {
-      console.warn('User data missing required fields. Using fallback data.');
-      const fallbackUserData = {
-        ...userData,
-        role_id: 4, // Default to client role
-        customers: [] // No customers by default
-      };
-      console.log('Using fallback user data:', fallbackUserData);
-      return mapApiUserToAppUser(fallbackUserData);
-    }
-    
-    // Map the API user data to our application user format
-    return mapApiUserToAppUser(userData);
+
+    return mapApiUserToAppUser(apiUser);
     
   } catch (error) {
     console.error('Failed to fetch user data:', error);
     
-    // Ultimate fallback: create a default admin user
-    console.warn('Using ultimate fallback - creating default admin user');
+    // Ultimate fallback: create a default user with the email we have
+    console.warn('Using ultimate fallback');
     const defaultUser: User = {
       id: '1',
-      name: 'Administrador',
-      email: email, // Use the email from login
+      name: 'Utilizador', // Avoid "Administrador" to not confuse
+      email: email,
       avatar: 'https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg',
-      role: Role.ADMIN,
-      roleDisplayName: 'Administrador',
-      allowedTenants: ['internal', 'admin']
+      role: Role.EMPLOYEE, // Safer default than ADMIN
+      roleDisplayName: 'Utilizador',
+      allowedTenants: ['internal']
     };
     
-    console.log('Default user created:', defaultUser);
     return defaultUser;
   }
 };
