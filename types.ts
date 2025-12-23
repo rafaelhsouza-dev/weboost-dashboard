@@ -21,6 +21,9 @@ export interface User {
   role: Role;
   roleDisplayName?: string; // Display name for the role (e.g., "TI", "Administrador")
   allowedTenants: string[]; // IDs of tenants this user can access
+  department_id?: number;
+  phone?: string;
+  bio?: string;
 }
 
 export interface Tenant {
@@ -85,12 +88,22 @@ export interface ApiCustomerResponse {
   updated_at: string;
 }
 
+export interface Department {
+  id: number;
+  name: string;
+  description?: string;
+}
+
 export interface ApiUserResponse {
   id: number;
   name: string;
   email: string;
   role_id: number;
   status: boolean;
+  department_id?: number;
+  avatar_url?: string;
+  phone?: string;
+  bio?: string;
   created_at: string;
   updated_at: string;
   role: {
@@ -98,6 +111,8 @@ export interface ApiUserResponse {
     description: string;
     id: number;
   };
+  roles?: number[];
+  customers?: number[];
 }
 
 export interface CustomerType {

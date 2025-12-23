@@ -17,6 +17,10 @@ interface CreateUserRequest {
   password: string;
   role_id: number;
   status?: boolean;
+  department_id?: number;
+  avatar_url?: string;
+  phone?: string;
+  bio?: string;
 }
 
 interface UpdateUserRequest {
@@ -25,6 +29,10 @@ interface UpdateUserRequest {
   password?: string;
   role_id?: number;
   status?: boolean;
+  department_id?: number;
+  avatar_url?: string;
+  phone?: string;
+  bio?: string;
 }
 
 export const getCurrentUser = async (): Promise<ApiUserResponse | null> => {

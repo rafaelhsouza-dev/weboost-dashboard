@@ -1,160 +1,220 @@
-# WeBoost API - Especificação Completa de Endpoints
+# WeBoost API - Documentação de Integração (Frontend)
 
-Este documento contém a relação de todos os endpoints da API, payloads completos e parâmetros.
+Este guia serve como referência para a equipe de frontend integrar com a WeBoost API. Ele detalha todos os endpoints disponíveis, seus contratos de dados (payloads) e exemplos práticos.
 
-**Base URL:** `https://api.weboost.pt`
+**Base URL de Produção:** `https://api.weboost.pt`
 
----
+## Autenticação
 
-## 🔐 Autenticação (`/auth`)
+Todas as requisições protegidas devem incluir o token JWT no cabeçalho:
+`Authorization: Bearer <ACCESS_TOKEN>`
 
 ### 1. Login (Obter Token)
 **POST** `/auth/token`
-- **Tipo:** `application/x-www-form-urlencoded`
-- **Payload:**
-    - `username` (string, obrigatório): E-mail do usuário.
-    - `password` (string, obrigatório): Senha do usuário.
+
+Utilizado para autenticar o usuário e iniciar a sessão.
+
+**Payload (Form Data - `application/x-www-form-urlencoded`):**
+| Campo | Tipo | Obrigatório | Descrição |
+|-------|------|-------------|-----------|
+| `username` | string | Sim | E-mail do usuário |
+| `password` | string | Sim | Senha do usuário |
+
+**Resposta (200 OK):**
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1Ni...",
+  "refresh_token": "dGhpcyBpcyBhIHJlZnJlc2ggdG9rZW4...",
+  "token_type": "bearer"
+}
+```
 
 ### 2. Refresh Token
 **POST** `/auth/refresh`
-- **Tipo:** `application/json`
-- **Payload:**
-    - `refresh_token` (string, obrigatório)
-    - `active_customer` (integer, opcional): ID do cliente para mudar o contexto do token.
+
+Renova o token de acesso. Pode ser usado para trocar o `active_customer` no contexto do token.
+
+**Payload (JSON):**
+```json
+{
+  "refresh_token": "seu_refresh_token_aqui",
+  "active_customer": 1 
+}
+```
 
 ---
 
-## 👥 Usuários (`/users`)
+## Gerenciamento de Usuários (`/users`)
 
-### 1. Criar Usuário
-**POST** `/users/`
-- **Payload:**
-    - `name` (string, obrigatório)
-    - `email` (string, obrigatório)
-    - `password` (string, obrigatório)
-    - `role_id` (integer, opcional, padrão: 5)
-    - `status` (boolean, opcional, padrão: true)
-
-### 2. Listar Usuários
+### 1. Listar Usuários
 **GET** `/users/`
-- **Query Params:**
-    - `skip` (integer, padrão: 0)
-    - `limit` (integer, padrão: 100)
 
-### 3. Obter Usuário Específico
-**GET** `/users/{user_id}`
+Retorna todos os usuários. Suporta paginação via Query Params.
 
-### 4. Atualizar Usuário
+**Query Params:**
+- `skip`: (int) Registros a pular. Padrão: 0.
+- `limit`: (int) Máximo de registros. Padrão: 100.
+
+### 2. Criar Usuário
+**POST** `/users/`
+
+Cria um novo usuário na plataforma. Novos campos opcionais foram adicionados para enriquecer o perfil.
+
+**Payload (JSON):**
+```json
+{
+  "name": "Nome do Usuário",
+  "email": "user@weboost.pt",
+  "password": "senha_segura",
+  "role_id": 5,
+  "department_id": 2,
+  "status": true,
+  "avatar_url": "https://exemplo.com/avatar.jpg",
+  "phone": "+351912345678",
+  "bio": "Desenvolvedor Backend responsável pelas APIs."
+}
+```
+*Roles Padrão: 1=CEO, 2=admin, 3=manager, 4=user, 5=employee.*
+*Campos novos: `department_id`, `avatar_url`, `phone`, `bio` são opcionais.*
+
+### 3. Atualizar Usuário
 **PUT** `/users/{user_id}`
-- **Payload (Todos opcionais):**
-    - `name` (string)
-    - `email` (string)
-    - `role_id` (integer)
-    - `status` (boolean)
-    - `password` (string)
+
+Permite atualizar dados e senha. Envie apenas o que deseja alterar.
+
+**Exemplo de Payload:**
+```json
+{
+  "phone": "+351999888777",
+  "department_id": 3,
+  "bio": "Nova biografia atualizada"
+}
+```
 
 ---
 
-## 🏢 Customers (Clientes/Tenants) (`/customers`)
+## Departamentos (`/users/departments`)
 
-### 1. Criar Novo Customer
+Endpoints para gerenciamento de departamentos internos, que podem ser associados aos usuários.
+
+### 1. Listar Departamentos
+**GET** `/users/departments/`
+
+Retorna a lista de todos os departamentos cadastrados.
+
+**Query Params:**
+- `skip`: (int) Registros a pular.
+- `limit`: (int) Máximo de registros.
+
+### 2. Criar Departamento
+**POST** `/users/departments/`
+
+**Payload (JSON):**
+```json
+{
+  "name": "Marketing",
+  "description": "Equipe responsável por vendas e campanhas"
+}
+```
+
+### 3. Operações Individuais
+- **Ver**: `GET /users/departments/{department_id}`
+- **Editar**: `PUT /users/departments/{department_id}`
+- **Deletar**: `DELETE /users/departments/{department_id}`
+
+**Exemplo de Payload para Edição (PUT):**
+```json
+{
+  "name": "Marketing Digital",
+  "description": "Foco em redes sociais"
+}
+```
+
+---
+
+## Gerenciamento de Customers (Tenants) (`/customers`)
+
+### 1. Criar Customer
 **POST** `/customers/`
-- **Query Params:**
-    - `user_ids` (array de integer, opcional): IDs dos usuários que terão acesso.
-- **Payload:**
-    - `name` (string, obrigatório)
-    - `email` (string, obrigatório)
-    - `schema_name` (string, obrigatório)
-    - `status` (boolean, opcional, padrão: true)
-    - `phone` (string, opcional)
-    - `type_id` (integer, opcional)
-    - `status_customer_id` (integer, opcional)
-    - `manager_id` (integer, opcional)
-    - `date_init` (date "YYYY-MM-DD", opcional)
-    - `fiscal_name` (string, opcional)
-    - `nif` (string, opcional)
-    - `url_website` (string, opcional)
-    - `url_ecommerce` (string, opcional)
-    - `street_name` (string, opcional)
-    - `street_number` (string, opcional)
-    - `city` (string, opcional)
-    - `country` (string, opcional)
-    - `zip` (string, opcional)
-    - `owner_name` (string, opcional)
-    - `owner_email` (string, opcional)
-    - `owner_phone` (string, opcional)
-    - `contact_name` (string, opcional)
-    - `contact_email` (string, opcional)
-    - `contact_phone` (string, opcional)
-    - `other_contacts_ids` (array, opcional)
-    - `info_general_id` (integer, opcional)
+
+Cria a empresa e o schema de banco de dados.
+
+**Query Params:**
+- `user_ids`: (Opcional) IDs de usuários para associar. Ex: `?user_ids=1&user_ids=9`
+
+**Payload (JSON):**
+```json
+{
+  "name": "Empresa Exemplo",
+  "email": "contato@exemplo.com",
+  "schema_name": "exemplo_ltda",
+  "nif": "500100200",
+  "phone": "+351912345678",
+  "type_id": 1,
+  "status_customer_id": 1
+}
+```
+*Nota: O `schema_name` será automaticamente prefixado com `customer_` pelo backend.*
 
 ### 2. Listar Customers
 **GET** `/customers/`
-- **Query Params:** `skip`, `limit`.
 
-### 3. Obter Customer
-**GET** `/customers/{customer_id}`
+Retorna apenas os customers que o usuário logado tem permissão de acessar.
 
-### 4. Atualizar Customer
-**PUT** `/customers/{customer_id}`
-- **Payload (Todos opcionais):**
-    - `name`, `email`, `status`, `phone`, `type_id`, `status_customer_id`, `manager_id`, `date_init`, `fiscal_name`, `nif`, `url_website`, `url_ecommerce`, `street_name`, `street_number`, `city`, `country`, `zip`, `owner_name`, `owner_email`, `owner_phone`, `contact_name`, `contact_email`, `contact_phone`, `other_contacts_ids`, `info_general_id`.
-
-### 5. Deletar Customer
-**DELETE** `/customers/{customer_id}`
+### 3. Associação de Usuários
+- **Listar Usuários do Customer**: `GET /customers/{customer_id}/users`
+- **Adicionar Acesso**: `POST /customers/{customer_id}/users/{user_id}`
+- **Remover Acesso**: `DELETE /customers/{customer_id}/users/{user_id}`
 
 ---
 
-## ⚙️ Configurações de Customer (`/customers/...`)
+## Configuração de Clientes (Tipos e Status)
 
 ### 1. Tipos de Clientes
-- **Listar:** `GET /customers/types`
-- **Adicionar:** `POST /customers/types`
-    - Payload: `{"name": "string", "description": "string"}`
+- **Listar**: `GET /customers/types`
+- **Adicionar**: `POST /customers/types` -> Payload: `{"name": "string", "description": "string"}`
 
 ### 2. Status de Clientes
-- **Listar:** `GET /customers/statuses`
-- **Adicionar:** `POST /customers/statuses`
-    - Payload: `{"name": "string", "description": "string", "is_active_status": boolean}`
-
-### 3. Gerenciamento de Usuários do Customer
-- **Listar Acessos:** `GET /customers/{customer_id}/users`
-- **Adicionar Usuário:** `POST /customers/{customer_id}/users/{user_id}`
-- **Remover Usuário:** `DELETE /customers/{customer_id}/users/{user_id}`
+- **Listar**: `GET /customers/statuses`
+- **Adicionar**: `POST /customers/statuses` -> Payload: `{"name": "string", "is_active_status": true}`
 
 ---
 
-## 📈 Leads (Tenant Data) (`/tenants/{customer_id}/leads`)
+## Dados do Tenant (Leads)
 
-### 1. Criar Lead
-**POST** `/tenants/{customer_id}/leads/`
-- **Payload:**
-    - `name` (string, obrigatório)
-    - `email` (string, opcional)
-    - `status` (string, opcional)
+Acessa os dados específicos de uma empresa. O `customer_id` no path define o schema.
 
-### 2. Listar Leads
+### 1. Listar Leads
 **GET** `/tenants/{customer_id}/leads/`
-- **Query Params:** `skip`, `limit`.
 
-### 3. Obter Lead
-**GET** `/tenants/{customer_id}/leads/{lead_id}`
+### 2. Criar Lead
+**POST** `/tenants/{customer_id}/leads/`
 
-### 4. Atualizar Lead
-**PUT** `/tenants/{customer_id}/leads/{lead_id}`
-- **Payload (Opcionais):**
-    - `name`, `email`, `status`.
+**Payload (JSON):**
+```json
+{
+  "name": "João Silva",
+  "email": "joao@email.com",
+  "status": "novo"
+}
+```
+*Nota: `email` e `status` são opcionais.*
 
-### 5. Deletar Lead
-**DELETE** `/tenants/{customer_id}/leads/{lead_id}`
+### 3. Operações Individuais
+- **Ver**: `GET /tenants/{customer_id}/leads/{lead_id}`
+- **Editar**: `PUT /tenants/{customer_id}/leads/{lead_id}`
+- **Deletar**: `DELETE /tenants/{customer_id}/leads/{lead_id}`
 
 ---
 
-## ⚡ Administração (`/admin`)
+## Administração (`/admin`)
 
-### 1. Rodar Migrations (Tenants)
+### 1. Migrations em Massa
 **POST** `/admin/migrations/run-all-tenants/`
 
-### 2. Status dos Tenants
+Atualiza a estrutura de banco de dados de TODOS os clientes cadastrados.
+
+### 2. Status do Sistema
 **GET** `/admin/tenants/status/`
+
+Verifica se os schemas e tabelas de todos os clientes estão íntegros no PostgreSQL.
