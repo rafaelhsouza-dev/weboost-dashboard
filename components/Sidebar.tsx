@@ -92,6 +92,7 @@ export const Sidebar: React.FC = () => {
             children: [
               { id: 'user-list', label: 'Lista de Utilizadores', path: '/admin/users', icon: List },
               { id: 'user-create', label: 'Novo Utilizador', path: '/admin/user-create', icon: PlusCircle },
+              { id: 'user-settings', label: 'Configurações Globais', path: '/admin/user-settings', icon: Activity },
             ]
           },
           { id: 'settings', label: 'Definições', icon: Settings, path: '/admin/settings' },

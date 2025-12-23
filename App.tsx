@@ -14,6 +14,7 @@ import { AdminCustomerCreatePage } from './pages/AdminCustomerCreatePage';
 import { AdminCustomerEditPage } from './pages/AdminCustomerEditPage';
 import { AdminCustomerViewPage } from './pages/AdminCustomerViewPage';
 import { AdminCustomerSettingsPage } from './pages/AdminCustomerSettingsPage';
+import { AdminUserSettingsPage } from './pages/AdminUserSettingsPage';
 import { AdminSettingsPage } from "./pages/AdminSettingsPage";
 import ClientDashboardPage from "./pages/ClientDashboardPage";
 import ClientSettingsPage from "./pages/ClientSettingsPage";
@@ -93,6 +94,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/admin/settings" element={<ProtectedLayout><AdminSettingsPage /></ProtectedLayout>} />
       <Route path="/admin/users" element={<ProtectedLayout><AdminUsersPage /></ProtectedLayout>} />
       <Route path="/admin/user-create" element={<ProtectedLayout><AdminUserCreatePage /></ProtectedLayout>} />
+      <Route path="/admin/user-settings" element={<ProtectedLayout><AdminUserSettingsPage /></ProtectedLayout>} />
       <Route path="/admin/users/:userId" element={<ProtectedLayout><AdminUserViewPage /></ProtectedLayout>} />
       <Route path="/admin/users/:userId/edit" element={<ProtectedLayout><AdminUserEditPage /></ProtectedLayout>} />
 
