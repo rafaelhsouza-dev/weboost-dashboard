@@ -88,7 +88,7 @@ export const AdminSettingsPage: React.FC = () => {
               className="shadow-lg shadow-primary/10"
             >
               <RefreshCw size={16} className={`mr-2 ${runningMigrations ? 'animate-spin' : ''}`} />
-              {runningMigrations ? 'Executando Migrações...' : 'Rodar Migrações (All Tenants)'}
+              {runningMigrations ? 'Executando Migrações...' : 'Rodar Migrações (Clientes)'}
             </Button>
           </div>
 
