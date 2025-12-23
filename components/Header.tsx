@@ -54,7 +54,9 @@ export const Header: React.FC = () => {
 
         <div className="flex items-center gap-3 pl-3">
           <div className="text-right hidden lg:block">
-            <p className="text-xs font-bold text-gray-900 dark:text-white leading-none mb-1 uppercase tracking-wider">{user?.name}</p>
+            <p className="text-xs font-bold text-gray-900 dark:text-white leading-none mb-1 uppercase tracking-wider">
+              {user?.name || user?.email || 'Utilizador'}
+            </p>
             <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{user?.roleDisplayName || user?.role}</p>
           </div>
           <div className="w-9 h-9 rounded-full ring-2 ring-primary/20 p-0.5 overflow-hidden">
