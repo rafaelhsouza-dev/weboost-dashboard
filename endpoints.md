@@ -222,3 +222,56 @@ Atualiza a estrutura de banco de dados de TODOS os clientes cadastrados.
 **GET** `/admin/tenants/status/`
 
 Verifica se os schemas e tabelas de todos os clientes estão íntegros no PostgreSQL.
+
+---
+
+## Intranet Alerts (`/intranet`)
+
+Sistema de avisos globais com confirmação de leitura.
+
+### 1. Listar Alertas
+**GET** `/intranet/alerts/`
+
+Retorna a lista de alertas. Usuários comuns veem se já leram o alerta através do campo `read_at`.
+
+**Query Params:**
+- `active`: (boolean) `true` para ver alertas vigentes, `false` para expirados/futuros.
+- `id`: (int) Filtrar um alerta específico.
+- `skip`, `limit`: Paginação.
+
+**Resposta (Exemplo):**
+```json
+[
+  {
+    "id": 1,
+    "title": "Manutenção Programada",
+    "message": "O sistema ficará instável das 22h às 00h.",
+    "date_enable": "2025-12-23T22:00:00Z",
+    "date_disable": "2025-12-24T00:00:00Z",
+    "read_at": "2025-12-23T15:30:00Z",
+    "created_at": "2025-12-23T10:00:00Z"
+  }
+]
+```
+
+### 2. Criar Alerta (Admin/CEO)
+**POST** `/intranet/alerts/`
+
+**Payload (JSON):**
+```json
+{
+  "title": "Título do Alerta",
+  "message": "Conteúdo detalhado da mensagem.",
+  "date_enable": "2025-12-23T10:00:00Z",
+  "date_disable": "2025-12-30T10:00:00Z"
+}
+```
+
+### 3. Confirmar Leitura
+**POST** `/intranet/alerts/{alert_id}/read`
+
+Utilizado pelo usuário para confirmar que viu o aviso.
+
+### 4. Gerenciamento (Admin/CEO)
+- **Editar**: `PUT /intranet/alerts/{alert_id}`
+- **Deletar**: `DELETE /intranet/alerts/{alert_id}`

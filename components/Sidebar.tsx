@@ -16,6 +16,7 @@ import {
   List,
   PlusCircle,
   Activity,
+  Bell,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -96,6 +97,14 @@ export const Sidebar: React.FC = () => {
             ]
           },
           { id: 'settings', label: 'Definições', icon: Settings, path: '/admin/settings' },
+          { 
+            id: 'intranet', 
+            label: 'Intranet', 
+            icon: Activity,
+            children: [
+              { id: 'alerts', label: 'Alertas', path: '/admin/alerts', icon: Bell }
+            ]
+          },
         ];
       case TenancyType.CLIENT:
         return [

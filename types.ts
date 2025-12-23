@@ -136,6 +136,17 @@ export interface Lead {
   created_at: string;
 }
 
+export interface Alert {
+  id: number;
+  title: string;
+  message: string;
+  date_enable: string;
+  date_disable: string;
+  read_at: string | null;
+  created_at: string;
+  updated_at?: string;
+}
+
 export interface ChartData {
   name: string;
   value: number;
