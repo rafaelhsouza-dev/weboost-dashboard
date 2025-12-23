@@ -90,7 +90,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         // Ensure we always have internal and admin tenants for admin users
         const essentialTenants = [
           { id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL },
-          { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN }
+          { id: 'admin', name: 'Administração', type: TenancyType.ADMIN }
         ];
         
         // Merge API tenants with essential tenants, avoiding duplicates
@@ -108,7 +108,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         console.log('Using fallback tenants due to API error');
         const fallbackTenants = [
           { id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL },
-          { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN }
+          { id: 'admin', name: 'Administração', type: TenancyType.ADMIN }
         ];
         setAllTenants(fallbackTenants);
       } finally {
@@ -153,7 +153,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       if (allTenants.length === 0 && user.role === Role.ADMIN) {
         userAvailableTenants = [
           { id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL },
-          { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN }
+          { id: 'admin', name: 'Administração', type: TenancyType.ADMIN }
         ];
       }
       
@@ -263,7 +263,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       if (allTenants.length === 0 && apiUser.role === Role.ADMIN) {
         userAvailableTenants = [
           { id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL },
-          { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN }
+          { id: 'admin', name: 'Administração', type: TenancyType.ADMIN }
         ];
       } else if (apiUser.role !== Role.ADMIN) {
         userAvailableTenants = allTenants.filter(t => apiUser.allowedTenants.includes(t.id));

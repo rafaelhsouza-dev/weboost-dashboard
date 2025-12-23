@@ -94,7 +94,7 @@ const mapApiUserToAppUser = (apiUser: ApiUserResponse | any): User => {
   
   // Add admin tenant ONLY for roles 1, 2, 3 (TI, Admin, Manager)
   if (roleId === 1 || roleId === 2 || roleId === 3) {
-    tenants.unshift({ id: 'admin', name: 'Admin System', type: TenancyType.ADMIN });
+    tenants.unshift({ id: 'admin', name: 'Administração', type: TenancyType.ADMIN });
   }
   
   // Add internal tenant for all users EXCEPT role 4 (client)

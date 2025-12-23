@@ -288,7 +288,7 @@ export const getAllTenants = async (): Promise<Tenant[]> => {
   // Combine with internal and admin tenants
   const allTenants = [
     { id: 'internal', name: 'Weboost', type: TenancyType.INTERNAL },
-    { id: 'admin', name: 'Admin System', type: TenancyType.ADMIN },
+    { id: 'admin', name: 'Administração', type: TenancyType.ADMIN },
     ...customerTenants
   ];
   
