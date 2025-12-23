@@ -4,12 +4,14 @@ import { Input } from '../components/Input';
 import { Card } from '../components/Card';
 import { LayoutPage } from '../components/LayoutPage';
 import { useApp } from '../store';
-import { Bell, Plus, Trash2, Edit2, X, Check, Calendar } from 'lucide-react';
+import { Bell, Plus, Trash2, Edit2, X, Check, Calendar, Users } from 'lucide-react';
 import { listAlerts, createAlert, updateAlert, deleteAlert } from '../services/intranetService';
 import { Alert } from '../types';
+import { useNavigate } from 'react-router-dom';
 
 export const AdminAlertsPage: React.FC = () => {
   const { notify } = useApp();
+  const navigate = useNavigate();
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [loading, setLoading] = useState(false);
   
@@ -237,6 +239,13 @@ export const AdminAlertsPage: React.FC = () => {
                     </div>
                   </div>
                   <div className="flex md:flex-col justify-end gap-2">
+                    <button 
+                      onClick={() => navigate(`/admin/alerts/${alert.id}/status`)}
+                      className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
+                      title="Ver quem leu"
+                    >
+                      <Users size={16} />
+                    </button>
                     <button 
                       onClick={() => startEdit(alert)}
                       className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"

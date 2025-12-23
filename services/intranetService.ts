@@ -62,3 +62,14 @@ export const confirmAlertRead = async (id: number): Promise<void> => {
     throw error;
   }
 };
+
+export const getAlertUsersStatus = async (id: number): Promise<any[]> => {
+  try {
+    const response = await apiGetWithRefresh(`${INTRANET_ENDPOINT}${id}/users-status`, true);
+    return await handleApiResponse<any[]>(response);
+  } catch (error) {
+    console.error(`Failed to get status for alert ${id}:`, error);
+    throw error;
+  }
+};
+

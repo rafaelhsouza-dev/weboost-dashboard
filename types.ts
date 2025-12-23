@@ -147,6 +147,14 @@ export interface Alert {
   updated_at?: string;
 }
 
+export interface AlertUserStatus {
+  user_id: number;
+  user_name: string;
+  user_email: string;
+  has_read: boolean;
+  read_at: string | null;
+}
+
 export interface ChartData {
   name: string;
   value: number;

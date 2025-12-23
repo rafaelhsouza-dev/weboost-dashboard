@@ -10,6 +10,7 @@ import { AdminUserCreatePage } from './pages/AdminUserCreatePage';
 import { AdminUserEditPage } from './pages/AdminUserEditPage';
 import { AdminUserViewPage } from './pages/AdminUserViewPage';
 import { AdminAlertsPage } from './pages/AdminAlertsPage';
+import { AdminAlertDetailsPage } from './pages/AdminAlertDetailsPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { AdminCustomerCreatePage } from './pages/AdminCustomerCreatePage';
 import { AdminCustomerEditPage } from './pages/AdminCustomerEditPage';
@@ -97,6 +98,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/admin/user-create" element={<ProtectedLayout><AdminUserCreatePage /></ProtectedLayout>} />
       <Route path="/admin/user-settings" element={<ProtectedLayout><AdminUserSettingsPage /></ProtectedLayout>} />
       <Route path="/admin/alerts" element={<ProtectedLayout><AdminAlertsPage /></ProtectedLayout>} />
+      <Route path="/admin/alerts/:alertId/status" element={<ProtectedLayout><AdminAlertDetailsPage /></ProtectedLayout>} />
       <Route path="/admin/users/:userId" element={<ProtectedLayout><AdminUserViewPage /></ProtectedLayout>} />
       <Route path="/admin/users/:userId/edit" element={<ProtectedLayout><AdminUserEditPage /></ProtectedLayout>} />
 

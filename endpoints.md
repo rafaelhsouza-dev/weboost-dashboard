@@ -272,6 +272,31 @@ Retorna a lista de alertas. Usuários comuns veem se já leram o alerta através
 
 Utilizado pelo usuário para confirmar que viu o aviso.
 
-### 4. Gerenciamento (Admin/CEO)
+### 4. Status de Leitura por Usuário (Admin/CEO)
+**GET** `/intranet/alerts/{alert_id}/users-status`
+
+Retorna a lista de **todos** os usuários cadastrados e indica quem já confirmou e quem ainda não leu o alerta.
+
+**Resposta (Exemplo):**
+```json
+[
+  {
+    "user_id": 1,
+    "user_name": "João Silva",
+    "user_email": "joao@weboost.pt",
+    "has_read": true,
+    "read_at": "2025-12-23T15:30:00Z"
+  },
+  {
+    "user_id": 2,
+    "user_name": "Maria Souza",
+    "user_email": "maria@weboost.pt",
+    "has_read": false,
+    "read_at": null
+  }
+]
+```
+
+### 5. Gerenciamento (Admin/CEO)
 - **Editar**: `PUT /intranet/alerts/{alert_id}`
 - **Deletar**: `DELETE /intranet/alerts/{alert_id}`
