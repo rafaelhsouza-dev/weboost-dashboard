@@ -76,7 +76,7 @@ export const AddUserToCustomerModal: React.FC<AddUserToCustomerModalProps> = ({ 
             label="Selecione um Utilizador"
             options={allUsers}
             value={selectedUserId}
-            onChange={(value) => setSelectedUserId(Array.isArray(value) ? value[0] : value)}
+            onChange={(value) => setSelectedUserId(value as string)}
             placeholder="Pesquisar por nome ou email..."
           />
         </div>

@@ -23,16 +23,26 @@ export const AdminCustomerViewPage: React.FC = () => {
       setLoading(false);
       return;
     }
+    
+    setLoading(true);
+    setError(null);
+
     try {
-      setLoading(true);
+      // 1. Load basic customer data first
       const customerData = await fetchCustomerById(parseInt(customerId));
       setCustomer(customerData);
       
-      const usersData = await listCustomerUsers(parseInt(customerId));
-      setUsers(usersData);
+      // 2. Try to load users in a separate block to avoid failing the whole page
+      try {
+        const usersData = await listCustomerUsers(parseInt(customerId));
+        setUsers(usersData);
+      } catch (userErr) {
+        console.error('Failed to load customer users:', userErr);
+        notify('Aviso: Não foi possível carregar a lista de utilizadores associados.', 'error');
+      }
 
     } catch (err) {
-      console.error('Failed to load customer data:', err);
+      console.error('Failed to load customer details:', err);
       const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
       setError(`Falha ao carregar dados do cliente: ${errorMessage}`);
     } finally {
