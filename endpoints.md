@@ -38,7 +38,7 @@ Renova o token de acesso. Pode ser usado para trocar o `active_customer` no cont
 ```json
 {
   "refresh_token": "seu_refresh_token_aqui",
-  "active_customer": 1 
+  "active_customer": 1
 }
 ```
 
@@ -75,7 +75,7 @@ Cria um novo usuário na plataforma. Novos campos opcionais foram adicionados pa
 }
 ```
 *Roles Padrão: 1=CEO, 2=admin, 3=manager, 4=user, 5=employee.*
-*Campos novos: `department_id`, `avatar_url`, `phone`, `bio` são opcionais.*
+*Campos novos: `department_id`, `avatar_url` (texto ilimitado), `phone`, `bio` são opcionais.*
 
 ### 3. Atualizar Usuário
 **PUT** `/users/{user_id}`
@@ -173,10 +173,14 @@ Retorna apenas os customers que o usuário logado tem permissão de acessar.
 ### 1. Tipos de Clientes
 - **Listar**: `GET /customers/types`
 - **Adicionar**: `POST /customers/types` -> Payload: `{"name": "string", "description": "string"}`
+- **Atualizar**: `PUT /customers/types/{type_id}` -> Payload: `{"name": "string", "description": "string"}`
+- **Deletar**: `DELETE /customers/types/{type_id}`
 
 ### 2. Status de Clientes
 - **Listar**: `GET /customers/statuses`
 - **Adicionar**: `POST /customers/statuses` -> Payload: `{"name": "string", "is_active_status": true}`
+- **Atualizar**: `PUT /customers/statuses/{status_id}` -> Payload: `{"name": "string", "is_active_status": true}`
+- **Deletar**: `DELETE /customers/statuses/{status_id}`
 
 ---
 

@@ -238,6 +238,26 @@ export const addCustomerType = async (typeData: { name: string; description: str
   }
 };
 
+export const updateCustomerType = async (id: number, typeData: { name?: string; description?: string }): Promise<CustomerType> => {
+  try {
+    const response = await apiPutWithRefresh(`${CUSTOMERS_ENDPOINT}types/${id}`, typeData, true);
+    return await handleApiResponse<CustomerType>(response);
+  } catch (error) {
+    console.error(`Failed to update customer type ${id}:`, error);
+    throw error;
+  }
+};
+
+export const deleteCustomerType = async (id: number): Promise<void> => {
+  try {
+    const response = await apiDeleteWithRefresh(`${CUSTOMERS_ENDPOINT}types/${id}`, true);
+    await handleApiResponse(response);
+  } catch (error) {
+    console.error(`Failed to delete customer type ${id}:`, error);
+    throw error;
+  }
+};
+
 // Customer Statuses
 export const listCustomerStatuses = async (): Promise<CustomerStatus[]> => {
   try {
@@ -255,6 +275,26 @@ export const addCustomerStatus = async (statusData: { name: string; description:
     return await handleApiResponse<CustomerStatus>(response);
   } catch (error) {
     console.error('Failed to add customer status:', error);
+    throw error;
+  }
+};
+
+export const updateCustomerStatus = async (id: number, statusData: { name?: string; description?: string; is_active_status?: boolean }): Promise<CustomerStatus> => {
+  try {
+    const response = await apiPutWithRefresh(`${CUSTOMERS_ENDPOINT}statuses/${id}`, statusData, true);
+    return await handleApiResponse<CustomerStatus>(response);
+  } catch (error) {
+    console.error(`Failed to update customer status ${id}:`, error);
+    throw error;
+  }
+};
+
+export const deleteCustomerStatus = async (id: number): Promise<void> => {
+  try {
+    const response = await apiDeleteWithRefresh(`${CUSTOMERS_ENDPOINT}statuses/${id}`, true);
+    await handleApiResponse(response);
+  } catch (error) {
+    console.error(`Failed to delete customer status ${id}:`, error);
     throw error;
   }
 };
