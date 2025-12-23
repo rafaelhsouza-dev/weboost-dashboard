@@ -9,7 +9,7 @@ import {
 import { getAccessToken } from './authService';
 
 // API Configuration
-const CUSTOMERS_ENDPOINT = '/customers/';
+const CUSTOMERS_ENDPOINT = '/customers';
 
 interface ApiCustomer extends ApiCustomerResponse {
 }
@@ -31,7 +31,7 @@ export const fetchCustomersFromApi = async (): Promise<Tenant[]> => {
     console.log('Token available for customers request:', token ? 'YES' : 'NO');
     
     // Use the new apiClient to make authenticated request
-    const response = await apiGetWithRefresh(CUSTOMERS_ENDPOINT, true); // true for requiresAuth
+    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}/`, true); // true for requiresAuth
     const data: ApiCustomer[] = await handleApiResponse(response);
     
     console.log('API Customers Response:', data);
@@ -91,7 +91,7 @@ export const fetchCustomers = async (skip: number = 0, limit: number = 100): Pro
     console.log('Token available for customers request:', token ? 'YES' : 'NO');
     
     // Use the new apiClient to make authenticated request
-    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}?skip=${skip}&limit=${limit}`, true);
+    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}/?skip=${skip}&limit=${limit}`, true);
     const data: ApiCustomer[] = await handleApiResponse(response);
     
     console.log('API Customers Response:', data);
@@ -115,7 +115,7 @@ export const fetchCustomerById = async (customerId: number): Promise<ApiCustomer
   try {
     console.log(`Fetching customer ${customerId} from API...`);
     
-    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}${customerId}`, true);
+    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}/${customerId}/`, true);
     const data: ApiCustomer = await handleApiResponse(response);
     
     console.log('API Customer Response:', data);
@@ -132,7 +132,7 @@ export const createCustomer = async (customerData: any, userIds: number[] = []):
   try {
     console.log('Creating customer with data:', customerData);
     
-    let endpoint = CUSTOMERS_ENDPOINT;
+    let endpoint = `${CUSTOMERS_ENDPOINT}/`;
     if (userIds.length > 0) {
       const params = new URLSearchParams();
       userIds.forEach(id => params.append('user_ids', id.toString()));
@@ -156,7 +156,7 @@ export const updateCustomer = async (customerId: number, customerData: any): Pro
   try {
     console.log(`Updating customer ${customerId} with data:`, customerData);
     
-    const response = await apiPutWithRefresh(`${CUSTOMERS_ENDPOINT}${customerId}`, customerData, true);
+    const response = await apiPutWithRefresh(`${CUSTOMERS_ENDPOINT}/${customerId}/`, customerData, true);
     const data: ApiCustomer = await handleApiResponse(response);
     
     console.log('Customer updated successfully:', data);
@@ -173,7 +173,7 @@ export const deleteCustomer = async (customerId: number): Promise<void> => {
   try {
     console.log(`Deleting customer ${customerId}...`);
     
-    const response = await apiDeleteWithRefresh(`${CUSTOMERS_ENDPOINT}${customerId}`, true);
+    const response = await apiDeleteWithRefresh(`${CUSTOMERS_ENDPOINT}/${customerId}/`, true);
     await handleApiResponse(response);
     
     console.log('Customer deleted successfully');
@@ -187,7 +187,7 @@ export const deleteCustomer = async (customerId: number): Promise<void> => {
 // Function to list users of a customer
 export const listCustomerUsers = async (customerId: number): Promise<ApiUserResponse[]> => {
   try {
-    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}${customerId}/users`, true);
+    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}/${customerId}/users/`, true);
     return await handleApiResponse<ApiUserResponse[]>(response);
   } catch (error) {
     console.error(`Failed to get users for customer ${customerId}:`, error);
@@ -198,7 +198,7 @@ export const listCustomerUsers = async (customerId: number): Promise<ApiUserResp
 // Function to add a user to a customer
 export const addUserToCustomer = async (customerId: number, userId: number): Promise<{ message: string }> => {
   try {
-    const response = await apiPostWithRefresh(`${CUSTOMERS_ENDPOINT}${customerId}/users/${userId}`, {}, true);
+    const response = await apiPostWithRefresh(`${CUSTOMERS_ENDPOINT}/${customerId}/users/${userId}/`, {}, true);
     return await handleApiResponse(response);
   } catch (error) {
     console.error(`Failed to add user ${userId} to customer ${customerId}:`, error);
@@ -209,7 +209,7 @@ export const addUserToCustomer = async (customerId: number, userId: number): Pro
 // Function to remove a user from a customer
 export const removeUserFromCustomer = async (customerId: number, userId: number): Promise<void> => {
   try {
-    const response = await apiDeleteWithRefresh(`${CUSTOMERS_ENDPOINT}${customerId}/users/${userId}`, true);
+    const response = await apiDeleteWithRefresh(`${CUSTOMERS_ENDPOINT}/${customerId}/users/${userId}/`, true);
     await handleApiResponse(response);
   } catch (error) {
     console.error(`Failed to remove user ${userId} from customer ${customerId}:`, error);
@@ -220,7 +220,7 @@ export const removeUserFromCustomer = async (customerId: number, userId: number)
 // Customer Types
 export const listCustomerTypes = async (): Promise<CustomerType[]> => {
   try {
-    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}types`, true);
+    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}/types/`, true);
     return await handleApiResponse<CustomerType[]>(response);
   } catch (error) {
     console.error('Failed to list customer types:', error);
@@ -230,7 +230,7 @@ export const listCustomerTypes = async (): Promise<CustomerType[]> => {
 
 export const addCustomerType = async (typeData: { name: string; description: string }): Promise<CustomerType> => {
   try {
-    const response = await apiPostWithRefresh(`${CUSTOMERS_ENDPOINT}types`, typeData, true);
+    const response = await apiPostWithRefresh(`${CUSTOMERS_ENDPOINT}/types/`, typeData, true);
     return await handleApiResponse<CustomerType>(response);
   } catch (error) {
     console.error('Failed to add customer type:', error);
@@ -240,7 +240,7 @@ export const addCustomerType = async (typeData: { name: string; description: str
 
 export const updateCustomerType = async (id: number, typeData: { name?: string; description?: string }): Promise<CustomerType> => {
   try {
-    const response = await apiPutWithRefresh(`${CUSTOMERS_ENDPOINT}types/${id}`, typeData, true);
+    const response = await apiPutWithRefresh(`${CUSTOMERS_ENDPOINT}/types/${id}/`, typeData, true);
     return await handleApiResponse<CustomerType>(response);
   } catch (error) {
     console.error(`Failed to update customer type ${id}:`, error);
@@ -250,7 +250,7 @@ export const updateCustomerType = async (id: number, typeData: { name?: string; 
 
 export const deleteCustomerType = async (id: number): Promise<void> => {
   try {
-    const response = await apiDeleteWithRefresh(`${CUSTOMERS_ENDPOINT}types/${id}`, true);
+    const response = await apiDeleteWithRefresh(`${CUSTOMERS_ENDPOINT}/types/${id}/`, true);
     await handleApiResponse(response);
   } catch (error) {
     console.error(`Failed to delete customer type ${id}:`, error);
@@ -261,7 +261,7 @@ export const deleteCustomerType = async (id: number): Promise<void> => {
 // Customer Statuses
 export const listCustomerStatuses = async (): Promise<CustomerStatus[]> => {
   try {
-    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}statuses`, true);
+    const response = await apiGetWithRefresh(`${CUSTOMERS_ENDPOINT}/statuses/`, true);
     return await handleApiResponse<CustomerStatus[]>(response);
   } catch (error) {
     console.error('Failed to list customer statuses:', error);
@@ -271,7 +271,7 @@ export const listCustomerStatuses = async (): Promise<CustomerStatus[]> => {
 
 export const addCustomerStatus = async (statusData: { name: string; description: string, is_active_status: boolean }): Promise<CustomerStatus> => {
   try {
-    const response = await apiPostWithRefresh(`${CUSTOMERS_ENDPOINT}statuses`, statusData, true);
+    const response = await apiPostWithRefresh(`${CUSTOMERS_ENDPOINT}/statuses/`, statusData, true);
     return await handleApiResponse<CustomerStatus>(response);
   } catch (error) {
     console.error('Failed to add customer status:', error);
@@ -281,7 +281,7 @@ export const addCustomerStatus = async (statusData: { name: string; description:
 
 export const updateCustomerStatus = async (id: number, statusData: { name?: string; description?: string; is_active_status?: boolean }): Promise<CustomerStatus> => {
   try {
-    const response = await apiPutWithRefresh(`${CUSTOMERS_ENDPOINT}statuses/${id}`, statusData, true);
+    const response = await apiPutWithRefresh(`${CUSTOMERS_ENDPOINT}/statuses/${id}/`, statusData, true);
     return await handleApiResponse<CustomerStatus>(response);
   } catch (error) {
     console.error(`Failed to update customer status ${id}:`, error);
@@ -291,7 +291,7 @@ export const updateCustomerStatus = async (id: number, statusData: { name?: stri
 
 export const deleteCustomerStatus = async (id: number): Promise<void> => {
   try {
-    const response = await apiDeleteWithRefresh(`${CUSTOMERS_ENDPOINT}statuses/${id}`, true);
+    const response = await apiDeleteWithRefresh(`${CUSTOMERS_ENDPOINT}/statuses/${id}/`, true);
     await handleApiResponse(response);
   } catch (error) {
     console.error(`Failed to delete customer status ${id}:`, error);

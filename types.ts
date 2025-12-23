@@ -104,9 +104,9 @@ export interface ApiUserResponse {
   avatar_url?: string;
   phone?: string;
   bio?: string;
-  created_at: string;
-  updated_at: string;
-  role: {
+  created_at?: string;
+  updated_at?: string;
+  role?: {
     name: string;
     description: string;
     id: number;
