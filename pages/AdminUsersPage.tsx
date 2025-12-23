@@ -11,6 +11,7 @@ interface User {
   name: string;
   email: string;
   role: string;
+  status: boolean;
 }
 
 export const AdminUsersPage: React.FC = () => {
@@ -29,7 +30,8 @@ export const AdminUsersPage: React.FC = () => {
         id: u.id,
         name: u.name,
         email: u.email,
-        role: u.role?.name || 'Utilizador'
+        role: u.role?.name || 'Utilizador',
+        status: u.status
       }));
       
       setUsers(mappedUsers);
@@ -79,14 +81,15 @@ export const AdminUsersPage: React.FC = () => {
               <th className="px-6 py-4 text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nome</th>
               <th className="px-6 py-4 text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
               <th className="px-6 py-4 text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Perfil</th>
+              <th className="px-6 py-4 text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
               <th className="px-6 py-4 text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider text-right">Ações</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50 dark:divide-dark-border">
             {loading ? (
-              <tr><td colSpan={4} className="px-6 py-8 text-center animate-pulse text-gray-400">Carregando...</td></tr>
+              <tr><td colSpan={5} className="px-6 py-8 text-center animate-pulse text-gray-400">Carregando...</td></tr>
             ) : filteredUsers.length === 0 ? (
-              <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500 italic">Nenhum utilizador encontrado.</td></tr>
+              <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500 italic">Nenhum utilizador encontrado.</td></tr>
             ) : (
               filteredUsers.map((user) => (
                 <tr key={user.id} className="hover:bg-primary/[0.02] transition-colors">
@@ -95,6 +98,15 @@ export const AdminUsersPage: React.FC = () => {
                   <td className="px-6 py-4">
                     <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-primary/10 text-primary">
                       {user.role}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                      user.status 
+                        ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400' 
+                        : 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400'
+                    }`}>
+                      {user.status ? 'Ativo' : 'Inativo'}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
